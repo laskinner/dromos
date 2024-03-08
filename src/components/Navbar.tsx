@@ -14,17 +14,16 @@ const NavBar: React.FC = () => {
         </Link>
       </div>
       <div className="flex-1 flex justify-center">
-        {/* Wrap Link content in a div with the group class */}
         <Link to="/" className="group mx-2">
           <i className="fa-solid fa-house text-3xl hover:text-gray-700"></i>
           <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
             Home
           </span>
         </Link>
-        <Link to="/area-graph" className="group mx-2">
+        <Link to="/graph-view" className="group mx-2">
           <i className="fa-regular fa-circle-nodes text-3xl hover:text-gray-700"></i>
           <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
-            Area Graphs
+            View Node Graphs
           </span>
         </Link>
       </div>
