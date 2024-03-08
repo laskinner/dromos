@@ -21,7 +21,7 @@ function App() {
         <Route path="/create-node-graph" element={<CreateNodeGraph />} />
         <Route path="/graph-view" element={<GraphView />} />
         <Route path="/log-in" element={<LogIn />} />
-        {/* Add more routes here as needed */}
+        {/* Add more routes here */}
       </Routes>
     </div>
   );
