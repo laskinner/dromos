@@ -1,4 +1,5 @@
 import React from "react";
+import CreateAccount from "@/components/CreateAccount";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -54,7 +55,9 @@ const NavBar: React.FC = () => {
               </span>
             </button>
           </SheetTrigger>
-          <SheetContent>{/* Sheet content here */}</SheetContent>
+          <SheetContent>
+            <CreateAccount />
+          </SheetContent>
         </Sheet>
       </div>
     </nav>
