@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const NavBar: React.FC = () => {
   return (
@@ -42,17 +43,19 @@ const NavBar: React.FC = () => {
         </NavLink>
       </div>
       <div className="flex-1 text-right">
-        <NavLink
-          to="/create-account"
-          className={({ isActive }) =>
-            `group ${isActive ? "text-blue-600" : "text-stone-500"} text-3xl`
-          }
-        >
-          <i className="fa-solid fa-user-plus"></i>
-          <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
-            Create Account
-          </span>
-        </NavLink>
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="relative">
+              {" "}
+              {/* Use a button or div as needed */}
+              <i className="fa-solid fa-user-plus text-stone-500 text-3xl"></i>
+              <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
+                Create Account
+              </span>
+            </button>
+          </SheetTrigger>
+          <SheetContent>{/* Sheet content here */}</SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
