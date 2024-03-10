@@ -8,6 +8,7 @@ import CreateNode from "@/components/CreateNode";
 import CreateNodeGraph from "@/components/CreateNodeGraph";
 import GraphView from "@/components/GraphView";
 import LogIn from "@/components/LogIn";
+import "./api/axiosDefaults.ts";
 
 function App() {
   return (
