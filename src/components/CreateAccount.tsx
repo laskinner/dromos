@@ -28,13 +28,11 @@ const CreateAccount: React.FC = () => {
         </div>
         {/* More fields can be added here, such as image and email */}
       </div>
-      <SheetClose asChild>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetClose>
+      <SheetFooter>
+        <SheetClose asChild>
+          <Button type="submit">Save changes</Button>
+        </SheetClose>
+      </SheetFooter>
     </>
   );
 };
