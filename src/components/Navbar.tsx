@@ -2,6 +2,12 @@ import React from "react";
 import CreateAccount from "@/components/CreateAccount";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const NavBar: React.FC = () => {
   return (
@@ -24,10 +30,16 @@ const NavBar: React.FC = () => {
             } text-3xl`
           }
         >
-          <i className="fa-solid fa-house"></i>
-          <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
-            Home
-          </span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <i className="fa-solid fa-house"></i>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Home</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </NavLink>
         <NavLink
           to="/graph-view"
@@ -37,10 +49,16 @@ const NavBar: React.FC = () => {
             } text-3xl`
           }
         >
-          <i className="fa-regular fa-circle-nodes"></i>
-          <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
-            View Node Graphs
-          </span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <i className="fa-regular fa-circle-nodes"></i>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View Node Graphs</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </NavLink>
       </div>
       <div className="flex-1 text-right">
@@ -49,10 +67,16 @@ const NavBar: React.FC = () => {
             <button className="relative">
               {" "}
               {/* Use a button or div as needed */}
-              <i className="fa-solid fa-user-plus text-stone-500 text-3xl"></i>
-              <span className="absolute mt-6 px-2 py-1 text-xs text-white bg-black rounded-md opacity-0 group-hover:opacity-100">
-                Create Account
-              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <i className="fa-solid fa-user-plus text-stone-500 text-3xl"></i>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Create Account</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </button>
           </SheetTrigger>
           <SheetContent>
