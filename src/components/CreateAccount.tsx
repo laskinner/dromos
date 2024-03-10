@@ -9,8 +9,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreateAccount: React.FC = () => {
+  const { toast } = useToast();
+
   return (
     <>
       <SheetHeader>
@@ -30,7 +33,16 @@ const CreateAccount: React.FC = () => {
       </div>
       <SheetFooter>
         <SheetClose asChild>
-          <Button type="submit">Save changes</Button>
+          <Button
+            type="submit"
+            onClick={() => {
+              toast({
+                title: "Account created succesffully",
+              });
+            }}
+          >
+            Save changes
+          </Button>
         </SheetClose>
       </SheetFooter>
     </>
