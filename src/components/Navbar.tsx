@@ -26,7 +26,7 @@ const NavBar: React.FC = () => {
           to="/"
           className={({ isActive }) =>
             `group mx-2 ${
-              isActive ? "text-blue-600" : "text-stone-500"
+              isActive ? "text-indigo-600" : "text-slate-900"
             } text-3xl`
           }
         >
@@ -45,7 +45,7 @@ const NavBar: React.FC = () => {
           to="/graph-view"
           className={({ isActive }) =>
             `group mx-2 ${
-              isActive ? "text-blue-600" : "text-stone-500"
+              isActive ? "text-indigo-600" : "text-slate-900"
             } text-3xl`
           }
         >
@@ -70,7 +70,7 @@ const NavBar: React.FC = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <i className="fa-solid fa-user-plus text-stone-500 text-3xl"></i>
+                    <i className="fa-solid fa-user-plus text-slate-900 text-3xl"></i>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Create Account</p>
