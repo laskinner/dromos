@@ -11,7 +11,7 @@ import LogIn from "@/components/LogIn";
 
 function App() {
   return (
-    <div>
+    <div className="bg-stone-50 min-h-screen">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
