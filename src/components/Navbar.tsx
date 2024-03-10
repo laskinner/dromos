@@ -19,7 +19,7 @@ const NavBar: React.FC = () => {
           className={({ isActive }) =>
             `group mx-2 ${
               isActive ? "text-blue-600" : "text-stone-500"
-            } text-3xl hover:text-gray-700`
+            } text-3xl hover:text-stone-500`
           }
         >
           <i className="fa-solid fa-house"></i>
@@ -32,7 +32,7 @@ const NavBar: React.FC = () => {
           className={({ isActive }) =>
             `group mx-2 ${
               isActive ? "text-blue-600" : "text-stone-500"
-            } text-3xl hover:text-gray-700`
+            } text-3xl hover:text-stone-500`
           }
         >
           <i className="fa-regular fa-circle-nodes"></i>
@@ -47,7 +47,7 @@ const NavBar: React.FC = () => {
           className={({ isActive }) =>
             `group ${
               isActive ? "text-blue-600" : "text-stone-500"
-            } text-3xl hover:text-gray-700`
+            } text-3xl hover:text-stone-500`
           }
         >
           <i className="fa-solid fa-user-plus"></i>
