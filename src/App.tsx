@@ -8,6 +8,7 @@ import CreateNodeGraph from "@/components/CreateNodeGraph";
 import GraphView from "@/components/GraphView";
 import LogIn from "@/components/LogIn";
 import "./api/axiosDefaults.ts";
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/log-in" element={<LogIn />} />
         {/* Add more routes here */}
       </Routes>
+      <Toaster />
     </div>
   );
 }

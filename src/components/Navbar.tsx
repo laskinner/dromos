@@ -1,7 +1,17 @@
 import React from "react";
 import CreateAccount from "@/components/CreateAccount";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
@@ -64,12 +74,11 @@ const NavBar: React.FC = () => {
       <div className="flex-1 text-right">
         <Sheet>
           <SheetTrigger asChild>
-            <button className="relative">
-              {" "}
-              {/* Use a button or div as needed */}
+            <div className="relative cursor-pointer">
+              {/* Visual representation (icon/text) indicating the trigger for the sheet */}
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <i className="fa-solid fa-user-plus text-slate-900 text-3xl"></i>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -77,9 +86,15 @@ const NavBar: React.FC = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            </button>
+            </div>
           </SheetTrigger>
           <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Create Profile</SheetTitle>
+              <SheetDescription>
+                Fill in the details below to create your profile.
+              </SheetDescription>
+            </SheetHeader>
             <CreateAccount />
           </SheetContent>
         </Sheet>
