@@ -12,17 +12,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { Input, Textarea } from "@/components/ui/input"; // Assuming Textarea is available for bio
+import { SheetFooter, SheetClose } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   username: z
@@ -70,7 +62,7 @@ const CreateAccount: React.FC = () => {
   const { toast } = useToast();
 
   const onSubmit: SubmitHandler<CreateAccountFormData> = (data) => {
-    // Implement your submission logic here
+    // Implement submission logic here
     toast({
       title: "Account created successfully",
     });
@@ -80,16 +72,15 @@ const CreateAccount: React.FC = () => {
   return (
     <FormProvider {...form}>
       {" "}
-      {/* Spread the form object to the FormProvider */}
+      {/* Spreads form object to the FormProvider */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           const data = form.getValues(); // Directly get form values
-          onSubmit(data); // Call your onSubmit handler with form data
+          onSubmit(data); // Calls onSubmit handler with form data
         }}
         className="grid gap-4 py-4"
       >
-        {/* Username */}
         <FormField
           control={form.control}
           name="username"
@@ -103,9 +94,88 @@ const CreateAccount: React.FC = () => {
             </FormItem>
           )}
         />
-        {/* Additional fields follow a similar pattern */}
-        {/* Email, Password, ConfirmPassword, FirstName, LastName, Bio */}
-        {/* For brevity, only username field is shown; replicate for others */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Confirm Password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="First name" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Last name" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bio</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder="Enter any bio details about yourself"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Add additional fields using similar pattern */}
         <SheetFooter>
           <SheetClose asChild>
             <Button type="submit">Create account</Button>
