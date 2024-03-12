@@ -21,7 +21,10 @@ import { Button } from "@/components/ui/button";
 
 const NavBar: React.FC = () => {
   const handleClickSubmit = () => {
-    document.getElementById("hidden-submit").click();
+    const hiddenSubmitButton = document.getElementById("hidden-submit");
+    if (hiddenSubmitButton) {
+      hiddenSubmitButton.click();
+    }
   };
 
   return (
