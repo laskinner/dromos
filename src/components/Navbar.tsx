@@ -1,23 +1,22 @@
 import React from "react";
-import CreateAccount from "@/components/CreateAccount";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-  SheetClose,
-} from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import CreateAccount from "@/components/CreateAccount";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const NavBar: React.FC = () => {
   return (
@@ -96,6 +95,9 @@ const NavBar: React.FC = () => {
               </SheetDescription>
             </SheetHeader>
             <CreateAccount />
+            <SheetFooter>
+              <SheetClose></SheetClose>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>

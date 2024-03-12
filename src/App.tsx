@@ -22,6 +22,7 @@ function App() {
         <Route path="/create-node-graph" element={<CreateNodeGraph />} />
         <Route path="/graph-view" element={<GraphView />} />
         <Route path="/log-in" element={<LogIn />} />
+        <Route path="/create-account" element={<CreateAccount />} />
         {/* Add more routes here */}
       </Routes>
       <Toaster />
