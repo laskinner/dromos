@@ -3,7 +3,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -54,7 +53,11 @@ const CreateAccount: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+    <form
+      id="create-account-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="grid gap-4 py-4"
+    >
       <div>
         <label htmlFor="username">Username</label>
         <Input {...register("username")} placeholder="Username" />
@@ -101,7 +104,7 @@ const CreateAccount: React.FC = () => {
         />
         {errors.bio && <p>{errors.bio.message}</p>}
       </div>
-      <Button type="submit">Create account</Button>
+      <button type="submit" style={{ display: "none" }} id="hidden-submit" />
     </form>
   );
 };

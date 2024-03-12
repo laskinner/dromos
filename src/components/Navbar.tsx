@@ -17,8 +17,13 @@ import {
   SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 const NavBar: React.FC = () => {
+  const handleClickSubmit = () => {
+    document.getElementById("hidden-submit").click();
+  };
+
   return (
     <nav className="flex items-center justify-between bg-transparent py-4 px-6">
       <div className="flex-1">
@@ -96,7 +101,9 @@ const NavBar: React.FC = () => {
             </SheetHeader>
             <CreateAccount />
             <SheetFooter>
-              <SheetClose></SheetClose>
+              <SheetClose asChild>
+                <Button onClick={handleClickSubmit}>Submit</Button>
+              </SheetClose>
             </SheetFooter>
           </SheetContent>
         </Sheet>
