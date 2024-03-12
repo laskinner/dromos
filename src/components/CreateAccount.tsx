@@ -5,18 +5,19 @@ import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 
 const formSchema = z.object({
   username: z
     .string()
     .min(2, { message: "Username must be at least 2 characters." }),
   email: z.string().email({ message: "Invalid email address." }),
-  password: z
+  password1: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
-  confirmPassword: z
+    .min(6, { message: "Password must be at least 6 characters." }), // Note the field name change to password1
+  password2: z
     .string()
-    .min(6, { message: "Confirm Password must match Password." }),
+    .min(6, { message: "Confirm Password must match Password." }), // Note the field name change to password2
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   bio: z
@@ -30,13 +31,14 @@ const CreateAccount: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       email: "",
-      password: "",
-      confirmPassword: "",
+      password1: "",
+      password2: "",
       firstName: "",
       lastName: "",
       bio: "",
@@ -45,19 +47,25 @@ const CreateAccount: React.FC = () => {
 
   const { toast } = useToast();
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = (data) => {
-    toast({
-      title: "Account created successfully",
-    });
-    console.log(data);
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+    try {
+      await axios.post("/dj-rest-auth/registration/", data);
+      toast({
+        title: "Account created successfully",
+      });
+      console.log("Registration successful", data);
+      reset(); // Reset the form fields
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Registration error:", error.response?.data);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
   };
 
   return (
-    <form
-      id="create-account-form"
-      onSubmit={handleSubmit(onSubmit)}
-      className="grid gap-4 py-4"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
       <div>
         <label htmlFor="username">Username</label>
         <Input {...register("username")} placeholder="Username" />
@@ -72,19 +80,19 @@ const CreateAccount: React.FC = () => {
         <label htmlFor="password">Password</label>
         <Input
           type="password"
-          {...register("password")}
+          {...register("password1")}
           placeholder="Password"
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password1 && <p>{errors.password1.message}</p>}
       </div>
       <div>
         <label htmlFor="confirmPassword">Confirm Password</label>
         <Input
           type="password"
-          {...register("confirmPassword")}
-          placeholder="Confirm Password"
+          {...register("password2")}
+          placeholder="Confirm password"
         />
-        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+        {errors.password2 && <p>{errors.password2.message}</p>}
       </div>
       <div>
         <label htmlFor="firstName">First Name (optional) </label>
