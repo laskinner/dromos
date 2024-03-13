@@ -107,8 +107,8 @@ const NavBar: React.FC = () => {
               </SheetTitle>
               <SheetDescription>
                 {isCreatingAccount
-                  ? "Fill in the details below to create your profile."
-                  : "Log in to your account."}
+                  ? "Fill in the details or log in below."
+                  : "Log in or create a new account below."}
               </SheetDescription>
             </SheetHeader>
             {isCreatingAccount ? <CreateAccount /> : <LogIn />}
@@ -118,14 +118,14 @@ const NavBar: React.FC = () => {
               </SheetClose>
             </SheetFooter>
             <hr />
-            <div style={{ textAlign: "center", marginTop: "1rem" }}>
+            <div className="mt-4 flex justify-end">
               {isCreatingAccount ? (
-                <Button variant="outline" onClick={toggleForm}>
+                <Button variant="outline" onClick={toggleForm} className="ml-4">
                   Login
                 </Button>
               ) : (
-                <Button variant="outline" onClick={toggleForm}>
-                  Sign up
+                <Button variant="outline" onClick={toggleForm} className="ml-4">
+                  Create Account
                 </Button>
               )}
             </div>

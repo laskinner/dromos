@@ -65,52 +65,84 @@ const CreateAccount: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 py-4">
       <div>
-        <label htmlFor="username">Username (required)</label>
-        <Input {...register("username")} placeholder="Username" />
-        {errors.username && <p>{errors.username.message}</p>}
+        <div className="mb-1 text-sm font-semibold text-gray-700">Required</div>
+        <div className="mb-4">
+          <Input
+            {...register("username")}
+            placeholder="Username"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {errors.username && (
+            <p className="mt-1 text-xs text-red-500">
+              {errors.username.message}
+            </p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Input
+            {...register("email")}
+            placeholder="Email"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {errors.email && (
+            <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Input
+            type="password"
+            {...register("password1")}
+            placeholder="Password"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {errors.password1 && (
+            <p className="mt-1 text-xs text-red-500">
+              {errors.password1.message}
+            </p>
+          )}
+        </div>
+        <div className="mb-4">
+          <Input
+            type="password"
+            {...register("password2")}
+            placeholder="Confirm password"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {errors.password2 && (
+            <p className="mt-1 text-xs text-red-500">
+              {errors.password2.message}
+            </p>
+          )}
+        </div>
       </div>
       <div>
-        <label htmlFor="email">Email (required)</label>
-        <Input {...register("email")} placeholder="Email" />
-        {errors.email && <p>{errors.email.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="password">Password (required)</label>
-        <Input
-          type="password"
-          {...register("password1")}
-          placeholder="Password"
-        />
-        {errors.password1 && <p>{errors.password1.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="confirmPassword">Confirm Password (required)</label>
-        <Input
-          type="password"
-          {...register("password2")}
-          placeholder="Confirm password"
-        />
-        {errors.password2 && <p>{errors.password2.message}</p>}
-      </div>
-      <div>
-        <label htmlFor="firstName">First Name (optional) </label>
-        <Input {...register("firstName")} placeholder="First Name" />
-        {/* No validation error for optional fields unless needed */}
-      </div>
-      <div>
-        <label htmlFor="lastName">Last Name (optional)</label>
-        <Input {...register("lastName")} placeholder="Last Name" />
-        {/* No validation error for optional fields unless needed */}
-      </div>
-      <div>
-        <label htmlFor="bio">Bio (optional) </label>
-        <Textarea
-          {...register("bio")}
-          placeholder="Enter any bio details about yourself"
-        />
-        {errors.bio && <p>{errors.bio.message}</p>}
+        <div className="mb-1 text-sm font-semibold text-gray-700">Optional</div>
+        <div className="mb-4">
+          <Input
+            {...register("firstName")}
+            placeholder="First Name"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <Input
+            {...register("lastName")}
+            placeholder="Last Name"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <Textarea
+            {...register("bio")}
+            placeholder="Enter any bio details about yourself"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          {errors.bio && (
+            <p className="mt-1 text-xs text-red-500">{errors.bio.message}</p>
+          )}
+        </div>
       </div>
       <button type="submit" style={{ display: "none" }} id="hidden-submit" />
     </form>
