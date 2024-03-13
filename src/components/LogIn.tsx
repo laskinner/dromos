@@ -10,12 +10,12 @@ const formSchema = z.object({
   username: z
     .string()
     .min(2, { message: "Username must be at least 2 characters." }),
-  password1: z
+  password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }), // Note the field name change to password1
+    .min(6, { message: "Password must be at least 6 characters." }),
 });
 
-const CreateAccount: React.FC = () => {
+const LogIn: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -25,8 +25,7 @@ const CreateAccount: React.FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      email: "",
-      password1: "",
+      password: "",
     },
   });
 
@@ -34,15 +33,15 @@ const CreateAccount: React.FC = () => {
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     try {
-      await axios.post("/dj-rest-auth/registration/", data);
+      await axios.post("/dj-rest-auth/login/", data);
       toast({
         title: "Login successful",
       });
-      console.log("Registration successful", data);
-      reset(); // Reset the form fields
+      console.log("Login successful", data);
+      reset(); // Resets the form fields after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Registration error:", error.response?.data);
+        console.error("Login error:", error.response?.data);
       } else {
         console.error("An unexpected error occurred:", error);
       }
@@ -58,14 +57,14 @@ const CreateAccount: React.FC = () => {
       <div>
         <Input
           type="password"
-          {...register("password1")}
+          {...register("password")}
           placeholder="Password"
         />
-        {errors.password1 && <p>{errors.password1.message}</p>}
+        {errors.password && <p>{errors.password.message}</p>}
       </div>
       <button type="submit" style={{ display: "none" }} id="hidden-submit" />
     </form>
   );
 };
 
-export default CreateAccount;
+export default LogIn;
