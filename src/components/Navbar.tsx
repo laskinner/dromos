@@ -108,6 +108,8 @@ const NavBar: React.FC = () => {
                 <Button onClick={handleClickSubmit}>Submit</Button>
               </SheetClose>
             </SheetFooter>
+            <p>Or Login</p>
+            <Button>Login</Button>
           </SheetContent>
         </Sheet>
       </div>

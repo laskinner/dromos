@@ -67,17 +67,17 @@ const CreateAccount: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
       <div>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Username (required)</label>
         <Input {...register("username")} placeholder="Username" />
         {errors.username && <p>{errors.username.message}</p>}
       </div>
       <div>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Email (required)</label>
         <Input {...register("email")} placeholder="Email" />
         {errors.email && <p>{errors.email.message}</p>}
       </div>
       <div>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password (required)</label>
         <Input
           type="password"
           {...register("password1")}
@@ -86,7 +86,7 @@ const CreateAccount: React.FC = () => {
         {errors.password1 && <p>{errors.password1.message}</p>}
       </div>
       <div>
-        <label htmlFor="confirmPassword">Confirm Password</label>
+        <label htmlFor="confirmPassword">Confirm Password (required)</label>
         <Input
           type="password"
           {...register("password2")}
