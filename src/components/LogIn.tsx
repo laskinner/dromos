@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { SetCurrentUserContext } from "@/App";
 
 const formSchema = z.object({
   username: z
@@ -31,13 +32,27 @@ const LogIn: React.FC = () => {
 
   const { toast } = useToast();
 
+  // Inside your LogIn component or wherever the login form submission is handled
+  const setCurrentUser = useContext(SetCurrentUserContext);
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     try {
-      await axios.post("/dj-rest-auth/login/", data);
+      const response = await axios.post("/dj-rest-auth/login/", data);
+      const token = response.data.key; // Assuming token is under `key`
+      localStorage.setItem("token", token); // Save the token for future requests
+
+      // Update the current user state with the logged in user's information
+      // This assumes the backend returns user info along with the token
+      // Adjust according to your actual API response structure
+      if (setCurrentUser) {
+        setCurrentUser(response.data.user);
+      }
+
       toast({
         title: "Login successful",
       });
-      console.log("Login successful", data);
+      console.log("Login successful", response.data);
+
       reset(); // Resets the form fields after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
