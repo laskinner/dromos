@@ -38,13 +38,30 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
     const checkUserStatus = async () => {
       try {
         const { data } = await axios.get("/dj-rest-auth/user/");
         setCurrentUser(data);
       } catch (error) {
-        console.error("Error fetching user:", error);
-        setCurrentUser(null);
+        if (axios.isAxiosError(error)) {
+          // Now TypeScript understands the structure of 'error'.
+          if (error.response && error.response.status === 401) {
+            // Handle unauthorized error, e.g., token expired or invalid
+            localStorage.removeItem("authToken");
+            delete axios.defaults.headers.common["Authorization"];
+            setCurrentUser(null);
+          } else {
+            console.error("Error fetching user:", error.response?.data);
+          }
+        } else {
+          // This block handles cases where the error is not from Axios.
+          console.error("An unexpected error occurred:", error);
+        }
       }
     };
 
