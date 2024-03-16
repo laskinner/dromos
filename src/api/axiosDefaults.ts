@@ -7,9 +7,8 @@ axios.defaults.withCredentials = true;
 // Interceptor to include the token in every request
 axios.interceptors.request.use(
   function (config) {
-    // Retrieve your token from localStorage or sessionStorage
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    // Retrieve your token from localStorage
+    const token = localStorage.getItem("authToken");
 
     // If a token is present, include it in the Authorization header
     if (token) {
