@@ -37,21 +37,21 @@ const LogIn: React.FC = () => {
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     try {
-      const response = await axios.post("/dj-rest-auth/login/", data);
-      const token = response.data.key; // Assuming token is under `key`
+      const loginResponse = await axios.post("/dj-rest-auth/login/", data);
+      const token = loginResponse.data.key; // Assuming token is under `key`
       localStorage.setItem("token", token); // Save the token for future requests
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Update the current user state with the logged in user's information
-      // This assumes the backend returns user info along with the token
-      // Adjust according to your actual API response structure
+      // Now fetch user data
+      const userResponse = await axios.get("/dj-rest-auth/user/");
       if (setCurrentUser) {
-        setCurrentUser(response.data.user);
+        setCurrentUser(userResponse.data); // Update user state with fetched data
       }
 
       toast({
         title: "Login successful",
       });
-      console.log("Login successful", response.data);
+      console.log("Login successful", userResponse.data);
 
       reset(); // Resets the form fields after successful login
     } catch (error) {
