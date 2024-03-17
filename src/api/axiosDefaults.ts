@@ -23,14 +23,22 @@ axios.interceptors.request.use(
   },
 );
 
+interface LoginResponse {
+  access: string;
+  refresh: string;
+  // Add more fields as per your API response
+}
+
+// Update the AuthService with the proper return type
 export const AuthService = {
-  login: async (username: string, password: string) => {
+  login: async (username: string, password: string): Promise<LoginResponse> => {
     try {
-      const response = await axios.post("/dj-rest-auth/login/", {
+      const response = await axios.post<LoginResponse>("/api/token/", {
         username,
         password,
       });
-      localStorage.setItem("authToken", response.data.key);
+      localStorage.setItem("authToken", response.data.access); // Store the access token
+      localStorage.setItem("refreshToken", response.data.refresh); // Store the refresh token if you plan to implement token refresh logic
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -38,23 +46,13 @@ export const AuthService = {
       } else {
         console.error("Login error:", error);
       }
+      // Consider what to re-throw or return in case of error
       throw error;
     }
   },
 
   logout: async () => {
-    try {
-      await axios.post("/dj-rest-auth/logout/");
-      localStorage.removeItem("authToken");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error("Logout error:", error.response.data);
-      } else {
-        console.error("Logout error:", error);
-      }
-      throw error;
-    }
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken"); // Remove the refresh token
   },
-
-  // Additional methods as needed
 };

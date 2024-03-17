@@ -32,7 +32,7 @@ const LogIn: React.FC = () => {
 
   const { toast } = useToast();
 
-  // Inside your LogIn component or wherever the login form submission is handled
+  // Inside LogIn component or wherever the login form submission is handled
   const setCurrentUser = useContext(SetCurrentUserContext);
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
