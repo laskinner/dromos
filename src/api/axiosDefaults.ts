@@ -5,20 +5,17 @@ axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
 axios.defaults.withCredentials = true;
 
 // Interceptor to include the token in every request
-axios.interceptors.request.use(
-  function (config) {
-    // Retrieve the access token from localStorage
-    const token = localStorage.getItem("accessToken"); // Adjusted from "authToken" to "accessToken"
-
-    // If a token is present, include it in the Authorization header
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+axios.interceptors.response.use(
+  (response) => response, // return the response if it's successful without modifying it
+  async (error) => {
+    const originalRequest = error.config;
+    // Check if we received a 401 status code and the request hasn't been retried yet
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // mark this request as retried
+      const newAccessToken = await AuthService.refreshToken(); // get a new token
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`; // update the token in the header
+      return axios(originalRequest); // retry the original request with the new token
     }
-
-    return config;
-  },
-  function (error) {
-    // Do something with request error
     return Promise.reject(error);
   },
 );
@@ -52,5 +49,18 @@ export const AuthService = {
   logout: async () => {
     localStorage.removeItem("accessToken"); // Adjusted key to "accessToken"
     localStorage.removeItem("refreshToken");
+  },
+  refreshToken: async () => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      const response = await axios.post("/api/token/refresh/", {
+        refresh: refreshToken,
+      });
+      localStorage.setItem("accessToken", response.data.access);
+      return response.data.access;
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      throw error;
+    }
   },
 };
