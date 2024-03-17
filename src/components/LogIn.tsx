@@ -16,49 +16,57 @@ const formSchema = z.object({
     .min(6, { message: "Password must be at least 6 characters." }),
 });
 
+type FormData = z.infer<typeof formSchema>;
+
 const LogIn: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
   });
 
   const { toast } = useToast();
 
-  // Inside LogIn component or wherever the login form submission is handled
   const setCurrentUser = useContext(SetCurrentUserContext);
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const loginResponse = await axios.post("/dj-rest-auth/login/", data);
-      const token = loginResponse.data.key; // Assuming token is under `key`
-      localStorage.setItem("token", token); // Save the token for future requests
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // Updates the login endpoint to use the JWT token endpoint
+      const loginResponse = await axios.post("/api/token/", data);
+      // Assumes the response now includes both access and refresh tokens
+      const { access: accessToken, refresh: refreshToken } = loginResponse.data;
+      localStorage.setItem("accessToken", accessToken); // Store access token
+      localStorage.setItem("refreshToken", refreshToken); // Optionally store refresh token
 
-      // Now fetch user data
-      const userResponse = await axios.get("/dj-rest-auth/user/");
+      // Sets default authorization header
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+      // Update or remove the user data fetch
+      // This assumes a separate endpoint to fetch user details
+      const userResponse = await axios.get("/api/profiles/user/"); // Uses simplyjwt intstead of dj-rest
       if (setCurrentUser) {
         setCurrentUser(userResponse.data); // Update user state with fetched data
       }
 
-      toast({
-        title: "Login successful",
-      });
+      toast({ title: "Login successful" });
       console.log("Login successful", userResponse.data);
-
       reset(); // Resets the form fields after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Login error:", error.response?.data);
+        toast({
+          title: "Error logging in",
+          description: error.response?.data.detail || "An error occurred",
+        });
       } else {
         console.error("An unexpected error occurred:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+        });
       }
     }
   };
