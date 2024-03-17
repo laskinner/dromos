@@ -7,8 +7,8 @@ axios.defaults.withCredentials = true;
 // Interceptor to include the token in every request
 axios.interceptors.request.use(
   function (config) {
-    // Retrieve your token from localStorage
-    const token = localStorage.getItem("authToken");
+    // Retrieve the access token from localStorage
+    const token = localStorage.getItem("accessToken"); // Adjusted from "authToken" to "accessToken"
 
     // If a token is present, include it in the Authorization header
     if (token) {
@@ -29,7 +29,6 @@ interface LoginResponse {
   // Add more fields as per your API response
 }
 
-// Update the AuthService with the proper return type
 export const AuthService = {
   login: async (username: string, password: string): Promise<LoginResponse> => {
     try {
@@ -37,8 +36,8 @@ export const AuthService = {
         username,
         password,
       });
-      localStorage.setItem("authToken", response.data.access); // Store the access token
-      localStorage.setItem("refreshToken", response.data.refresh); // Store the refresh token if you plan to implement token refresh logic
+      localStorage.setItem("accessToken", response.data.access); // Adjusted key to "accessToken"
+      localStorage.setItem("refreshToken", response.data.refresh); // Storing the refresh token
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -46,13 +45,12 @@ export const AuthService = {
       } else {
         console.error("Login error:", error);
       }
-      // Consider what to re-throw or return in case of error
       throw error;
     }
   },
 
   logout: async () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("refreshToken"); // Remove the refresh token
+    localStorage.removeItem("accessToken"); // Adjusted key to "accessToken"
+    localStorage.removeItem("refreshToken");
   },
 };
