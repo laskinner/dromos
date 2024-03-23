@@ -36,6 +36,7 @@ const NavBar: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    console.log("Logging out...");
     try {
       await AuthService.logout();
       if (setCurrentUser) {
@@ -118,8 +119,8 @@ const NavBar: React.FC = () => {
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>"View or Edit Account"</SheetTitle>
-                <SheetDescription>"Save or log out below."</SheetDescription>
+                <SheetTitle>View or Edit Account</SheetTitle>
+                <SheetDescription>Save or log out below.</SheetDescription>
               </SheetHeader>
               <EditAccount />
               <SheetFooter className="mb-4 flex justify-between">
