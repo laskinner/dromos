@@ -40,6 +40,7 @@ const NavBar: React.FC = () => {
     try {
       await AuthService.logout();
       if (setCurrentUser) {
+        console.log("User set to null");
         setCurrentUser(null); // Reset currentUser state to null
       } else {
         throw new Error("SetCurrentUserContext not available");
