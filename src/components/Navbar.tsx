@@ -106,8 +106,7 @@ const NavBar: React.FC = () => {
           <Sheet>
             <SheetTrigger asChild>
               <div className="relative cursor-pointer">
-                {/* Visual representation (icon/text) indicating the trigger for the sheet */}
-                // User is logged in
+                {/* Visual representation (icon/text) indicating the trigger for the sheet, and user logged in */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
