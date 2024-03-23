@@ -6,15 +6,28 @@ axios.defaults.withCredentials = true;
 
 // Interceptor to include the token in every request
 axios.interceptors.response.use(
-  (response) => response, // return the response if it's successful without modifying it
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    // Check if we received a 401 status code and the request hasn't been retried yet
+    // Skip retry logic for login or token refresh requests
+    if (
+      originalRequest.url.includes("/api/token/") ||
+      originalRequest.url.includes("/api/token/refresh/")
+    ) {
+      return Promise.reject(error);
+    }
+
     if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // mark this request as retried
-      const newAccessToken = await AuthService.refreshToken(); // get a new token
-      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`; // update the token in the header
-      return axios(originalRequest); // retry the original request with the new token
+      originalRequest._retry = true;
+      try {
+        const newAccessToken = await AuthService.refreshToken();
+        axios.defaults.headers.common["Authorization"] =
+          "Bearer " + newAccessToken;
+        originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
+        return axios(originalRequest);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   },
