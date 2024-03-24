@@ -1,4 +1,5 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
 import { CurrentUserContext, SetCurrentUserContext } from "@/App";
 import { NavLink } from "react-router-dom"; // Change from Link to NavLink
 import {
@@ -28,6 +29,7 @@ import { faCircleNodes } from "@fortawesome/free-solid-svg-icons"; // Ensure thi
 const NavBar: React.FC = () => {
   const currentUser = useContext(CurrentUserContext);
   const setCurrentUser = useContext(SetCurrentUserContext);
+  const [userProfileImage, setUserProfileImage] = useState(""); // State to store the user's profile image URL
   const [isCreatingAccount, setIsCreatingAccount] = useState(true); // Default to showing the create account form
   const toggleForm = () => setIsCreatingAccount(!isCreatingAccount);
   const handleClickSubmit = () => {
@@ -36,6 +38,23 @@ const NavBar: React.FC = () => {
       hiddenSubmitButton.click();
     }
   };
+
+  useEffect(() => {
+    // Moved fetchUserProfile inside useEffect
+    const fetchUserProfile = async () => {
+      if (currentUser?.id) {
+        // Use optional chaining to safely access id
+        try {
+          const response = await axios.get("/api/profiles/user/"); // Adjust as necessary
+          setUserProfileImage(response.data.image);
+        } catch (error) {
+          console.error("Failed to fetch user profile", error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [currentUser]); // currentUser is a dependency of useEffect now
 
   const handleLogout = async () => {
     console.log("Logging out...");
@@ -104,7 +123,7 @@ const NavBar: React.FC = () => {
         </NavLink>
       </div>
       <div className="flex-1 text-right">
-        {currentUser ? (
+        {currentUser?.id ? (
           <Sheet>
             <SheetTrigger asChild>
               <div className="relative cursor-pointer">
@@ -112,7 +131,16 @@ const NavBar: React.FC = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <i className="fa-solid fa-user text-slate-900 text-3xl cursor-pointer"></i>
+                      {/* Display the user's profile image if available, otherwise show an icon */}
+                      {userProfileImage ? (
+                        <img
+                          src={userProfileImage}
+                          alt="Profile"
+                          className="rounded-full w-12 h-12"
+                        />
+                      ) : (
+                        <i className="fa-solid fa-user text-slate-900 text-3xl cursor-pointer"></i>
+                      )}
                     </TooltipTrigger>
                     <TooltipContent>Edit Account</TooltipContent>
                   </Tooltip>

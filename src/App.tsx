@@ -23,10 +23,12 @@ export interface UserType {
   // Define user properties here
   username: string;
   email: string;
+  id: string;
   // Optional properties
   firstName?: string;
   lastName?: string;
   bio?: string;
+  image?: string;
 }
 
 export const CurrentUserContext = createContext<UserType | null>(null);
