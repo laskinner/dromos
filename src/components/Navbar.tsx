@@ -22,6 +22,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNodes } from "@fortawesome/free-solid-svg-icons"; // Ensure this is the correct import path for the icon
 
 const NavBar: React.FC = () => {
   const currentUser = useContext(CurrentUserContext);
@@ -92,7 +94,7 @@ const NavBar: React.FC = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <i className="fa-regular fa-circle-nodes"></i>
+                <FontAwesomeIcon icon={faCircleNodes} />
               </TooltipTrigger>
               <TooltipContent>
                 <p>View Node Graphs</p>
@@ -119,7 +121,7 @@ const NavBar: React.FC = () => {
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>View or Edit Account</SheetTitle>
+                <SheetTitle>Edit Account</SheetTitle>
                 <SheetDescription>Save or log out below.</SheetDescription>
               </SheetHeader>
               <EditAccount />
