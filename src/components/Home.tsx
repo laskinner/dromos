@@ -7,6 +7,7 @@ interface Area {
   id: string;
   name: string;
   description: string;
+  image: string; // Add image field
 }
 
 const Home: React.FC = () => {
@@ -46,20 +47,22 @@ const Home: React.FC = () => {
         Graphs with recent updates
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {areas.map(
-          (
-            area, // Maps through areas
-          ) => (
-            <Card key={area.id}>
-              <CardHeader>
-                <CardTitle>{area.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{area.description}</p>
-              </CardContent>
-            </Card>
-          ),
-        )}
+        {areas.map((area) => (
+          <Card key={area.id}>
+            <CardHeader>
+              <CardTitle>{area.name}</CardTitle>
+              {/* Display area image */}
+              <img
+                src={area.image}
+                alt={area.name}
+                className="w-full h-40 object-cover"
+              />
+            </CardHeader>
+            <CardContent>
+              <p>{area.description}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
