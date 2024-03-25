@@ -83,8 +83,8 @@ const GraphView: React.FC = () => {
           ))}
         </div>
       </ScrollArea>
-      {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}{" "}
       {/* Conditional rendering */}
+      {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}{" "}
     </div>
   );
 };
