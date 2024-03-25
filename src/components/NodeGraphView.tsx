@@ -72,7 +72,9 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
     return () => sigmaInstance.kill(); // Cleanup the sigma instance on component unmount
   }, [graphData]);
 
-  return <div ref={containerRef} style={{ height: "500px" }}></div>;
+  return (
+    <div ref={containerRef} style={{ width: "100%", height: "500px" }}></div>
+  );
 };
 
 export default NodeGraphView;
