@@ -61,10 +61,10 @@ const GraphView: React.FC = () => {
   return (
     <div className="flex h-screen">
       <aside className="w-64 p-4">
-        <ScrollArea className="w-full h-full bg-gray-200 shadow-gray-200 overflow-y-auto rounded-full border">
-          <div className="flex flex-col space-y-4 p-2">
+        <ScrollArea className="w-full h-full bg-gray-200 shadow-lg overflow-y-auto rounded-lg border">
+          <div className="flex flex-col space-y-2 p-2">
             {areas.map((area) => (
-              <Card>
+              <Card className="rounded-xl py-2 px-4">
                 <CardContent>
                   <div
                     key={area.id}
@@ -74,7 +74,7 @@ const GraphView: React.FC = () => {
                     <img
                       src={area.image}
                       alt={area.name}
-                      className="w-10 h-10 object-cover rounded-md"
+                      className="w-10 h-10 object-cover rounded-full"
                     />
                     <div>
                       <h2 className="text-lg font-semibold">{area.name}</h2>
