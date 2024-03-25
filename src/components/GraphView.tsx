@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import NodeGraphView from "@/components/NodeGraphView";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Interface for an area
 export interface Area {
@@ -60,24 +61,28 @@ const GraphView: React.FC = () => {
   return (
     <div className="flex h-screen">
       <aside className="w-64 p-4">
-        <ScrollArea className="w-full bg-gray-300 shadow-gray-50 overflow-y-auto rounded-md border">
+        <ScrollArea className="w-full h-full bg-gray-300 shadow-gray-50 overflow-y-auto rounded-md border">
           <div className="flex flex-col space-y-4 p-4">
             {areas.map((area) => (
-              <div
-                key={area.id}
-                className="flex items-center space-x-4 cursor-pointer"
-                onClick={() => handleAreaClick(area.id)}
-              >
-                <img
-                  src={area.image}
-                  alt={area.name}
-                  className="w-20 h-20 object-cover rounded-full"
-                />
-                <div>
-                  <h2 className="text-xl font-semibold">{area.name}</h2>
-                  {/* Render additional area details here */}
-                </div>
-              </div>
+              <Card>
+                <CardContent>
+                  <div
+                    key={area.id}
+                    className="flex items-center space-x-4 cursor-pointer"
+                    onClick={() => handleAreaClick(area.id)}
+                  >
+                    <img
+                      src={area.image}
+                      alt={area.name}
+                      className="w-20 h-20 object-cover rounded-full"
+                    />
+                    <div>
+                      <h2 className="text-xl font-semibold">{area.name}</h2>
+                      {/* Render additional area details here */}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </ScrollArea>
