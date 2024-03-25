@@ -52,11 +52,28 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
       containerRef.current.offsetWidth > 0 &&
       containerRef.current.offsetHeight > 0
     ) {
+      console.log("Graph data:", graphData); // Log to verify data structure
+
       const graph = new Graph();
-      graphData.nodes.forEach((node) => graph.addNode(node.id, node));
-      graphData.edges.forEach((edge) =>
-        graph.addEdge(edge.source, edge.target, edge),
-      );
+      graphData.nodes.forEach((node) => {
+        graph.addNode(node.id, {
+          label: node.label,
+          x: node.x || Math.random(), // Fallback to random if no x, y provided
+          y: node.y || Math.random(),
+          size: node.size || 1,
+          color: node.color || "#666",
+        });
+      });
+
+      graphData.edges.forEach((edge) => {
+        if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
+          // Check if source and target nodes exist
+          graph.addEdge(edge.source, edge.target, {
+            size: edge.size || 1,
+            color: edge.color || "#ccc",
+          });
+        }
+      });
 
       // Initialize Sigma without 'renderer' options since it's not accepted here.
       const sigmaInstance = new Sigma(graph, containerRef.current);
