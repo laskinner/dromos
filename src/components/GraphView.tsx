@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import NodeGraphView from "@/components/NodeGraphView";
 
 // Interface for an area
 export interface Area {
@@ -14,6 +15,7 @@ const GraphView: React.FC = () => {
   const [areas, setAreas] = useState<Area[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null); // Track selected area ID
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -33,12 +35,26 @@ const GraphView: React.FC = () => {
     fetchAreas();
   }, []);
 
+  const handleAreaClick = (areaId: string) => {
+    console.log("Area clicked:", areaId);
+    setSelectedAreaId(areaId); // Update state to indicate selected area
+    // Later, this will trigger rendering of the node graph for this area
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        Error: {error}
+      </div>
+    );
   }
 
   return (
@@ -49,7 +65,11 @@ const GraphView: React.FC = () => {
       <ScrollArea className="w-full h-96 overflow-y-auto">
         <div className="flex flex-col space-y-4 p-4">
           {areas.map((area) => (
-            <div key={area.id} className="flex items-center space-x-4">
+            <div
+              key={area.id}
+              className="flex items-center space-x-4 cursor-pointer"
+              onClick={() => handleAreaClick(area.id)}
+            >
               <img
                 src={area.image}
                 alt={area.name}
@@ -63,6 +83,8 @@ const GraphView: React.FC = () => {
           ))}
         </div>
       </ScrollArea>
+      {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}{" "}
+      {/* Conditional rendering */}
     </div>
   );
 };
