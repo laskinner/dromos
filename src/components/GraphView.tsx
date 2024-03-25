@@ -59,11 +59,11 @@ const GraphView: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
-        Welcome to the Graph View!
-      </h1>
       <ScrollArea className="w-full h-96 overflow-y-auto">
         <div className="flex flex-col space-y-4 p-4">
+          <h4 className="mb-4 text-sm font-medium leading-none">
+            Available Networks
+          </h4>
           {areas.map((area) => (
             <div
               key={area.id}
