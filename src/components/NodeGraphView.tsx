@@ -37,44 +37,35 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
 
   useEffect(() => {
     const fetchGraphData = async () => {
-      // Adjust this URL to match the correct endpoint for fetching graph data for a specific area, should the GraphView in back-end be refactored
       const response = await axios.get(`/api/graph-data/${areaId}/`);
-
       setGraphData(response.data);
     };
-
     fetchGraphData();
   }, [areaId]);
 
   useEffect(() => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
-    const graph = new Graph();
-    graphData.nodes.forEach((node) => {
-      graph.addNode(node.id, {
-        label: node.label,
-        x: node.x,
-        y: node.y,
-        size: node.size,
-        color: node.color,
-      });
-    });
+    // A more sophisticated check here to ensure the styling
+    // guarantees the container will have size before this code executes could be needed.
+    if (
+      containerRef.current.offsetWidth > 0 &&
+      containerRef.current.offsetHeight > 0
+    ) {
+      const graph = new Graph();
+      graphData.nodes.forEach((node) => graph.addNode(node.id, node));
+      graphData.edges.forEach((edge) =>
+        graph.addEdge(edge.source, edge.target, edge),
+      );
 
-    graphData.edges.forEach((edge) => {
-      graph.addEdge(edge.source, edge.target, {
-        size: edge.size || 1,
-        color: edge.color || "grey",
-      });
-    });
+      // Initialize Sigma without 'renderer' options since it's not accepted here.
+      const sigmaInstance = new Sigma(graph, containerRef.current);
 
-    const sigmaInstance = new Sigma(graph, containerRef.current);
-
-    return () => sigmaInstance.kill(); // Cleanup the sigma instance on component unmount
+      return () => sigmaInstance.kill(); // Cleanup on unmount
+    }
   }, [graphData]);
 
-  return (
-    <div ref={containerRef} style={{ width: "100%", height: "500px" }}></div>
-  );
+  return <div ref={containerRef} style={{ width: "100%", height: "500px" }} />;
 };
 
 export default NodeGraphView;
