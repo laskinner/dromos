@@ -58,33 +58,36 @@ const GraphView: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <ScrollArea className="w-full h-96 overflow-y-auto">
-        <div className="flex flex-col space-y-4 p-4">
-          <h4 className="mb-4 text-sm font-medium leading-none">
-            Available Networks
-          </h4>
-          {areas.map((area) => (
-            <div
-              key={area.id}
-              className="flex items-center space-x-4 cursor-pointer"
-              onClick={() => handleAreaClick(area.id)}
-            >
-              <img
-                src={area.image}
-                alt={area.name}
-                className="w-20 h-20 object-cover rounded-full"
-              />
-              <div>
-                <h2 className="text-xl font-semibold">{area.name}</h2>
-                {/* Render additional area details here */}
+    <div className="flex h-screen">
+      <aside className="w-64 bg-gray-800 p-4 overflow-y-auto">
+        <ScrollArea className="w-full h-96 overflow-y-auto">
+          <div className="flex flex-col space-y-4 p-4">
+            <h4 className="mb-4 text-sm font-medium leading-none">
+              Available Networks
+            </h4>
+            {areas.map((area) => (
+              <div
+                key={area.id}
+                className="flex items-center space-x-4 cursor-pointer"
+                onClick={() => handleAreaClick(area.id)}
+              >
+                <img
+                  src={area.image}
+                  alt={area.name}
+                  className="w-20 h-20 object-cover rounded-full"
+                />
+                <div>
+                  <h2 className="text-xl font-semibold">{area.name}</h2>
+                  {/* Render additional area details here */}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
-      {/* Conditional rendering */}
-      {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}{" "}
+            ))}
+          </div>
+        </ScrollArea>
+      </aside>
+      <main className="flex-1 p-4">
+        {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}
+      </main>
     </div>
   );
 };
