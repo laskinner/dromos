@@ -64,7 +64,7 @@ const GraphView: React.FC = () => {
         <ScrollArea className="w-full h-full bg-gray-200 shadow-lg overflow-y-auto rounded-lg border p-2">
           <div className="flex flex-col space-y-2">
             {areas.map((area) => (
-              <Card className="rounded-xl">
+              <Card className="rounded-xl p-4">
                 <CardContent>
                   <div
                     key={area.id}
