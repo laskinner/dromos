@@ -61,10 +61,10 @@ const GraphView: React.FC = () => {
   return (
     <div className="flex h-screen">
       <aside className="w-64 p-4">
-        <ScrollArea className="w-full h-full bg-gray-200 shadow-lg overflow-y-auto rounded-lg border">
-          <div className="flex flex-col space-y-2 p-2">
+        <ScrollArea className="w-full h-full bg-gray-200 shadow-lg overflow-y-auto rounded-lg border p-2">
+          <div className="flex flex-col space-y-2">
             {areas.map((area) => (
-              <Card className="rounded-xl py-2 px-4">
+              <Card className="rounded-xl">
                 <CardContent>
                   <div
                     key={area.id}
@@ -77,7 +77,7 @@ const GraphView: React.FC = () => {
                       className="w-10 h-10 object-cover rounded-full"
                     />
                     <div>
-                      <h2 className="text-lg font-semibold">{area.name}</h2>
+                      <h2 className="text-md font-semibold">{area.name}</h2>
                       {/* Render any desired additional area details here */}
                     </div>
                   </div>
