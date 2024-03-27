@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
         Graphs with recent updates
       </h1>
