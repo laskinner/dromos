@@ -71,12 +71,21 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
           graph.addEdge(edge.source, edge.target, {
             size: edge.size || 1,
             color: edge.color || "#ccc",
+            type: "arrow",
           });
         }
       });
 
       // Initialize Sigma without 'renderer' options since it's not accepted here.
       const sigmaInstance = new Sigma(graph, containerRef.current);
+
+      sigmaInstance.setSetting("nodeReducer", (_node, data) => {
+        return { ...data, size: data.size * 2 }; // Adjusts the node size
+      });
+
+      sigmaInstance.setSetting("edgeReducer", (_edge, data) => {
+        return { ...data, size: Math.max(data.size, 2) }; // Adjusts the node size
+      });
 
       return () => sigmaInstance.kill(); // Cleanup on unmount
     }
