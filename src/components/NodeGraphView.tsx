@@ -60,7 +60,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
           label: node.label,
           x: node.x || Math.random(), // Fallback to random if no x, y provided
           y: node.y || Math.random(),
-          size: node.size || 1,
+          size: node.size || 4,
           color: node.color || "#666",
         });
       });
@@ -69,7 +69,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
         if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
           // Check if source and target nodes exist
           graph.addEdge(edge.source, edge.target, {
-            size: edge.size || 1,
+            size: edge.size || 2,
             color: edge.color || "#ccc",
             type: "arrow",
           });
