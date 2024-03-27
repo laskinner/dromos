@@ -60,7 +60,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
           label: node.label,
           x: node.x || Math.random(), // Fallback to random if no x, y provided
           y: node.y || Math.random(),
-          size: node.size || 20,
+          size: node.size || 10,
           color: node.color || "#666",
         });
       });
