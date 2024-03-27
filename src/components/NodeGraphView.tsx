@@ -69,7 +69,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
         if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
           // Check if source and target nodes exist
           graph.addEdge(edge.source, edge.target, {
-            size: edge.size || 4,
+            size: edge.size || 6,
             color: edge.color || "#ccc",
             type: "arrow",
           });
