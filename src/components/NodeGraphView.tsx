@@ -2,6 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import Graph from "graphology";
 import Sigma from "sigma";
 import axios from "axios";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 interface NodeData {
   id: string;
@@ -29,6 +37,10 @@ interface NodeGraphViewProps {
 }
 
 const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
+  // Drawer state hooks
+  const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [graphData, setGraphData] = useState<GraphData>({
     nodes: [],
@@ -46,8 +58,8 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
   useEffect(() => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
-    // A more sophisticated check here to ensure the styling
-    // guarantees the container will have size before this code executes could be needed.
+    // Checks the styling, guarantees the container will
+    // have size before this code executes.
     if (
       containerRef.current.offsetWidth > 0 &&
       containerRef.current.offsetHeight > 0
@@ -89,15 +101,41 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
         return { ...data, size: Math.max(data.size, 2) }; // Adjusts the node size
       });
 
+      sigmaInstance.on("clickNode", ({ node }) => {
+        const nodeData = graph.getNodeAttributes(node) as NodeData;
+        setSelectedNode(nodeData); // Update state with the selected node data
+        setIsDrawerOpen(true); // Open the drawer
+      });
+
       return () => sigmaInstance.kill(); // Cleanup on unmount
     }
   }, [graphData]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full border border-border shadow-lg rounded-lg"
-    />
+    <div className="node-graph-view">
+      <div
+        ref={containerRef}
+        className="w-full h-full border border-border shadow-lg rounded-lg"
+      />
+      {/* Conditionally render the Drawer based on isDrawerOpen state */}
+      {isDrawerOpen && (
+        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+          <DrawerHeader>
+            <DrawerTitle>Node Details</DrawerTitle>
+          </DrawerHeader>
+          <DrawerContent>
+            {/* Display selected node details here */}
+            <p>Label: {selectedNode?.label}</p>
+            {/* Add more node details as needed */}
+          </DrawerContent>
+          <DrawerFooter>
+            <DrawerClose>
+              <button onClick={() => setIsDrawerOpen(false)}>Close</button>
+            </DrawerClose>
+          </DrawerFooter>
+        </Drawer>
+      )}
+    </div>
   );
 };
 
