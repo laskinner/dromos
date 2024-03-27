@@ -37,7 +37,7 @@ export const SetCurrentUserContext = createContext<
 >(undefined);
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -75,9 +75,7 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <SetCurrentUserContext.Provider
-        value={setCurrentUser as Dispatch<SetStateAction<UserType | null>>}
-      >
+      <SetCurrentUserContext.Provider value={setCurrentUser}>
         <div className="flex flex-col h-screen">
           <Navbar />
           <div className="flex-1 overflow-auto">

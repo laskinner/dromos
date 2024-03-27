@@ -59,7 +59,7 @@ const GraphView: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <aside className="w-64 p-4">
         <ScrollArea className="w-full h-1/2 bg-gray-200 shadow-lg overflow-y-auto rounded-lg border p-2">
           <div className="flex flex-col space-y-2">
