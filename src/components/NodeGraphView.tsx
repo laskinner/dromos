@@ -85,7 +85,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full border shadow-lg rounded-lg"
+      className="w-full h-full border border-border shadow-lg rounded-lg"
     />
   );
 };
