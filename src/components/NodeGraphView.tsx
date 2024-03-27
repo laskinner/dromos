@@ -82,7 +82,12 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
     }
   }, [graphData]);
 
-  return <div ref={containerRef} style={{ width: "100%", height: "500px" }} />;
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full border shadow-lg rounded-lg"
+    />
+  );
 };
 
 export default NodeGraphView;
