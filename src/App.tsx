@@ -78,7 +78,7 @@ function App() {
       <SetCurrentUserContext.Provider
         value={setCurrentUser as Dispatch<SetStateAction<UserType | null>>}
       >
-        <div className="flex flex-col h-screen bg-stone-50 m-0">
+        <div className="flex flex-col h-full">
           <Navbar />
           <div className="flex-1 overflow-auto">
             <Routes>
