@@ -78,7 +78,7 @@ function App() {
       <SetCurrentUserContext.Provider value={setCurrentUser}>
         <div className="flex flex-col h-screen">
           <Navbar />
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto h-full">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/create-account" element={<CreateAccount />} />
