@@ -112,7 +112,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
   }, [graphData]);
 
   return (
-    <div className="node-graph-view">
+    <div className="node-graph-view h-full w-full">
       <div
         ref={containerRef}
         className="w-full h-full border border-border shadow-lg rounded-lg"
