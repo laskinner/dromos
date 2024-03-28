@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Graph from "graphology";
 import Sigma from "sigma";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -131,7 +132,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
             </DrawerContent>
             <DrawerFooter>
               <DrawerClose asChild>
-                <button onClick={() => setIsDrawerOpen(false)}>Close</button>
+                <Button variant="outline">Close</Button>
               </DrawerClose>
             </DrawerFooter>
           </Drawer>
