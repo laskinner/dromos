@@ -120,25 +120,23 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
       />
       {/* Conditionally render the Drawer based on isDrawerOpen state */}
       {isDrawerOpen && (
-        <div>
-          <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-            <DrawerContent>
-              <div style={{ minHeight: "200px" }}>
-                <DrawerHeader>
-                  <DrawerTitle>Node Details</DrawerTitle>
-                </DrawerHeader>
-                {/* Display selected node details here */}
-                <p>Label: {selectedNode?.label}</p>
-                {/* Add more node details as needed */}
-                <DrawerFooter>
-                  <DrawerClose asChild>
-                    <Button variant="outline">Close</Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </div>
-            </DrawerContent>
-          </Drawer>
-        </div>
+        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+          <DrawerContent>
+            <div style={{ minHeight: "200px" }}>
+              <DrawerHeader>
+                <DrawerTitle>Node Details</DrawerTitle>
+              </DrawerHeader>
+              {/* Display selected node details here */}
+              <p>Label: {selectedNode?.label}</p>
+              {/* Add more node details as needed */}
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </div>
+          </DrawerContent>
+        </Drawer>
       )}
     </div>
   );
