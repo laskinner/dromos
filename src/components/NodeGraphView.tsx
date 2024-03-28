@@ -130,7 +130,7 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
               {/* Add more node details as needed */}
             </DrawerContent>
             <DrawerFooter>
-              <DrawerClose>
+              <DrawerClose asChild>
                 <button onClick={() => setIsDrawerOpen(false)}>Close</button>
               </DrawerClose>
             </DrawerFooter>
