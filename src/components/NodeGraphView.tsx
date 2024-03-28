@@ -122,19 +122,21 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
       {isDrawerOpen && (
         <div>
           <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-            <DrawerHeader>
-              <DrawerTitle>Node Details</DrawerTitle>
-            </DrawerHeader>
             <DrawerContent>
-              {/* Display selected node details here */}
-              <p>Label: {selectedNode?.label}</p>
-              {/* Add more node details as needed */}
+              <div style={{ minHeight: "200px" }}>
+                <DrawerHeader>
+                  <DrawerTitle>Node Details</DrawerTitle>
+                </DrawerHeader>
+                {/* Display selected node details here */}
+                <p>Label: {selectedNode?.label}</p>
+                {/* Add more node details as needed */}
+                <DrawerFooter>
+                  <DrawerClose asChild>
+                    <Button variant="outline">Close</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </div>
             </DrawerContent>
-            <DrawerFooter>
-              <DrawerClose asChild>
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
           </Drawer>
         </div>
       )}
