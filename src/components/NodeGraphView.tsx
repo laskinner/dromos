@@ -37,16 +37,41 @@ interface NodeGraphViewProps {
   areaId: string;
 }
 
+function useOutsideClick(
+  ref: React.RefObject<HTMLElement>,
+  callback: () => void,
+): void {
+  useEffect(() => {
+    // Correctly type the event parameter as a MouseEvent
+    function handleClickOutside(event: MouseEvent): void {
+      // Adding a type assertion here for ref.current
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        callback();
+      }
+    }
+
+    // Attach the event listener for mousedown events
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up the event listener
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, callback]);
+}
+
 const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
   // Drawer state hooks
   const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null); // Correct placement
   const [graphData, setGraphData] = useState<GraphData>({
     nodes: [],
     edges: [],
   });
+
+  // Call useOutsideClick here
+  useOutsideClick(drawerRef, () => setIsDrawerOpen(false));
 
   useEffect(() => {
     const fetchGraphData = async () => {
@@ -118,25 +143,26 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
         ref={containerRef}
         className="w-full h-full border border-border shadow-lg rounded-lg"
       />
-      {/* Conditionally render the Drawer based on isDrawerOpen state */}
       {isDrawerOpen && (
-        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-          <DrawerContent>
-            <div style={{ minHeight: "200px" }}>
-              <DrawerHeader>
-                <DrawerTitle>Node Details</DrawerTitle>
-              </DrawerHeader>
-              {/* Display selected node details here */}
-              <p>Label: {selectedNode?.label}</p>
-              {/* Add more node details as needed */}
-              <DrawerFooter>
-                <DrawerClose asChild>
-                  <Button variant="outline">Close</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </div>
-          </DrawerContent>
-        </Drawer>
+        // Use the drawerRef here to reference the actual Drawer or its wrapper div
+        <div ref={drawerRef}>
+          <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+            <DrawerContent>
+              <div style={{ minHeight: "200px" }}>
+                <DrawerHeader>
+                  <DrawerTitle>Node Details</DrawerTitle>
+                </DrawerHeader>
+                {/* Node details */}
+                <p>{selectedNode?.label}</p>
+                <DrawerFooter>
+                  <DrawerClose asChild>
+                    <Button variant="outline">Close</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </div>
       )}
     </div>
   );
