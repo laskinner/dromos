@@ -112,10 +112,32 @@ const NodeGraphView: React.FC<NodeGraphViewProps> = ({ areaId }) => {
   }, [graphData]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full border border-border shadow-lg rounded-lg"
-    />
+    <div className="node-graph-view">
+      <div
+        ref={containerRef}
+        className="w-full h-full border border-border shadow-lg rounded-lg"
+      />
+      {/* Conditionally render the Drawer based on isDrawerOpen state */}
+      {isDrawerOpen && (
+        <div>
+          <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+            <DrawerHeader>
+              <DrawerTitle>Node Details</DrawerTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              {/* Display selected node details here */}
+              <p>Label: {selectedNode?.label}</p>
+              {/* Add more node details as needed */}
+            </DrawerContent>
+            <DrawerFooter>
+              <DrawerClose>
+                <button onClick={() => setIsDrawerOpen(false)}>Close</button>
+              </DrawerClose>
+            </DrawerFooter>
+          </Drawer>
+        </div>
+      )}
+    </div>
   );
 };
 
