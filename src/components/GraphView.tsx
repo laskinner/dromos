@@ -87,7 +87,68 @@ const GraphView: React.FC = () => {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex">
+      <main className="flex-1 p-4">
+        <div className="flex justify-between mb-4">
+          <div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">Create Graph</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create Graph</DialogTitle>
+                  <DialogDescription>
+                    Add new graph details here. Click save when you're done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value="Graph Name"
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="content" className="text-right">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="content"
+                      value="Description"
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div>
+                    <Switch id="is_public" />
+                    <Label htmlFor="is_public"> Private</Label>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit">Save changes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <Select onValueChange={handleSelectArea}>
+            <SelectTrigger>
+              <SelectValue>Select a Graph</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {areas.map((area) => (
+                <SelectItem key={area.id} value={area.id}>
+                  {area.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}
+      </main>
       <aside className="w-64 p-4">
         <Select onValueChange={handleSelectArea}>
           <SelectTrigger className="w-full">
@@ -101,44 +162,6 @@ const GraphView: React.FC = () => {
             ))}
           </SelectContent>
         </Select>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Create Graph</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create Graph</DialogTitle>
-              <DialogDescription>
-                Add new graph details here. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input id="name" value="Graph Name" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="content" className="text-right">
-                  Description
-                </Label>
-                <Textarea
-                  id="content"
-                  value="Description"
-                  className="col-span-3"
-                />
-              </div>
-              <div>
-                <Switch id="is_public" />
-                <Label htmlFor="is_public"> Private</Label>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
         {areas.map((area) => (
           <Card key={area.id}>
             <CardHeader>
@@ -206,9 +229,6 @@ const GraphView: React.FC = () => {
           </CardFooter>
         </Card>
       </aside>
-      <main className="flex-1 p-4">
-        {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}
-      </main>
     </div>
   );
 };
