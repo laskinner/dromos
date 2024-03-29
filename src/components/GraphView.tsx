@@ -149,29 +149,21 @@ const GraphView: React.FC = () => {
         </div>
         {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}
       </main>
-      <aside className="w-64 p-4">
-        <Select onValueChange={handleSelectArea}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a Graph" />
-          </SelectTrigger>
-          <SelectContent>
-            {areas.map((area) => (
-              <SelectItem key={area.id} value={area.id}>
-                {area.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {areas.map((area) => (
-          <Card key={area.id}>
+      {selectedAreaId && (
+        <aside className="w-64 p-4">
+          <Card key={selectedAreaId}>
             <CardHeader>
-              <CardTitle>{area.name}</CardTitle>
-              <CardDescription>{area.content}</CardDescription>
+              <CardTitle>
+                {areas.find((area) => area.id === selectedAreaId)?.name}
+              </CardTitle>
+              <CardDescription>
+                {areas.find((area) => area.id === selectedAreaId)?.content}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <img
-                src={area.image}
-                alt={area.name}
+                src={areas.find((area) => area.id === selectedAreaId)?.image}
+                alt={areas.find((area) => area.id === selectedAreaId)?.name}
                 className="w-10 h-10 object-cover rounded-full"
               />
             </CardContent>
@@ -216,19 +208,19 @@ const GraphView: React.FC = () => {
               </Dialog>
             </CardFooter>
           </Card>
-        ))}
-        <Card>
-          <CardHeader>
-            <p>Select a node</p>
-          </CardHeader>
-          <CardContent>
-            <p>Node content goes here</p>
-          </CardContent>
-          <CardFooter>
-            <Button>Enter Node View</Button>
-          </CardFooter>
-        </Card>
-      </aside>
+          <Card>
+            <CardHeader>
+              <p>Select a node</p>
+            </CardHeader>
+            <CardContent>
+              <p>Node content goes here</p>
+            </CardContent>
+            <CardFooter>
+              <Button>Enter Node View</Button>
+            </CardFooter>
+          </Card>
+        </aside>
+      )}
     </div>
   );
 };
