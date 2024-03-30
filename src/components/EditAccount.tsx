@@ -1,20 +1,18 @@
-// Assuming you have defined a UserType elsewhere in your application
-import { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios"; // Make sure to import AxiosError
-import { CurrentUserContext, UserType } from "@/App";
+import axios from "axios";
+import { useUserStore } from "@/stores/useUserStore";
 
 const formSchema = z.object({
   username: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
+    .min(2, { message: "Username must be at least 2 characters long." }),
   email: z.string().email({ message: "Invalid email address." }),
-  // Omitting password for simplicity in this example
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   bio: z
@@ -23,39 +21,43 @@ const formSchema = z.object({
     .optional(),
 });
 
-// Ensure your component receives any props as needed
+type FormData = z.infer<typeof formSchema>;
+
 const EditAccount: React.FC = () => {
-  const currentUser = useContext<UserType | null>(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useUserStore(); // Use Zustand store
   const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    // This will correctly handle an undefined currentUser
-    defaultValues: currentUser || {},
+    defaultValues: currentUser ?? {},
   });
 
   useEffect(() => {
-    // This effect will update the form's default values when currentUser changes
-    reset(currentUser || {});
+    // Update form default values if currentUser changes
+    reset(currentUser ?? {});
   }, [currentUser, reset]);
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      await axios.put("/api/user/update/", data); // Ensure you have the correct endpoint
+      await axios.put("/api/user/update/", data);
+      setCurrentUser({ ...currentUser, ...data }); // Update local user state with new data
       toast({ title: "Account updated successfully" });
-      console.log("Update successful", data);
-      // Optionally reset form here
-    } catch (error: unknown) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
-        // TypeScript now understands error is an AxiosError.
-        console.error("Update error:", error.response?.data);
+        toast({
+          title: "Error updating account",
+          description: error.response?.data.detail || "An error occurred",
+        });
       } else {
-        // Handle any other errors that might occur
-        console.error("An unexpected error occurred:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+        });
       }
     }
   };
@@ -114,7 +116,9 @@ const EditAccount: React.FC = () => {
           )}
         </div>
       </div>
-      <button type="submit" style={{ display: "none" }} id="hidden-submit" />
+      <button type="submit" className="btn-primary">
+        Update Account
+      </button>{" "}
     </form>
   );
 };

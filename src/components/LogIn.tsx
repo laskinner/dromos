@@ -1,19 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { SetCurrentUserContext } from "@/App";
+import useUserStore from "@/stores/useUserStore"; // Import Zustand store hook
 
 const formSchema = z.object({
   username: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
+    .min(2, { message: "Username must be at least 2 characters long." }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
+    .min(6, { message: "Password must be at least 6 characters long." }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -29,40 +29,28 @@ const LogIn: React.FC = () => {
   });
 
   const { toast } = useToast();
-
-  const setCurrentUser = useContext(SetCurrentUserContext);
+  const { setCurrentUser } = useUserStore(); // Use Zustand store for setting the current user
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      // Updates the login endpoint to use the JWT token endpoint
       const loginResponse = await axios.post("/api/token/", data);
-      // Assumes the response now includes both access and refresh tokens
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
-      localStorage.setItem("accessToken", accessToken); // Store access token
-      localStorage.setItem("refreshToken", refreshToken); // Optionally store refresh token
-
-      // Sets default authorization header
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      // Update or remove the user data fetch
-      // This assumes a separate endpoint to fetch user details
-      const userResponse = await axios.get("/api/profiles/user/"); // Uses simplyjwt intstead of dj-rest
-      if (setCurrentUser) {
-        setCurrentUser(userResponse.data); // Update user state with fetched data
-      }
+      const userResponse = await axios.get("/api/profiles/user/");
+      setCurrentUser(userResponse.data); // Update Zustand store with the user data
 
       toast({ title: "Login successful" });
-      console.log("Login successful", userResponse.data);
       reset(); // Resets the form fields after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Login error:", error.response?.data);
         toast({
           title: "Error logging in",
           description: error.response?.data.detail || "An error occurred",
         });
       } else {
-        console.error("An unexpected error occurred:", error);
         toast({
           title: "Error",
           description: "An unexpected error occurred",
@@ -85,7 +73,10 @@ const LogIn: React.FC = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
-      <button type="submit" style={{ display: "none" }} id="hidden-submit" />
+      <button type="submit" className="btn-primary">
+        Log In
+      </button>{" "}
+      {/* Customize with your styling */}
     </form>
   );
 };

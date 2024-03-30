@@ -5,26 +5,29 @@ import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  password1: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
-  password2: z
-    .string()
-    .min(6, { message: "Confirm Password must match Password." }),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  bio: z
-    .string()
-    .max(250, { message: "Bio cannot exceed 250 characters." })
-    .optional(),
-});
+// Updated form schema with password confirmation logic
+const formSchema = z
+  .object({
+    username: z.string().min(2, "Username must be at least 2 characters."),
+    email: z.string().email("Invalid email address."),
+    password1: z.string().min(6, "Password must be at least 6 characters."),
+    password2: z.string().min(6, "Confirm Password must match Password."),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    bio: z
+      .string()
+      .max(250, { message: "Bio cannot exceed 250 characters." })
+      .optional(),
+  })
+  .refine((data) => data.password1 === data.password2, {
+    message: "Passwords do not match.",
+    path: ["password2"], // Specify the path of the field that the error should be associated with
+  });
+
+type FormData = z.infer<typeof formSchema>;
 
 const CreateAccount: React.FC = () => {
   const {
@@ -32,34 +35,39 @@ const CreateAccount: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password1: "",
-      password2: "",
-      firstName: "",
-      lastName: "",
-      bio: "",
-    },
   });
 
   const { toast } = useToast();
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const postData = {
+      username: data.username,
+      email: data.email,
+      password: data.password1, // Assuming your API expects a "password" field
+      firstName: data.firstName,
+      lastName: data.lastName,
+      bio: data.bio,
+    };
+
     try {
-      await axios.post("/dj-rest-auth/registration/", data);
-      toast({
-        title: "Account created successfully",
-      });
-      console.log("Registration successful", data);
-      reset(); // Reset the form fields
+      await axios.post("/dj-rest-auth/registration/", postData);
+      toast({ title: "Account created successfully" });
+      reset(); // Reset the form fields after successful registration
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Registration error:", error.response?.data);
+        toast({
+          title: "Error creating account",
+          description: error.response?.data.detail || "An error occurred",
+        });
       } else {
         console.error("An unexpected error occurred:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred",
+        });
       }
     }
   };
@@ -92,7 +100,7 @@ const CreateAccount: React.FC = () => {
         </div>
         <div className="mb-4">
           <Input
-            type="password"
+            type="dassword"
             {...register("password1")}
             placeholder="Password"
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -144,7 +152,9 @@ const CreateAccount: React.FC = () => {
           )}
         </div>
       </div>
-      <button type="submit" style={{ display: "none" }} id="hidden-submit" />
+      <Button type="submit" className="btn-primary">
+        Create Account
+      </Button>
     </form>
   );
 };

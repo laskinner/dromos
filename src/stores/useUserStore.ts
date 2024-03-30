@@ -1,25 +1,36 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
-// Define a type for user's  state
-interface UserState {
-  currentUser: UserType | null;
-  setCurrentUser: (user: UserType | null) => void;
-}
-
-// Defines user types
 interface UserType {
-  username: string;
-  email: string;
-  id: string;
+  username?: string;
+  email?: string;
+  id?: string;
   firstName?: string;
   lastName?: string;
   bio?: string;
   image?: string;
 }
 
-const useUserStore = create<UserState>((set) => ({
-  currentUser: null,
-  setCurrentUser: (user: UserType | null) => set({ currentUser: user }),
-}));
+interface UserState {
+  currentUser: UserType | null;
+}
 
-export default useUserStore;
+interface UserActions {
+  setCurrentUser: (user: Partial<UserType> | null) => void;
+}
+
+export const useUserStore = create<UserState & UserActions>()(
+  immer((set) => ({
+    currentUser: null,
+    setCurrentUser: (user) => {
+      set((state) => {
+        if (user === null) {
+          state.currentUser = null;
+        } else {
+          // Ensures we're not spreading "null" into the state.
+          state.currentUser = { ...state.currentUser, ...user };
+        }
+      });
+    },
+  })),
+);
