@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import CreateAccount from "@/components/CreateAccount";
 import LogIn from "@/components/LogIn";
 import EditAccount from "@/components/EditAccount";
-import useUserStore from "@/stores/useUserStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 // Assuming Tooltip related imports are correct and available in your project
 import {
