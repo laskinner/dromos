@@ -11,7 +11,7 @@ import GraphView from "@/components/GraphView";
 import LogIn from "@/components/LogIn";
 import "./api/axiosDefaults.ts";
 import { Toaster } from "@/components/ui/toaster";
-import useUserStore from "@/stores/useUserStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 function App() {
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
