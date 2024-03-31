@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useUserStore } from "@/stores/useUserStore"; // Import Zustand store hook
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   username: z
@@ -73,9 +74,9 @@ const LogIn: React.FC = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
-      <button type="submit" className="btn-primary">
+      <Button type="submit" className="btn-primary">
         Log In
-      </button>{" "}
+      </Button>
       {/* Customize with your styling */}
     </form>
   );

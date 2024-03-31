@@ -88,9 +88,7 @@ const LoginSheet: React.FC = () => {
           {showLoginForm ? <LogIn /> : <CreateAccount />}
           <SheetFooter>
             <Button variant="outline" onClick={toggleForm}>
-              {showLoginForm
-                ? "Need an account? Create One"
-                : "Already have an account? Log In"}
+              {showLoginForm ? "Create Account" : "Log In"}
             </Button>
           </SheetFooter>
         </SheetContent>
