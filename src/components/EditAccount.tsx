@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { useUserStore } from "@/stores/useUserStore";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   username: z
@@ -116,9 +117,9 @@ const EditAccount: React.FC = () => {
           )}
         </div>
       </div>
-      <button type="submit" className="btn-primary">
-        Update Account
-      </button>{" "}
+      <Button type="submit" className="btn-primary">
+        Save
+      </Button>{" "}
     </form>
   );
 };

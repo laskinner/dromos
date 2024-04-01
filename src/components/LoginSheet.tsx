@@ -39,7 +39,7 @@ const LoginSheet: React.FC = () => {
     return (
       <Sheet>
         <SheetTrigger asChild>
-          <div className="relative cursor-pointer">
+          <div className="relative justify-end cursor-pointer">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -47,7 +47,7 @@ const LoginSheet: React.FC = () => {
                     <img
                       src={userProfileImage}
                       alt="Profile"
-                      className="rounded-full w-12 h-12"
+                      className="rounded-full w-12 h-12 object-cover"
                     />
                   ) : (
                     <i className="fa-solid fa-user text-slate-900 text-3xl cursor-pointer"></i>
