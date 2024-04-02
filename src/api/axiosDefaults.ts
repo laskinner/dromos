@@ -77,3 +77,5 @@ export const AuthService = {
     }
   },
 };
+
+export default axios;
