@@ -4,6 +4,8 @@ import { create } from "zustand";
 interface Area {
   id: string;
   name: string;
+  image: string;
+  content: string;
   // Add other properties as necessary
 }
 

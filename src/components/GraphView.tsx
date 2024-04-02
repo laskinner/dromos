@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import NodeQuickView from "@/components/NodeQuickView";
+import React, { useEffect } from "react";
+import GraphRenderer from "./GraphRenderer";
+import GraphSelector from "./GraphSelector";
+import { useAreaStore } from "@/stores/useAreaStore";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,13 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -42,49 +36,15 @@ export interface Area {
 }
 
 const GraphView: React.FC = () => {
-  const [areas, setAreas] = useState<Area[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null); // Track selected area ID
+  const {
+    areas,
+    selectedAreaId,
+    fetchAreas, // Now using fetchAreas from the store
+  } = useAreaStore();
 
   useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          "https://dromos-backend-1542a6a0bcb1.herokuapp.com/api/areas/",
-        );
-        setAreas(response.data);
-      } catch (error) {
-        console.error("Failed to fetch areas:", error);
-        setError("Failed to fetch areas. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAreas();
-  }, []);
-
-  const handleSelectArea = (areaId: string) => {
-    console.log("Selected Area ID:", areaId);
-    setSelectedAreaId(areaId);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen">
-        Error: {error}
-      </div>
-    );
-  }
+    fetchAreas(); // Fetch areas using the store action
+  }, [fetchAreas]);
 
   return (
     <div className="flex h-full">
@@ -206,23 +166,14 @@ const GraphView: React.FC = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+            <GraphSelector />
           </div>
-          <div className="w-1/4">
-            <Select onValueChange={handleSelectArea}>
-              <SelectTrigger>
-                <SelectValue>Select a Graph</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {areas.map((area) => (
-                  <SelectItem key={area.id} value={area.id}>
-                    {area.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {selectedAreaId ? (
+            <GraphRenderer /> // Assuming GraphRenderer uses selectedAreaId from useAreaStore internally
+          ) : (
+            <div>Select a Graph to view its details.</div>
+          )}
         </div>
-        {selectedAreaId && <NodeQuickView />}
       </main>
     </div>
   );
