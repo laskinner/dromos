@@ -6,7 +6,7 @@ import CreateAccount from "@/components/CreateAccount";
 import Home from "@/components/Home";
 import EditProfile from "@/components/EditAccount";
 import CreateNode from "@/components/CreateNode";
-import CreateNodeGraph from "@/components/CreateNodeGraph";
+import CreateGraph from "@/components/CreateGraph";
 import GraphView from "@/components/GraphView";
 import LogIn from "@/components/LogIn";
 import "./api/axiosDefaults.ts";
@@ -59,7 +59,7 @@ function App() {
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/create-node" element={<CreateNode />} />
-          <Route path="/create-node-graph" element={<CreateNodeGraph />} />
+          <Route path="/create-graph" element={<CreateGraph />} />
           <Route path="/graph-view" element={<GraphView />} />
           <Route path="/log-in" element={<LogIn />} />
           <Route path="/create-account" element={<CreateAccount />} />
