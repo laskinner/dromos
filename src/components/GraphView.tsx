@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import NodeGraphView from "@/components/NodeGraphView";
+import NodeQuickView from "@/components/NodeQuickView";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -222,7 +222,7 @@ const GraphView: React.FC = () => {
             </Select>
           </div>
         </div>
-        {selectedAreaId && <NodeGraphView areaId={selectedAreaId} />}
+        {selectedAreaId && <NodeQuickView />}
       </main>
     </div>
   );

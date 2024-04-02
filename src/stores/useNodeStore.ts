@@ -1,12 +1,36 @@
-import create from "zustand";
+import { create } from "zustand";
 
-const useNodeStore = create((set) => ({
+interface Node {
+  id: string;
+  title: string;
+  // Define other node properties
+}
+
+interface NodeState {
+  nodes: Node[];
+  selectedNodeId: string | null;
+  selectNode: (nodeId: string) => void;
+  fetchNodes: () => Promise<void>;
+  getSelectedNode: () => Node | undefined;
+}
+
+export const useNodeStore = create<NodeState>((set, get) => ({
   nodes: [],
-  selectedNode: null,
-  addNode: (node) => set((state) => ({ nodes: [...state.nodes, node] })),
-  selectNode: (nodeId) =>
-    set((state) => ({
-      selectedNode: state.nodes.find((n) => n.id === nodeId),
-    })),
-  // Add more actions as needed
+  selectedNodeId: null,
+  selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
+  fetchNodes: async () => {
+    try {
+      const response = await fetch("/api/nodes/");
+      const nodes: Node[] = await response.json();
+      set({ nodes });
+    } catch (error) {
+      console.error("Failed to fetch nodes:", error);
+      // Handle error
+    }
+  },
+  getSelectedNode: () => {
+    // Use get() here to access the current state
+    const state = get();
+    return state.nodes.find((node) => node.id === state.selectedNodeId);
+  },
 }));
