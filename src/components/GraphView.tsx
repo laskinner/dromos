@@ -69,7 +69,7 @@ const GraphView: React.FC = () => {
             ) : (
               // Updated text styling for centering and appearance
               <div className="text-center font-semibold text-lg text-gray-700">
-                Select a Graph to view its details.
+                Select a Graph.
               </div>
             )}
           </div>
