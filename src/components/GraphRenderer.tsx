@@ -7,7 +7,7 @@ import { useNodeStore } from "@/stores/useNodeStore";
 import { circularLayout } from "@/lib/layouts/circularLayout";
 import { useLayoutStore } from "@/stores/useLayoutStore";
 // Import centralized types
-import { NodeData, EdgeData } from "@/lib/graphTypes";
+import { NodeData, EdgeData } from "@/lib/interfaces/graphTypes";
 
 interface GraphData {
   nodes: NodeData[];

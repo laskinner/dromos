@@ -25,16 +25,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// Interface for an area
-export interface Area {
-  id: string;
-  name: string;
-  image: string;
-  content: string;
-  is_user_area: boolean;
-  // Add more fields as necessary
-}
-
 const GraphView: React.FC = () => {
   const {
     areas,

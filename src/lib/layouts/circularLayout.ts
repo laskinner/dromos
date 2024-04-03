@@ -1,4 +1,4 @@
-import { LayoutFunction } from "../graphTypes";
+import { LayoutFunction } from "@/lib/interfaces/graphTypes";
 
 export const circularLayout: LayoutFunction = (nodes) => {
   const radius = 100; // Radius of the circle on which nodes will be placed
