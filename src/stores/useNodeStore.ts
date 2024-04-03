@@ -12,7 +12,10 @@ interface NodeState {
 export const useNodeStore = create<NodeState>((set, get) => ({
   nodes: [],
   selectedNodeId: null,
-  selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
+  selectNode: (nodeId) => {
+    console.log("Selecting node:", nodeId); // Debugging log
+    set({ selectedNodeId: nodeId });
+  },
   fetchNodes: async () => {
     try {
       const response = await fetch("/api/nodes/");

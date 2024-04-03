@@ -21,6 +21,7 @@ const NodeQuickView: React.FC = () => {
 
   useEffect(() => {
     const node = getSelectedNode();
+    console.log("Selected node details:", node); // Debugging line
     if (node) {
       setNodeDetails(node);
     } else if (selectedNodeId) {
