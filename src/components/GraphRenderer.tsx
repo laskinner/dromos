@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Graph from "graphology";
 import Sigma from "sigma";
 import axios from "axios";
 import { useAreaStore } from "@/stores/useAreaStore";
-import { useNodeStore } from "@/stores/useNodeStore"; // Import your node store
+import { useNodeStore } from "@/stores/useNodeStore";
 
 interface NodeData {
   id: string;
@@ -30,13 +30,14 @@ const GraphRenderer: React.FC = () => {
   const { selectedAreaId } = useAreaStore((state) => ({
     selectedAreaId: state.selectedAreaId,
   }));
-  const { selectNode } = useNodeStore(); // Use selectNode action from the node store
+  const { selectNode } = useNodeStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [graphData, setGraphData] = React.useState<GraphData>({
+  const [graphData, setGraphData] = useState<GraphData>({
     nodes: [],
     edges: [],
   });
 
+  // Fetch graph data when selectedAreaId changes
   useEffect(() => {
     if (!selectedAreaId) return;
 
@@ -56,6 +57,7 @@ const GraphRenderer: React.FC = () => {
     fetchGraphData();
   }, [selectedAreaId]);
 
+  // Initialize and render graph with Sigma when graphData changes
   useEffect(() => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
@@ -69,14 +71,16 @@ const GraphRenderer: React.FC = () => {
 
     const sigmaInstance = new Sigma(graph, containerRef.current, {
       renderLabels: true,
+      defaultNodeColor: "#666",
+      defaultEdgeColor: "#ccc",
     });
 
     sigmaInstance.on("clickNode", ({ node }) => {
       const nodeData = graph.getNodeAttributes(node) as NodeData;
-      selectNode(nodeData.id); // Use selectNode action from the node store
+      selectNode(nodeData.id);
     });
 
-    return () => sigmaInstance.kill();
+    return () => sigmaInstance.kill(); // Cleanup on unmount
   }, [graphData, selectNode]);
 
   return (
