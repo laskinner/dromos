@@ -45,6 +45,7 @@ const GraphRenderer: React.FC = () => {
       try {
         const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
         setGraphData(response.data);
+        console.log("Fetched graph data:", response.data);
       } catch (error) {
         console.error(
           "Error fetching graph data for area:",
@@ -62,6 +63,7 @@ const GraphRenderer: React.FC = () => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
     const graph = new Graph();
+    console.log("Graph data for Sigma:", graphData);
     graphData.nodes.forEach((node) => graph.addNode(node.id, { ...node }));
     graphData.edges.forEach((edge) => {
       if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
@@ -77,6 +79,7 @@ const GraphRenderer: React.FC = () => {
 
     sigmaInstance.on("clickNode", ({ node }) => {
       const nodeData = graph.getNodeAttributes(node) as NodeData;
+      console.log("Node clicked:", nodeData);
       selectNode(nodeData.id);
     });
 
