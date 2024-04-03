@@ -75,6 +75,11 @@ const CreateAccount: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 py-4">
       <div>
+        <div>
+          <p className="text-sm text-gray-600 font-medium mb-2">
+            Create account or log in below.
+          </p>
+        </div>
         <div className="mb-1 text-sm font-semibold text-gray-700">Required</div>
         <div className="mb-4">
           <Input

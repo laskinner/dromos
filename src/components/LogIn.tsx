@@ -63,6 +63,11 @@ const LogIn: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
       <div>
+        <p className="text-sm text-gray-600 font-medium mb-2">
+          Log in or create account below.
+        </p>
+      </div>
+      <div>
         <Input {...register("username")} placeholder="Username" />
         {errors.username && <p>{errors.username.message}</p>}
       </div>

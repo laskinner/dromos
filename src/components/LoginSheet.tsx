@@ -80,9 +80,7 @@ const LoginSheet: React.FC = () => {
     return (
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline">
-            {showLoginForm ? "Create Account" : "Log In"}
-          </Button>
+          <Button>{showLoginForm ? "Create Account" : "Log In"}</Button>
         </SheetTrigger>
         <SheetContent>
           {showLoginForm ? <LogIn /> : <CreateAccount />}
