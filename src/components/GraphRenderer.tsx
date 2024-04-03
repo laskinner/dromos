@@ -4,22 +4,10 @@ import Sigma from "sigma";
 import axios from "axios";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { useNodeStore } from "@/stores/useNodeStore";
-
-interface NodeData {
-  id: string;
-  label: string;
-  x: number;
-  y: number;
-  size: number;
-  color: string;
-}
-
-interface EdgeData {
-  source: string;
-  target: string;
-  size?: number;
-  color?: string;
-}
+import { circularLayout } from "@/lib/layouts/circularLayout";
+import { useLayoutStore } from "@/stores/useLayoutStore";
+// Import centralized types
+import { NodeData, EdgeData } from "@/lib/graphTypes";
 
 interface GraphData {
   nodes: NodeData[];
@@ -27,10 +15,9 @@ interface GraphData {
 }
 
 const GraphRenderer: React.FC = () => {
-  const { selectedAreaId } = useAreaStore((state) => ({
-    selectedAreaId: state.selectedAreaId,
-  }));
+  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
   const { selectNode } = useNodeStore();
+  const layoutAlgorithm = useLayoutStore((state) => state.layoutAlgorithm);
   const containerRef = useRef<HTMLDivElement>(null);
   const [graphData, setGraphData] = useState<GraphData>({
     nodes: [],
@@ -45,7 +32,6 @@ const GraphRenderer: React.FC = () => {
       try {
         const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
         setGraphData(response.data);
-        console.log("Fetched graph data:", response.data);
       } catch (error) {
         console.error(
           "Error fetching graph data for area:",
@@ -58,19 +44,31 @@ const GraphRenderer: React.FC = () => {
     fetchGraphData();
   }, [selectedAreaId]);
 
-  // Initialize and render graph with Sigma when graphData changes
+  // Apply the layout and render graph with Sigma when graphData or layoutAlgorithm changes
   useEffect(() => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
-    const graph = new Graph();
-    console.log("Graph data for Sigma:", graphData);
-    graphData.nodes.forEach((node) => graph.addNode(node.id, { ...node }));
-    graphData.edges.forEach((edge) => {
-      if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
-        graph.addEdge(edge.source, edge.target, { ...edge, type: "arrow" });
-      }
-    });
+    // Apply the selected layout algorithm
+    let laidOutNodes = graphData.nodes;
+    switch (layoutAlgorithm) {
+      // Add cases for other layout algorithms
+      // case 'otherLayout':
+      //   laidOutNodes = otherLayoutAlgorithm(graphData.nodes, graphData.edges);
+      //   break;
+      case "circular":
+      default:
+        laidOutNodes = circularLayout(graphData.nodes, graphData.edges);
+        break;
+    }
 
+    // Initialize Graphology instance with laid out nodes
+    const graph = new Graph();
+    laidOutNodes.forEach((node) => graph.addNode(node.id, node));
+    graphData.edges.forEach((edge) =>
+      graph.addEdge(edge.source, edge.target, edge),
+    );
+
+    // Render the graph with Sigma
     const sigmaInstance = new Sigma(graph, containerRef.current, {
       renderLabels: true,
       defaultNodeColor: "#666",
@@ -79,12 +77,11 @@ const GraphRenderer: React.FC = () => {
 
     sigmaInstance.on("clickNode", ({ node }) => {
       const nodeData = graph.getNodeAttributes(node) as NodeData;
-      console.log("Node clicked:", nodeData);
       selectNode(nodeData.id);
     });
 
     return () => sigmaInstance.kill(); // Cleanup on unmount
-  }, [graphData, selectNode]);
+  }, [graphData, layoutAlgorithm, selectNode]);
 
   return (
     <div className="graph-renderer h-full w-full">
