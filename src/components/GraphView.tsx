@@ -47,7 +47,10 @@ const GraphView: React.FC = () => {
         </div>
         {selectedAreaId && (
           <>
-            <Card key={selectedAreaId}>
+            <Card
+              key={selectedAreaId}
+              className="flex justify-center items-center text-center"
+            >
               <CardHeader>
                 <CardTitle>
                   {areas.find((area) => area.id === selectedAreaId)?.name}
@@ -109,11 +112,14 @@ const GraphView: React.FC = () => {
       </aside>
       <main className="flex-1 p-4 h-full">
         <div className="graph-renderer h-full w-full flex justify-center items-center">
-          <div className="w-full h-full border border-border shadow-lg rounded-lg">
+          <div className="w-full h-full border border-border shadow-lg rounded-lg flex justify-center items-center">
             {selectedAreaId ? (
               <GraphRenderer /> // Render GraphRenderer here, inside the styled container
             ) : (
-              <div className="text-center">Select a Graph</div>
+              // Updated text styling for centering and appearance
+              <div className="text-center font-semibold text-lg text-gray-700">
+                Select a Graph to view its details.
+              </div>
             )}
           </div>
         </div>
