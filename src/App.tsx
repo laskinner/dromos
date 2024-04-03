@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import CreateAccount from "@/components/CreateAccount";
 import Home from "@/components/Home";
 import EditProfile from "@/components/EditAccount";
-import CreateNode from "@/components/CreateNode";
+import { CreateNode } from "@/components/CreateNode";
 import { CreateGraph } from "@/components/CreateGraph";
 import GraphView from "@/components/GraphView";
 import LogIn from "@/components/LogIn";
