@@ -18,7 +18,7 @@ export const CreateGraph: React.FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Graph</Button>
+        <Button>Create Graph</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

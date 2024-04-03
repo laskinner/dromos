@@ -17,7 +17,7 @@ export const CreateNode: React.FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Node</Button>
+        <Button>Create Node</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
