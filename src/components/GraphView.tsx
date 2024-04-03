@@ -108,12 +108,12 @@ const GraphView: React.FC = () => {
         )}
       </aside>
       <main className="flex-1 p-4 h-full">
-        <div className="graph-renderer h-full w-full">
+        <div className="graph-renderer h-full w-full flex justify-center items-center">
           <div className="w-full h-full border border-border shadow-lg rounded-lg">
             {selectedAreaId ? (
               <GraphRenderer /> // Render GraphRenderer here, inside the styled container
             ) : (
-              <div>Select a Graph to view its details.</div>
+              <div className="text-center">Select a Graph</div>
             )}
           </div>
         </div>
