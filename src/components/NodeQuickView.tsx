@@ -13,6 +13,7 @@ import {
 import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
+  console.log("NodeQuickView Mounted");
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
 
