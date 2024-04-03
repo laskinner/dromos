@@ -38,79 +38,80 @@ const GraphView: React.FC = () => {
 
   return (
     <div className="flex h-full">
-      {/* Moved aside to the left and applied conditional rendering */}
-      {selectedAreaId && (
-        <aside className="w-64 p-4 h-full">
-          <Card key={selectedAreaId}>
-            <CardHeader>
-              <CardTitle>
-                {areas.find((area) => area.id === selectedAreaId)?.name}
-              </CardTitle>
-              <CardDescription>
-                {areas.find((area) => area.id === selectedAreaId)?.content}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <img
-                src={areas.find((area) => area.id === selectedAreaId)?.image}
-                alt={areas.find((area) => area.id === selectedAreaId)?.name}
-                className="w-10 h-10 object-cover rounded-full"
-              />
-            </CardContent>
-            <CardFooter>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Create Node</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Create Node</DialogTitle>
-                    <DialogDescription>
-                      Add new node details here. Click save when you're done.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="title" className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="title"
-                        value="Node Name"
-                        className="col-span-3"
-                      />
+      <aside className="w-64 p-4 h-full">
+        {selectedAreaId && (
+          <>
+            <Card key={selectedAreaId}>
+              <CardHeader>
+                <CardTitle>
+                  {areas.find((area) => area.id === selectedAreaId)?.name}
+                </CardTitle>
+                <CardDescription>
+                  {areas.find((area) => area.id === selectedAreaId)?.content}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <img
+                  src={areas.find((area) => area.id === selectedAreaId)?.image}
+                  alt={areas.find((area) => area.id === selectedAreaId)?.name}
+                  className="w-10 h-10 object-cover rounded-full"
+                />
+              </CardContent>
+              <CardFooter>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Create Node</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Create Node</DialogTitle>
+                      <DialogDescription>
+                        Add new node details here. Click save when you're done.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="title" className="text-right">
+                          Name
+                        </Label>
+                        <Input
+                          id="title"
+                          value="Node Name"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="content" className="text-right">
+                          Description
+                        </Label>
+                        <Textarea
+                          id="content"
+                          value="Description"
+                          className="col-span-3"
+                        />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="content" className="text-right">
-                        Description
-                      </Label>
-                      <Textarea
-                        id="content"
-                        value="Description"
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <p>Select a node</p>
-            </CardHeader>
-            <CardContent>
-              <p>Node content goes here</p>
-            </CardContent>
-            <CardFooter>
-              <Button>Enter Node View</Button>
-            </CardFooter>
-          </Card>
-        </aside>
-      )}
+                    <DialogFooter>
+                      <Button type="submit">Save changes</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <p>Select a node</p>
+              </CardHeader>
+              <CardContent>
+                <p>Node content goes here</p>
+              </CardContent>
+              <CardFooter>
+                <Button>Enter Node View</Button>
+              </CardFooter>
+            </Card>
+          </>
+        )}
+      </aside>
       <main className="flex-1 p-4 h-full">
         <div className="flex justify-between mb-4">
           <Dialog>
