@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import GraphRenderer from "./GraphRenderer";
 import GraphSelector from "./GraphSelector";
+import { CreateGraph } from "./CreateGraph";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import {
   Card,
   CardContent,
@@ -39,6 +39,12 @@ const GraphView: React.FC = () => {
   return (
     <div className="flex h-full">
       <aside className="w-64 p-4 h-full">
+        <div className="flex mb-4">
+          <CreateGraph />
+        </div>
+        <div className="flex mb-4">
+          <GraphSelector />
+        </div>
         {selectedAreaId && (
           <>
             <Card key={selectedAreaId}>
@@ -98,67 +104,19 @@ const GraphView: React.FC = () => {
                 </Dialog>
               </CardFooter>
             </Card>
-            <Card>
-              <CardHeader>
-                <p>Select a node</p>
-              </CardHeader>
-              <CardContent>
-                <p>Node content goes here</p>
-              </CardContent>
-              <CardFooter>
-                <Button>Enter Node View</Button>
-              </CardFooter>
-            </Card>
           </>
         )}
       </aside>
       <main className="flex-1 p-4 h-full">
-        <div className="flex justify-between mb-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Create Graph</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Create Graph</DialogTitle>
-                <DialogDescription>
-                  Add new graph details here. Click save when you're done.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input id="name" value="Graph Name" className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="content" className="text-right">
-                    Description
-                  </Label>
-                  <Textarea
-                    id="content"
-                    value="Description"
-                    className="col-span-3"
-                  />
-                </div>
-                <div>
-                  <Switch id="is_public" />
-                  <Label htmlFor="is_public"> Private</Label>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          <GraphSelector />
+        <div className="graph-renderer h-full w-full">
+          <div className="w-full h-full border border-border shadow-lg rounded-lg">
+            {selectedAreaId ? (
+              <GraphRenderer /> // Render GraphRenderer here, inside the styled container
+            ) : (
+              <div>Select a Graph to view its details.</div>
+            )}
+          </div>
         </div>
-        {selectedAreaId ? (
-          <GraphRenderer /> // Assuming GraphRenderer uses selectedAreaId from useAreaStore internally
-        ) : (
-          <div>Select a Graph to view its details.</div>
-        )}
       </main>
     </div>
   );

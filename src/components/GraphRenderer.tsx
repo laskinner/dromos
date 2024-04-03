@@ -83,14 +83,7 @@ const GraphRenderer: React.FC = () => {
     return () => sigmaInstance.kill(); // Cleanup on unmount
   }, [graphData, layoutAlgorithm, selectNode]);
 
-  return (
-    <div className="graph-renderer h-full w-full">
-      <div
-        ref={containerRef}
-        className="w-full h-full border border-border shadow-lg rounded-lg"
-      />
-    </div>
-  );
+  return <div ref={containerRef} />;
 };
 
 export default GraphRenderer;
