@@ -21,7 +21,7 @@ const GraphSelector: React.FC = () => {
 
   return (
     <Select onValueChange={handleSelectArea} value={selectedAreaName}>
-      <SelectTrigger>
+      <SelectTrigger className="w-[180px]">
         <SelectValue>{selectedAreaName}</SelectValue>
       </SelectTrigger>
       <SelectContent>
