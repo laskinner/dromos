@@ -10,16 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-
-interface NodeData {
-  id: string;
-  title: string;
-  content?: string;
-  owner?: string;
-  created_at?: string;
-  updated_at?: string;
-  // Add any additional fields you expect to display
-}
+import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
