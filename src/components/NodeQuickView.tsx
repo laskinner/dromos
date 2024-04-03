@@ -14,30 +14,36 @@ import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
-  const { selectedNodeId, getSelectedNode } = useNodeStore((state) => ({
-    selectedNodeId: state.selectedNodeId,
-    getSelectedNode: state.getSelectedNode,
-  }));
+  const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
 
   useEffect(() => {
-    const node = getSelectedNode();
+    if (!selectedNodeId) {
+      setNodeDetails(null);
+      return;
+    }
+
+    // Ensures getSelectedNode is called only when selectedNodeId changes,
+    // as opposed to including getSelectedNode in the dependency array.
+    const node = useNodeStore.getState().getSelectedNode();
+
     console.log("Selected node details:", node); // Debugging line
     if (node) {
       setNodeDetails(node);
-    } else if (selectedNodeId) {
-      // Fetch node details if necessary
-      const fetchNodeDetails = async () => {
-        try {
-          const response = await axios.get(`/api/nodes/${selectedNodeId}`);
-          setNodeDetails(response.data);
-        } catch (error) {
-          console.error("Failed to fetch node details:", error);
-        }
-      };
-
-      fetchNodeDetails();
+      return;
     }
-  }, [selectedNodeId, getSelectedNode]);
+
+    // Fetch node details if necessary
+    const fetchNodeDetails = async () => {
+      try {
+        const response = await axios.get(`/api/nodes/${selectedNodeId}`);
+        setNodeDetails(response.data);
+      } catch (error) {
+        console.error("Failed to fetch node details:", error);
+      }
+    };
+
+    fetchNodeDetails();
+  }, [selectedNodeId]); // Depend only on selectedNodeId
 
   return (
     <Drawer open={!!nodeDetails}>
