@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useNodeStore } from "@/stores/useNodeStore";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import {
 import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
-  console.log("NodeQuickView Mounted");
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // New state to control drawer visibility
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
@@ -63,7 +64,9 @@ const NodeQuickView: React.FC = () => {
             <p>To view comments, go to node full view.</p>
           </div>
           <DrawerFooter>
-            <Button>View Node</Button>
+            <Button onClick={() => navigate("/node-full-view")}>
+              View Node
+            </Button>
             <DrawerClose asChild>
               <Button variant="outline" onClick={closeDrawer}>
                 Close
