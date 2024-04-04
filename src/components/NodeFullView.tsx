@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CommentList } from "@/components/CommentList";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useNodeStore } from "@/stores/useNodeStore";
@@ -61,6 +62,7 @@ export const NodeFullView: React.FC = () => {
         </CardContent>
       </Card>
       <Button onClick={handleBackClick}>Back</Button>
+      <CommentList />
     </div>
   );
 };
