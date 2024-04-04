@@ -64,9 +64,7 @@ const NodeQuickView: React.FC = () => {
             <p>To view comments, go to node full view.</p>
           </div>
           <DrawerFooter>
-            <Button onClick={() => navigate("/node-full-view")}>
-              View Node
-            </Button>
+            <Button onClick={() => navigate("/node-view")}>View Node</Button>
             <DrawerClose asChild>
               <Button variant="outline" onClick={closeDrawer}>
                 Close

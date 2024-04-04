@@ -51,7 +51,6 @@ export const NodeFullView: React.FC = () => {
 
   return (
     <div>
-      <h1>This is a test.</h1>
       <Card>
         <CardHeader>
           <CardTitle>{nodeDetails?.title || "Node Details"}</CardTitle>
