@@ -25,7 +25,13 @@ export const NodeFullView: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!selectedNodeId) {
+      setNodeDetails(null);
+      return;
+    }
+
     const node = useNodeStore.getState().getSelectedNode();
+    console.log("Selected node details:", node);
     if (node) {
       setNodeDetails(node);
     } else {
