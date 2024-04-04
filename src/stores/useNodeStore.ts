@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { NodeData } from "@/lib/interfaces/graphTypes";
+import axios from "axios";
 
 interface NodeState {
   nodes: NodeData[];
@@ -13,18 +14,18 @@ export const useNodeStore = create<NodeState>((set, get) => ({
   nodes: [],
   selectedNodeId: null,
   selectNode: (nodeId) => {
-    console.log("Selecting node:", nodeId); // Debugging log
+    console.log("Selecting node:", nodeId);
     set({ selectedNodeId: nodeId });
   },
   fetchNodes: async () => {
     try {
-      const response = await fetch("/api/nodes/");
-      // Make sure the response structure matches NodeData interface
-      const nodes: NodeData[] = await response.json();
+      // Using Axios for the HTTP request
+      const response = await axios.get("/api/nodes/");
+      // Axios automatically handles JSON parsing
+      const nodes: NodeData[] = response.data;
       set({ nodes });
     } catch (error) {
       console.error("Failed to fetch nodes:", error);
-      // Handle error
     }
   },
   getSelectedNode: () => {

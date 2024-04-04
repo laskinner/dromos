@@ -28,6 +28,7 @@ interface CommentFormProps {
 }
 
 export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
+  console.log("Received Node ID in CommentForm:", nodeId);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });

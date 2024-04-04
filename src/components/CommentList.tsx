@@ -9,6 +9,7 @@ export const CommentList = () => {
 
   useEffect(() => {
     const selectedNode = getSelectedNode();
+    console.log("Selected Node ID:", selectedNode?.id);
     if (selectedNode) {
       fetchComments(selectedNode.id);
     }
