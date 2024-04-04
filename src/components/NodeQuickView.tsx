@@ -64,15 +64,15 @@ const NodeQuickView: React.FC = () => {
             <p>Last Update: {nodeDetails?.updated_at}</p>
             <p>To view comments, go to node full view.</p>
           </div>
+          <DrawerFooter>
+            <Button>View Node</Button>
+            <DrawerClose asChild>
+              <Button variant="outline" onClick={closeDrawer}>
+                Close
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
-        <DrawerFooter>
-          <Button>View Node</Button>
-          <DrawerClose asChild>
-            <Button variant="outline" onClick={closeDrawer}>
-              Close
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
