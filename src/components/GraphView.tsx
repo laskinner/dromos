@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import NodeQuickView from "./NodeQuickView";
 
 const GraphView: React.FC = () => {
   const {
@@ -65,11 +66,16 @@ const GraphView: React.FC = () => {
         <div className="graph-renderer h-full w-full flex justify-center items-center">
           <div className="w-full h-full border border-border shadow-lg rounded-lg flex justify-center items-center">
             {selectedAreaId ? (
-              <GraphRenderer /> // Render GraphRenderer here, inside the styled container
+              <>
+                <GraphRenderer /> // Render GraphRenderer here, inside the
+                styled container
+                <NodeQuickView /> // Rendes NodeQuickView here, as a drawer when
+                a node is clicked
+              </>
             ) : (
               // Updated text styling for centering and appearance
               <div className="text-center font-semibold text-lg text-gray-700">
-                Select a Graph.
+                Select a Graph
               </div>
             )}
           </div>
