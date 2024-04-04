@@ -14,40 +14,44 @@ import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
   console.log("NodeQuickView Mounted");
+  const [isOpen, setIsOpen] = useState(false); // New state to control drawer visibility
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
 
   useEffect(() => {
     if (!selectedNodeId) {
       setNodeDetails(null);
+      setIsOpen(false); // Close drawer when there is no selected node
       return;
     }
 
-    // Ensures getSelectedNode is called only when selectedNodeId changes,
-    // as opposed to including getSelectedNode in the dependency array.
     const node = useNodeStore.getState().getSelectedNode();
-
-    console.log("Selected node details:", node); // Debugging line
+    console.log("Selected node details:", node);
     if (node) {
       setNodeDetails(node);
-      return;
+      setIsOpen(true); // Open drawer when node details are fetched
+    } else {
+      // Fetch node details if necessary
+      const fetchNodeDetails = async () => {
+        try {
+          const response = await axios.get(`/api/nodes/${selectedNodeId}`);
+          setNodeDetails(response.data);
+          setIsOpen(true); // Open drawer when node details are fetched from API
+        } catch (error) {
+          console.error("Failed to fetch node details:", error);
+          setIsOpen(false);
+        }
+      };
+
+      fetchNodeDetails();
     }
+  }, [selectedNodeId]);
 
-    // Fetch node details if necessary
-    const fetchNodeDetails = async () => {
-      try {
-        const response = await axios.get(`/api/nodes/${selectedNodeId}`);
-        setNodeDetails(response.data);
-      } catch (error) {
-        console.error("Failed to fetch node details:", error);
-      }
-    };
-
-    fetchNodeDetails();
-  }, [selectedNodeId]); // Depend only on selectedNodeId
+  // Function to close the drawer
+  const closeDrawer = () => setIsOpen(false);
 
   return (
-    <Drawer open={!!nodeDetails}>
+    <Drawer open={isOpen}>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
@@ -60,13 +64,15 @@ const NodeQuickView: React.FC = () => {
             <p>Last Update: {nodeDetails?.updated_at}</p>
             <p>To view comments, go to node full view.</p>
           </div>
-          <DrawerFooter>
-            <Button>View Node</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Close</Button>
-            </DrawerClose>
-          </DrawerFooter>
         </div>
+        <DrawerFooter>
+          <Button>View Node</Button>
+          <DrawerClose asChild>
+            <Button variant="outline" onClick={closeDrawer}>
+              Close
+            </Button>
+          </DrawerClose>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
