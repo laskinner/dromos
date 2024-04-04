@@ -60,8 +60,6 @@ const NodeQuickView: React.FC = () => {
           <div>
             <p>{nodeDetails?.content}</p>
             <p>Owner: {nodeDetails?.owner}</p>
-            <p>Create: {nodeDetails?.created_at}</p>
-            <p>Last Update: {nodeDetails?.updated_at}</p>
             <p>To view comments, go to node full view.</p>
           </div>
           <DrawerFooter>

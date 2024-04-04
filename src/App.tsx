@@ -2,13 +2,9 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import CreateAccount from "@/components/CreateAccount";
 import Home from "@/components/Home";
-import EditProfile from "@/components/EditAccount";
-import { CreateNode } from "@/components/CreateNode";
-import { CreateGraph } from "@/components/CreateGraph";
+import { NodeFullView } from "@/components/NodeFullView";
 import GraphView from "@/components/GraphView";
-import LogIn from "@/components/LogIn";
 import "./api/axiosDefaults.ts";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserStore } from "@/stores/useUserStore";
@@ -56,13 +52,8 @@ function App() {
       <div className="flex-1 overflow-auto h-full">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/create-account" element={<CreateAccount />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/create-node" element={<CreateNode />} />
-          <Route path="/create-graph" element={<CreateGraph />} />
           <Route path="/graph-view" element={<GraphView />} />
-          <Route path="/log-in" element={<LogIn />} />
-          <Route path="/create-account" element={<CreateAccount />} />
+          <Route path="/node-view" element={<NodeFullView />} />
           {/* Add more routes here as needed */}
         </Routes>
         <Toaster />
