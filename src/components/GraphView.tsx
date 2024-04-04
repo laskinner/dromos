@@ -67,10 +67,8 @@ const GraphView: React.FC = () => {
           <div className="w-full h-full border border-border shadow-lg rounded-lg flex justify-center items-center">
             {selectedAreaId ? (
               <>
-                <GraphRenderer /> // Render GraphRenderer here, inside the
-                styled container
-                <NodeQuickView /> // Rendes NodeQuickView here, as a drawer when
-                a node is clicked
+                <GraphRenderer />
+                <NodeQuickView />
               </>
             ) : (
               // Updated text styling for centering and appearance
