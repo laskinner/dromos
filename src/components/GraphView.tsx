@@ -64,7 +64,7 @@ const GraphView: React.FC = () => {
       </aside>
       <main className="flex-1 p-4 h-full">
         <div className="graph-renderer h-full w-full flex justify-center items-center">
-          <div className="w-full h-full border border-border shadow-lg rounded-lg flex justify-center items-center">
+          <div className="w-full h-full border-2 border-border shadow-lg rounded-lg flex justify-center items-center">
             {selectedAreaId ? (
               <>
                 <GraphRenderer />
