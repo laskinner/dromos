@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   comment: z.string().min(1, {
-    message: "Enter a comment.",
+    message: "Write a comment.",
   }),
 });
 
@@ -36,6 +36,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
   const onSubmit = async (data: FormData) => {
     if (nodeId) {
       try {
+        console.log("Submitting comment data:", { ...data, node: nodeId });
         await axios.post("/api/comments/", { ...data, node: nodeId });
         form.reset(); // Reset the form after successful submission
       } catch (error) {
