@@ -9,6 +9,7 @@ export const CommentList = () => {
 
   // Move selectedNode definition here, outside useEffect
   const selectedNode = getSelectedNode();
+  console.log("Selected Node ID:", selectedNode?.id);
 
   useEffect(() => {
     console.log("Selected Node ID:", selectedNode?.id);
