@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios"; // Ensure axios is imported
+import { AxiosError } from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  comment: z.string().min(1, {
+  content: z.string().min(1, {
     message: "Write a comment.",
   }),
 });
@@ -36,14 +37,18 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
   const onSubmit = async (data: FormData) => {
     if (nodeId) {
       try {
-        console.log("Submitting comment data:", { ...data, node: nodeId });
-        await axios.post("/api/comments/", { ...data, node: nodeId });
+        // Directly use 'data.content' now that the form field is named 'content'
+        await axios.post("/api/comments/", {
+          content: data.content,
+          node: nodeId, // Assuming your API also expects a 'node' field
+        });
         form.reset(); // Reset the form after successful submission
       } catch (error) {
-        console.error("Failed to submit comment:", error);
+        const axiosError = error as AxiosError;
+        console.error("Failed to submit comment:", axiosError.response?.data);
       }
     } else {
-      console.error("Node ID is missing.");
+      console.error("Node ID is missing, cannot submit comment.");
     }
   };
 
@@ -52,7 +57,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="comment"
+          name="content"
           render={({ field, fieldState: { error } }) => (
             <FormItem>
               <FormLabel>Comment</FormLabel>

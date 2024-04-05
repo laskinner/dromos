@@ -51,17 +51,26 @@ export const NodeFullView: React.FC = () => {
   }, [selectedNodeId]);
 
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>{nodeDetails?.title || "Node Details"}</CardTitle>
-          <CardDescription>{nodeDetails?.content}</CardDescription>
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <Card className="mb-8">
+        <CardHeader className="bg-gray-100 p-4">
+          <CardTitle className="text-lg font-semibold">
+            {nodeDetails?.title || "Node Details"}
+          </CardTitle>
+          <CardDescription className="text-gray-700 mt-2">
+            {nodeDetails?.content}
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <p>Owner: {nodeDetails?.owner}</p>
+        <CardContent className="p-4">
+          <p className="text-gray-600">Owner: {nodeDetails?.owner}</p>
         </CardContent>
       </Card>
-      <Button onClick={handleBackClick}>Back</Button>
+      <Button
+        onClick={handleBackClick}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Back
+      </Button>
       <CommentList />
     </div>
   );
