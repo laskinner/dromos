@@ -1,48 +1,98 @@
-import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import axios from "@/api/axiosDefaults";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
-export const CreateNode: React.FC = () => {
+const formSchema = z.object({
+  title: z.string().min(1, "Name is required."),
+  content: z.string().min(1, "Description is required."),
+});
+
+export const CreateGraph: React.FC = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+    const payload = {
+      title: data.title,
+      content: data.content,
+    };
+
+    try {
+      await axios.post("/api/nodes/", payload);
+      form.reset();
+      // Handle success (e.g., show confirmation, refresh list of areas/graphs)
+    } catch (error) {
+      // Handle error
+      console.error("Failed to create area:", error);
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button>Create Node</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Node</DialogTitle>
           <DialogDescription>
-            Add new node details here. Click save when you're done.
+            Add new node details here. Save when done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="title" className="text-right">
-              Name
-            </Label>
-            <Input id="title" value="Node Name" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="content" className="text-right">
-              Description
-            </Label>
-            <Textarea id="content" value="Description" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <DialogClose>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

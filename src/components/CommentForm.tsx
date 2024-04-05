@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios"; // Ensure axios is imported
+import axios from "axios";
 import { AxiosError } from "axios";
 
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
         // Directly use 'data.content' now that the form field is named 'content'
         await axios.post("/api/comments/", {
           content: data.content,
-          node: nodeId, // Assuming your API also expects a 'node' field
+          node: nodeId,
         });
         form.reset(); // Reset the form after successful submission
       } catch (error) {

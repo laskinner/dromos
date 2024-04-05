@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -60,7 +61,7 @@ export const CreateGraph: React.FC = () => {
         <DialogHeader>
           <DialogTitle>Create Graph</DialogTitle>
           <DialogDescription>
-            Add new graph details here. Click save when you're done.
+            Add new graph details here. Save when done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -106,7 +107,9 @@ export const CreateGraph: React.FC = () => {
               )}
             />
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <DialogClose>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </Form>
