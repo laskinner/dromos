@@ -1,26 +1,21 @@
 import { useEffect } from "react";
-import { useNodeStore } from "@/stores/useNodeStore"; // Adjust path as needed
-import { useCommentStore } from "@/stores/useCommentStore"; // Adjust path as needed
+import { useNodeStore } from "@/stores/useNodeStore";
+import { useCommentStore } from "@/stores/useCommentStore";
 import { CommentForm } from "./CommentForm";
 
 export const CommentList = () => {
-  const { getSelectedNode } = useNodeStore();
+  const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
   const { comments, fetchComments } = useCommentStore();
 
-  // Move selectedNode definition here, outside useEffect
-  const selectedNode = getSelectedNode();
-  console.log("Selected Node ID:", selectedNode?.id);
-
   useEffect(() => {
-    console.log("Selected Node ID:", selectedNode?.id);
-    if (selectedNode) {
-      fetchComments(selectedNode.id);
+    if (selectedNodeId) {
+      console.log("Fetching comments for Node ID:", selectedNodeId);
+      fetchComments(selectedNodeId);
     }
-  }, [selectedNode, fetchComments]); // Note: You might need to adjust dependencies based on your state management
+  }, [selectedNodeId, fetchComments]);
 
-  if (!selectedNode) {
-    // Handle the case where no node is selected, perhaps with a placeholder message or empty fragment
-    return null; // or <div>Select a node to view comments.</div>
+  if (!selectedNodeId) {
+    return <div>Select a node to view comments.</div>;
   }
 
   return (
@@ -29,7 +24,6 @@ export const CommentList = () => {
       <div>
         <p>Comments</p>
       </div>
-      {/* If the component has reached here, selectedNode is defined, so selectedNode.id is safe to use */}
       {comments.length > 0 ? (
         comments.map((comment) => (
           <div key={comment.id}>
@@ -39,8 +33,7 @@ export const CommentList = () => {
       ) : (
         <p>No comments yet.</p>
       )}
-      <CommentForm nodeId={selectedNode.id} />{" "}
-      {/* Now it's safe because of the check above */}
+      <CommentForm nodeId={selectedNodeId} />
     </div>
   );
 };

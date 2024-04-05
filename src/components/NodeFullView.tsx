@@ -18,7 +18,7 @@ export const NodeFullView: React.FC = () => {
   const navigate = useNavigate();
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
-  const selectedAreaId = useAreaStore((state) => state.selectedAreaId); // Access the global state
+  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
 
   const handleBackClick = () => {
     // Navigate back to GraphView with selectedAreaId state
