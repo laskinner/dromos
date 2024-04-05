@@ -28,7 +28,7 @@ const formSchema = z.object({
   content: z.string().min(1, "Description is required."),
 });
 
-export const CreateGraph: React.FC = () => {
+export const CreateNode: React.FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
