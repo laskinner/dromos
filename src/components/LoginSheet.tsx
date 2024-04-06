@@ -85,9 +85,11 @@ const LoginSheet: React.FC = () => {
         <SheetContent>
           {showLoginForm ? <LogIn /> : <CreateAccount />}
           <SheetFooter>
-            <Button onClick={toggleForm}>
-              {showLoginForm ? "Create Account" : "Log In"}
-            </Button>
+            <SheetClose asChild>
+              <Button onClick={toggleForm}>
+                {showLoginForm ? "Create Account" : "Log In"}
+              </Button>
+            </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
