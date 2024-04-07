@@ -12,7 +12,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNodes, faHouse } from "@fortawesome/free-solid-svg-icons";
 
-export const NavBar: React.FC = () => {
+export const Navbar: React.FC = () => {
   const { currentUser } = useUserStore();
 
   return (

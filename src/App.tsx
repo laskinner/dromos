@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import axios from "./api/axiosDefaults";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import Home from "@/components/Home";
 import { NodeFullView } from "@/components/NodeFullView";
 import GraphView from "@/components/GraphView";
