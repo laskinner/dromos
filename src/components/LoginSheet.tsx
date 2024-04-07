@@ -16,8 +16,6 @@ import LogIn from "@/components/LogIn";
 import EditAccount from "@/components/EditAccount";
 import { useUserStore } from "@/stores/useUserStore";
 import { AuthService } from "@/lib/AuthService";
-
-// Assuming Tooltip related imports are correct and available in your project
 import {
   TooltipProvider,
   Tooltip,
@@ -27,16 +25,15 @@ import {
 
 const LoginSheet: React.FC = () => {
   const { currentUser, setCurrentUser } = useUserStore();
-  const userProfileImage = currentUser?.image;
   const [showLoginForm, setShowLoginForm] = useState(false);
   const { toast } = useToast();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleLogout = () => {
     AuthService.logout();
     toast({
       description: "Seccussfully logged out",
     });
-    // Implement logout logic here, including clearing local storage or tokens
     setCurrentUser(null);
   };
 
@@ -50,17 +47,23 @@ const LoginSheet: React.FC = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  {userProfileImage ? (
-                    <img
-                      src={userProfileImage}
-                      alt="Profile"
-                      className="rounded-full w-12 h-12 object-cover"
-                    />
-                  ) : (
+                  {currentUser?.image && !imageLoaded ? (
                     <i className="fa-solid fa-user text-slate-900 text-3xl cursor-pointer"></i>
-                  )}
+                  ) : null}
+                  <img
+                    src={currentUser?.image || ""}
+                    alt="Profile"
+                    className={`rounded-full w-12 h-12 object-cover ${
+                      !currentUser?.image || imageLoaded ? "visible" : "hidden"
+                    }`}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => setImageLoaded(false)}
+                    style={{ display: currentUser?.image ? "block" : "none" }}
+                  />
                 </TooltipTrigger>
-                <TooltipContent>Edit Account</TooltipContent>
+                <TooltipContent>
+                  {currentUser ? "Edit Account" : "Login / Create Account"}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
