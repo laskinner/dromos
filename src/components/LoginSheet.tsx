@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Sheet,
   SheetTrigger,
@@ -14,6 +15,7 @@ import CreateAccount from "@/components/CreateAccount";
 import LogIn from "@/components/LogIn";
 import EditAccount from "@/components/EditAccount";
 import { useUserStore } from "@/stores/useUserStore";
+import { AuthService } from "@/lib/AuthService";
 
 // Assuming Tooltip related imports are correct and available in your project
 import {
@@ -27,8 +29,13 @@ const LoginSheet: React.FC = () => {
   const { currentUser, setCurrentUser } = useUserStore();
   const userProfileImage = currentUser?.image;
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const { toast } = useToast();
 
   const handleLogout = () => {
+    AuthService.logout();
+    toast({
+      description: "Seccussfully logged out",
+    });
     // Implement logout logic here, including clearing local storage or tokens
     setCurrentUser(null);
   };
