@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { AuthService } from "@/lib/AuthService";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,8 +25,9 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const EditAccount: React.FC = () => {
-  const { currentUser, setCurrentUser } = useUserStore(); // Use Zustand store
+// Adjusted component to accept `onSuccess` prop
+const EditAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+  const { currentUser, setCurrentUser } = useUserStore();
   const { toast } = useToast();
 
   const {
@@ -38,6 +40,15 @@ const EditAccount: React.FC = () => {
     defaultValues: currentUser ?? {},
   });
 
+  const handleLogout = async () => {
+    AuthService.logout();
+    setCurrentUser(null);
+    toast({
+      description: "Successfully logged out",
+    });
+    onSuccess(); // Closes the sheet
+  };
+
   useEffect(() => {
     // Update form default values if currentUser changes
     reset(currentUser ?? {});
@@ -48,6 +59,7 @@ const EditAccount: React.FC = () => {
       await axios.put("/api/user/update/", data);
       setCurrentUser({ ...currentUser, ...data }); // Update local user state with new data
       toast({ title: "Account updated successfully" });
+      onSuccess(); // Call onSuccess after successful account update
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({
@@ -119,7 +131,10 @@ const EditAccount: React.FC = () => {
       </div>
       <Button type="submit" className="btn-primary">
         Save
-      </Button>{" "}
+      </Button>
+      <Button variant="outline" onClick={handleLogout}>
+        Logout
+      </Button>
     </form>
   );
 };

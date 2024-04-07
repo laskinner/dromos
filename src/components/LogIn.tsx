@@ -19,7 +19,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const LogIn: React.FC = () => {
+const LogIn: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const {
     register,
     handleSubmit,
@@ -30,7 +30,7 @@ const LogIn: React.FC = () => {
   });
 
   const { toast } = useToast();
-  const { setCurrentUser } = useUserStore(); // Use Zustand store for setting the current user
+  const { setCurrentUser } = useUserStore();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
@@ -45,6 +45,7 @@ const LogIn: React.FC = () => {
 
       toast({ title: "Login successful" });
       reset(); // Resets the form fields after successful login
+      onSuccess(); // Close the sheet after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({

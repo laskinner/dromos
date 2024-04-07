@@ -7,7 +7,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleNodes } from "@fortawesome/free-solid-svg-icons";
+import { faCircleNodes, faHouse } from "@fortawesome/free-solid-svg-icons";
 import LoginSheet from "@/components/LoginSheet";
 
 const NavBar: React.FC = () => {
@@ -22,47 +22,42 @@ const NavBar: React.FC = () => {
           />
         </NavLink>
       </div>
-      <div className="flex-1 flex justify-center">
+      <div className="flex-1 flex justify-center items-center">
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `group mx-2 ${
-              isActive ? "text-indigo-600" : "text-slate-900"
-            } text-3xl`
+            `mx-2 ${isActive ? "text-indigo-600" : "text-slate-900"} text-3xl`
           }
         >
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <i className="fa-solid fa-house"></i>
+              <TooltipTrigger asChild>
+                <FontAwesomeIcon icon={faHouse} className="cursor-pointer" />
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Home</p>
-              </TooltipContent>
+              <TooltipContent>Home</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </NavLink>
         <NavLink
           to="/graph-view"
           className={({ isActive }) =>
-            `group mx-2 ${
-              isActive ? "text-indigo-600" : "text-slate-900"
-            } text-3xl`
+            `mx-2 ${isActive ? "text-indigo-600" : "text-slate-900"} text-3xl`
           }
         >
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <FontAwesomeIcon icon={faCircleNodes} />
+              <TooltipTrigger asChild>
+                <FontAwesomeIcon
+                  icon={faCircleNodes}
+                  className="cursor-pointer"
+                />
               </TooltipTrigger>
-              <TooltipContent>
-                <p>View Node Graphs</p>
-              </TooltipContent>
+              <TooltipContent>View Node Graphs</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </NavLink>
       </div>
-      <div className="flex-1 text-right">
+      <div className="flex-1 flex justify-end">
         <LoginSheet />
       </div>
     </nav>

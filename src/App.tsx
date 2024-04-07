@@ -12,7 +12,7 @@ function App() {
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken"); // Ensure consistency in token key
+    const token = localStorage.getItem("accessToken");
 
     const checkUserStatus = async () => {
       if (!token) {
