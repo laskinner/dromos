@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import axios from "axios";
+import axios from "./api/axiosDefaults";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Home from "@/components/Home";
 import { NodeFullView } from "@/components/NodeFullView";
 import GraphView from "@/components/GraphView";
-import "./api/axiosDefaults.ts";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -13,7 +12,7 @@ function App() {
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("accessToken"); // Ensure consistency in token key
 
     const checkUserStatus = async () => {
       if (!token) {
@@ -21,10 +20,11 @@ function App() {
         return; // Early return if no token, avoids unnecessary request
       }
 
+      // Now using the axios instance from axiosDefaults
       try {
         const { data } = await axios.get("/dj-rest-auth/user/", {
           headers: {
-            Authorization: `Bearer ${token}`, // Sets the token here specifically for this request
+            Authorization: `Bearer ${token}`,
           },
         });
         setCurrentUser(data);
@@ -54,7 +54,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/graph-view" element={<GraphView />} />
           <Route path="/node-view" element={<NodeFullView />} />
-          {/* Add more routes here as needed */}
+          {/* Additional routes as needed */}
         </Routes>
         <Toaster />
       </div>
