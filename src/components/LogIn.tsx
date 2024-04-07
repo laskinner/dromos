@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useUserStore } from "@/stores/useUserStore"; // Import Zustand store hook
 import { Button } from "@/components/ui/button";
+import { SheetClose } from "./ui/sheet";
 
 const formSchema = z.object({
   username: z
@@ -79,10 +80,11 @@ const LogIn: React.FC = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
-      <Button type="submit" className="btn-primary">
-        Log In
-      </Button>
-      {/* Customize with your styling */}
+      <SheetClose asChild>
+        <Button type="submit" className="btn-primary">
+          Log In
+        </Button>
+      </SheetClose>
     </form>
   );
 };
