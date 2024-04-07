@@ -25,8 +25,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-// Adjusted component to accept `onSuccess` prop
-const EditAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+export const EditAccount: React.FC = () => {
   const { currentUser, setCurrentUser } = useUserStore();
   const { toast } = useToast();
 
@@ -46,7 +45,6 @@ const EditAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     toast({
       description: "Successfully logged out",
     });
-    onSuccess(); // Closes the sheet
   };
 
   useEffect(() => {
@@ -59,7 +57,6 @@ const EditAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
       await axios.put("/api/user/update/", data);
       setCurrentUser({ ...currentUser, ...data }); // Update local user state with new data
       toast({ title: "Account updated successfully" });
-      onSuccess(); // Call onSuccess after successful account update
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({

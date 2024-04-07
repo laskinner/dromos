@@ -1,4 +1,7 @@
 import React from "react";
+import { EditAccount } from "@/components/EditAccount";
+import { LogIn } from "@/components/LogIn";
+import { useUserStore } from "@/stores/useUserStore";
 import { NavLink } from "react-router-dom";
 import {
   Tooltip,
@@ -8,9 +11,10 @@ import {
 } from "@/components/ui/tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNodes, faHouse } from "@fortawesome/free-solid-svg-icons";
-import LoginSheet from "@/components/LoginSheet";
 
-const NavBar: React.FC = () => {
+export const NavBar: React.FC = () => {
+  const { currentUser } = useUserStore();
+
   return (
     <nav className="flex items-center justify-between bg-transparent py-4 px-6">
       <div className="flex-1">
@@ -58,10 +62,8 @@ const NavBar: React.FC = () => {
         </NavLink>
       </div>
       <div className="flex-1 flex justify-end">
-        <LoginSheet />
+        {currentUser ? <EditAccount /> : <LogIn />}
       </div>
     </nav>
   );
 };
-
-export default NavBar;

@@ -1,12 +1,34 @@
+"use client"; // Use client validiot for form
+
 import React from "react";
+import { CreateAccount } from "@/components/CreateAccount";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useUserStore } from "@/stores/useUserStore"; // Import Zustand store hook
+import { useUserStore } from "@/stores/useUserStore";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const formSchema = z.object({
   username: z
@@ -19,15 +41,10 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const LogIn: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormData>({
+export const LogIn: React.FC = () => {
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-  });
+  }); // Use `form` to capture all useForm return values
 
   const { toast } = useToast();
   const { setCurrentUser } = useUserStore();
@@ -44,8 +61,6 @@ const LogIn: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
       setCurrentUser(userResponse.data); // Update Zustand store with the user data
 
       toast({ title: "Login successful" });
-      reset(); // Resets the form fields after successful login
-      onSuccess(); // Close the sheet after successful login
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({
@@ -62,29 +77,64 @@ const LogIn: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
-      <div>
-        <p className="text-sm text-gray-600 font-medium mb-2">
-          Log in or create account below.
-        </p>
-      </div>
-      <div>
-        <Input {...register("username")} placeholder="Username" />
-        {errors.username && <p>{errors.username.message}</p>}
-      </div>
-      <div>
-        <Input
-          type="password"
-          {...register("password")}
-          placeholder="Password"
-        />
-        {errors.password && <p>{errors.password.message}</p>}
-      </div>
-      <Button type="submit" className="btn-primary">
-        Log In
-      </Button>
-    </form>
+    <>
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button>Log In</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Log In</SheetTitle>
+            <SheetDescription>
+              Enter log in details or create account below.
+            </SheetDescription>
+          </SheetHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Username" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Password" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Please enter your password.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button type="submit">Log In</Button>
+              <hr />
+              <CreateAccount />
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
-
-export default LogIn;

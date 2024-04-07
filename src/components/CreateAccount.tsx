@@ -26,7 +26,7 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>;
 
 // Adjusted component to accept `onSuccess` prop
-const CreateAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+export const CreateAccount: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -52,7 +52,6 @@ const CreateAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
       await axios.post("/dj-rest-auth/registration/", postData);
       toast({ title: "Account created successfully" });
       reset();
-      onSuccess(); // Call onSuccess after successful account creation
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({
@@ -159,5 +158,3 @@ const CreateAccount: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     </form>
   );
 };
-
-export default CreateAccount;
