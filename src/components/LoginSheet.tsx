@@ -84,7 +84,6 @@ const LoginSheet: React.FC = () => {
             <SheetFooter>
               <SheetClose asChild>
                 <Button onClick={closeSheet}>Close</Button>
-                correctly
               </SheetClose>
             </SheetFooter>
           </>
