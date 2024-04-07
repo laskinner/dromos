@@ -91,9 +91,11 @@ const LoginSheet: React.FC = () => {
         </SheetTrigger>
         <SheetContent>
           {showLoginForm ? <LogIn /> : <CreateAccount />}
-          <Button onClick={toggleForm}>
-            {showLoginForm ? "Create Account" : "Log In"}
-          </Button>
+          <SheetClose asChild>
+            <Button onClick={toggleForm}>
+              {showLoginForm ? "Create Account" : "Log In"}
+            </Button>
+          </SheetClose>
         </SheetContent>
       </Sheet>
     );

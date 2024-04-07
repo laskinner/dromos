@@ -80,11 +80,9 @@ const LogIn: React.FC = () => {
         />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
-      <SheetClose asChild>
-        <Button type="submit" className="btn-primary">
-          Log In
-        </Button>
-      </SheetClose>
+      <Button type="submit" className="btn-primary">
+        Log In
+      </Button>
     </form>
   );
 };
