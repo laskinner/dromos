@@ -128,9 +128,11 @@ export const LogIn: React.FC = () => {
           </Form>
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit">Log In</Button>
-              <hr />
-              <CreateAccount />
+              <div>
+                <Button type="submit">Log In</Button>
+                <hr />
+                <CreateAccount />
+              </div>
             </SheetClose>
           </SheetFooter>
         </SheetContent>
