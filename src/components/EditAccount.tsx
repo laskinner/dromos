@@ -151,7 +151,7 @@ export const EditAccount: React.FC = () => {
             <i className="fa-solid fa-user text-slate-900 text-3xl cursor-pointer"></i>
           )}
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="overflow-y-auto max-h-[100vh]">
           <SheetHeader>
             <SheetTitle>Edit Account</SheetTitle>
             <SheetDescription>

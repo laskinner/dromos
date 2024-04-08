@@ -82,7 +82,7 @@ export const LogIn: React.FC = () => {
         <SheetTrigger asChild>
           <Button variant="outline">Log In</Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="overflow-y-auto max-h-[100vh]">
           <SheetHeader>
             <SheetTitle>Log In</SheetTitle>
             <SheetDescription>

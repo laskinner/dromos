@@ -108,7 +108,7 @@ export const CreateAccount: React.FC = () => {
         <SheetTrigger asChild>
           <Button variant="outline">Create Account</Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="overflow-y-auto max-h-[100vh]">
           <SheetHeader>
             <SheetTitle>Create Account</SheetTitle>
             <SheetDescription>

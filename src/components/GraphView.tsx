@@ -71,7 +71,6 @@ const GraphView: React.FC = () => {
                 <NodeQuickView />
               </>
             ) : (
-              // Updated text styling for centering and appearance
               <div className="text-center font-semibold text-lg text-gray-700">
                 Select a Graph
               </div>
