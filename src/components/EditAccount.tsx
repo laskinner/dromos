@@ -35,11 +35,18 @@ const formSchema = z
   .object({
     username: z.string().min(2, "Username must be at least 2 characters."),
     email: z.string().email("Invalid email address."),
-    currentPassword: z.string().min(6, "Current password is required."),
+    currentPassword: z
+      .string()
+      .min(6, "Current password is required.")
+      .optional(),
     newPassword: z
       .string()
-      .min(6, "New password must be at least 6 characters."),
-    confirmNewPassword: z.string().min(6, "Confirm new password must match."),
+      .min(6, "New password must be at least 6 characters.")
+      .optional(),
+    confirmNewPassword: z
+      .string()
+      .min(6, "Confirm new password must match.")
+      .optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     bio: z.string().max(250, "Bio cannot exceed 250 characters.").optional(),
