@@ -123,7 +123,7 @@ export const LogIn: React.FC = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Log in</Button>
             </form>
           </Form>
           <SheetFooter>
