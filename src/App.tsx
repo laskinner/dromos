@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import Home from "@/components/Home";
 import { NodeFullView } from "@/components/NodeFullView";
 import GraphView from "@/components/GraphView";
+import { CreateNode } from "@/components/CreateNode";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -54,6 +55,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/graph-view" element={<GraphView />} />
           <Route path="/node-view" element={<NodeFullView />} />
+          <Route path="/create-node" element={<CreateNode />} />
           {/* Additional routes as needed */}
         </Routes>
         <Toaster />

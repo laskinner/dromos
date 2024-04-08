@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import GraphRenderer from "./GraphRenderer";
 import GraphSelector from "./GraphSelector";
 import { CreateGraph } from "./CreateGraph";
-import { CreateNode } from "./CreateNode";
 import { useAreaStore } from "@/stores/useAreaStore";
 import {
   Card,
@@ -12,9 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import NodeQuickView from "./NodeQuickView";
 
 const GraphView: React.FC = () => {
+  const navigate = useNavigate();
   const {
     areas,
     selectedAreaId,
@@ -56,7 +58,9 @@ const GraphView: React.FC = () => {
                 />
               </CardContent>
               <CardFooter>
-                <CreateNode />
+                <Button onClick={() => navigate("/create-node")}>
+                  Create Node
+                </Button>
               </CardFooter>
             </Card>
           </>
