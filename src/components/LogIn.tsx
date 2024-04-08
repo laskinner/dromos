@@ -80,7 +80,7 @@ export const LogIn: React.FC = () => {
     <>
       <Sheet>
         <SheetTrigger asChild>
-          <Button>Log In</Button>
+          <Button variant="outline">Log In</Button>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
@@ -128,11 +128,7 @@ export const LogIn: React.FC = () => {
           </Form>
           <SheetFooter>
             <SheetClose asChild>
-              <div>
-                <Button asChild>
-                  <CreateAccount />
-                </Button>
-              </div>
+              <CreateAccount />
             </SheetClose>
           </SheetFooter>
         </SheetContent>
