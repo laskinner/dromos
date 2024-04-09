@@ -1,7 +1,12 @@
-import React from "react";
+("use client");
+
+import React, { useState } from "react";
+import { CauseSelector } from "@/components/CauseSelector";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
+import { useNodeStore } from "@/stores/useNodeStore";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import axios from "@/api/axiosDefaults";
@@ -21,10 +26,11 @@ const formSchema = z.object({
   content: z.string().min(1, "Description is required."),
   image: z.any(),
   area: z.string(), // Assuming area ID is a string; adjust if it's numeric.
-  // `caused_by` can be an array of IDs and needs to be handled differently.
+  causedBy: z.array(z.string()),
 });
 
 export const CreateNode: React.FC = () => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,27 +38,25 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    // Ensure selectedAreaId is not null before proceeding
-    if (!selectedAreaId) {
-      console.error("Area ID is required to create a node.");
-      // Optionally, show a toast or dialog to inform the user
-      return;
-    }
-
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("content", data.content);
-    formData.append("area", selectedAreaId.toString()); // Safe to use toString() now
-
-    if (data.image && data.image.length > 0)
-      formData.append("image", data.image[0]);
+    formData.append("area", selectedAreaId || ""); // Handle case where selectedAreaId might be null
+    if (data.image?.[0]) formData.append("image", data.image[0]);
 
     try {
       await axios.post("/api/nodes/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      // Optionally reset form here
       form.reset();
+
+      // Optionally navigate back or update UI
+      toast({ title: "Account created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
+
+      // Refresh nodes in your state (assuming you're on a page where this is relevant)
+      useNodeStore.getState().fetchNodes();
     } catch (error) {
       console.error("Failed to create node:", error);
     }
@@ -61,6 +65,16 @@ export const CreateNode: React.FC = () => {
   const handleBackClick = () => {
     // Navigate back to GraphView with selectedAreaId state
     navigate("/graph-view", { state: { selectedAreaId } });
+  };
+
+  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
+
+  const handleSelectionChange = (nodeId: string) => {
+    setSelectedCauses((prevSelected) =>
+      prevSelected.includes(nodeId)
+        ? prevSelected.filter((id) => id !== nodeId)
+        : [...prevSelected, nodeId],
+    );
   };
 
   return (
@@ -104,6 +118,10 @@ export const CreateNode: React.FC = () => {
                 </FormControl>
               </FormItem>
             )}
+          />
+          <CauseSelector
+            selectedCauses={selectedCauses}
+            onSelectionChange={handleSelectionChange}
           />
           <Button
             type="submit"
