@@ -19,20 +19,27 @@ interface AreaState {
   getSelectedArea: () => Area | undefined; // Return type is Area or undefined
 }
 
+interface Filters {
+  ownerId?: string;
+  isPublic?: boolean;
+  subscribedUserId?: string;
+}
+
 // Create the store with typed state and actions
 export const useAreaStore = create<AreaState>((set, get) => ({
   areas: [],
   selectedAreaId: null,
   selectArea: (areaId) => set({ selectedAreaId: areaId }),
-  fetchAreas: async () => {
-    // Ensure error handling for fetch call
+  fetchAreas: async (filters: Filters = {}) => {
     try {
-      const response = await axios.get("/api/areas/");
-      const areas: Area[] = response.data; // Axios automatically parses the JSON response
+      const queryString = new URLSearchParams(
+        filters as Record<string, string>,
+      ).toString();
+      const response = await axios.get(`/api/areas/?${queryString}`);
+      const areas = response.data;
       set({ areas });
     } catch (error) {
       console.error("Failed to fetch areas:", error);
-      // Handle errors here
     }
   },
   getSelectedArea: () =>

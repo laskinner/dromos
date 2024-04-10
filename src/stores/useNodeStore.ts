@@ -1,35 +1,31 @@
 import { create } from "zustand";
-import { NodeData } from "@/lib/interfaces/graphTypes";
 import axios from "axios";
+import { NodeData } from "@/lib/interfaces/graphTypes";
 
 interface NodeState {
   nodes: NodeData[];
   selectedNodeId: string | null;
   selectNode: (nodeId: string) => void;
-  fetchNodes: () => Promise<void>;
-  getSelectedNode: () => NodeData | undefined; // Returns NodeData or undefined
+  // Note the change here: fetchNodes now accepts an areaId parameter
+  fetchNodes: (areaId: string) => Promise<void>;
+  getSelectedNode: () => NodeData | undefined;
 }
 
 export const useNodeStore = create<NodeState>((set, get) => ({
   nodes: [],
   selectedNodeId: null,
-  selectNode: (nodeId) => {
-    console.log("Selecting node:", nodeId);
-    set({ selectedNodeId: nodeId });
-  },
-  fetchNodes: async () => {
+  selectNode: (nodeId: string) => set({ selectedNodeId: nodeId }),
+  // Correctly accepting areaId as a parameter
+  fetchNodes: async (areaId: string) => {
     try {
-      // Using Axios for the HTTP request
-      const response = await axios.get("/api/nodes/");
-      // Axios automatically handles JSON parsing
-      const nodes: NodeData[] = response.data;
-      set({ nodes });
+      const response = await axios.get(`/api/nodes/?areaId=${areaId}`);
+      set({ nodes: response.data });
     } catch (error) {
-      console.error("Failed to fetch nodes:", error);
+      console.error(`Failed to fetch nodes for area ${areaId}:`, error);
     }
   },
   getSelectedNode: () => {
-    const state = get();
-    return state.nodes.find((node) => node.id === state.selectedNodeId);
+    const { nodes, selectedNodeId } = get();
+    return nodes.find((node: NodeData) => node.id === selectedNodeId);
   },
 }));

@@ -55,8 +55,13 @@ export const CreateNode: React.FC = () => {
       toast({ title: "Account created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
 
-      // Refresh nodes in your state (assuming you're on a page where this is relevant)
-      useNodeStore.getState().fetchNodes();
+      if (selectedAreaId) {
+        // Only fetch nodes if a specific area is selected
+        useNodeStore.getState().fetchNodes(selectedAreaId);
+      } else {
+        // Handle the case where no area is selected, if necessary
+        console.error("No area selected.");
+      }
     } catch (error) {
       console.error("Failed to create node:", error);
     }
