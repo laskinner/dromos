@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNodeStore } from "@/stores/useNodeStore";
-import { useAreaStore } from "@/stores/useAreaStore";
-import { NodeData } from "@/lib/interfaces/graphTypes";
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
   CommandItem,
   CommandEmpty,
+  CommandGroup,
   CommandInput,
 } from "@/components/ui/command";
 import {
@@ -14,51 +14,55 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface CauseSelectorProps {
+export const CauseSelector: React.FC<{
   selectedCauses: string[];
   onSelectionChange: (nodeId: string) => void;
-}
-
-export const CauseSelector: React.FC<CauseSelectorProps> = ({
-  selectedCauses,
-  onSelectionChange,
-}) => {
-  const { nodes, fetchNodes } = useNodeStore();
-  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+}> = ({ selectedCauses, onSelectionChange }) => {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (selectedAreaId) {
-      fetchNodes(selectedAreaId);
-    }
-  }, [fetchNodes, selectedAreaId]);
+  const { nodes } = useNodeStore();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-full justify-between">
-          {selectedCauses.length > 0 ? "Selected Nodes..." : "Select Nodes..."}
-          <ChevronsUpDown className="ml-2" />
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between"
+        >
+          {selectedCauses.length > 0
+            ? selectedCauses.join(", ")
+            : "Select nodes..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full max-w-xs p-0">
+      <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search nodes..." autoFocus />
-          {nodes.length === 0 ? (
-            <CommandEmpty>No nodes found.</CommandEmpty>
-          ) : (
-            nodes.map((node: NodeData) => (
+          <CommandInput placeholder="Search nodes..." />
+          <CommandEmpty>No nodes found.</CommandEmpty>
+          <CommandGroup>
+            {nodes.map((node) => (
               <CommandItem
                 key={node.id}
-                onSelect={() => onSelectionChange(node.id)}
+                onSelect={() => {
+                  onSelectionChange(node.id);
+                  setOpen(false);
+                }}
               >
-                {selectedCauses.includes(node.id) ? "✓ " : ""}
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    selectedCauses.includes(node.id)
+                      ? "opacity-100"
+                      : "opacity-0",
+                  )}
+                />
                 {node.title}
               </CommandItem>
-            ))
-          )}
+            ))}
+          </CommandGroup>
         </Command>
       </PopoverContent>
     </Popover>
