@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useAreaStore } from "@/stores/useAreaStore";
-import { useNodeStore } from "@/stores/useNodeStore";
 import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
@@ -15,6 +15,11 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { NodeData } from "@/lib/interfaces/graphTypes";
+
+interface GraphData {
+  nodes: NodeData[];
+}
 
 export const CauseSelector: React.FC<{
   selectedCauses: string[];
@@ -22,14 +27,27 @@ export const CauseSelector: React.FC<{
 }> = ({ selectedCauses, onSelectionChange }) => {
   const [open, setOpen] = useState(false);
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
-  const { nodes, fetchNodes } = useNodeStore();
+  const [graphData, setGraphData] = useState<GraphData>({ nodes: [] });
 
-  // Fetch nodes when selectedAreaId changes
+  // Fetch graph data when selectedAreaId changes
   useEffect(() => {
-    if (selectedAreaId) {
-      fetchNodes(selectedAreaId);
-    }
-  }, [fetchNodes, selectedAreaId]);
+    if (!selectedAreaId) return;
+
+    const fetchGraphData = async () => {
+      try {
+        const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
+        setGraphData(response.data);
+      } catch (error) {
+        console.error(
+          "Error fetching graph data for area:",
+          selectedAreaId,
+          error,
+        );
+      }
+    };
+
+    fetchGraphData();
+  }, [selectedAreaId]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -41,7 +59,7 @@ export const CauseSelector: React.FC<{
           className="w-[200px] justify-between"
         >
           {selectedCauses.length > 0
-            ? nodes
+            ? graphData.nodes
                 .filter((node) => selectedCauses.includes(node.id))
                 .map((node) => node.title)
                 .join(", ")
@@ -52,8 +70,8 @@ export const CauseSelector: React.FC<{
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search nodes..." />
-          {nodes.length ? (
-            nodes.map((node) => (
+          {graphData.nodes.length > 0 ? (
+            graphData.nodes.map((node) => (
               <CommandItem
                 key={node.id}
                 onSelect={() => {
