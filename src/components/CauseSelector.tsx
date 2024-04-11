@@ -70,7 +70,7 @@ export const CauseSelector: React.FC<{
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search nodes..." />
-          {graphData.nodes.length > 0 ? (
+          {graphData.nodes.length ? (
             graphData.nodes.map((node) => (
               <CommandItem
                 key={node.id}
