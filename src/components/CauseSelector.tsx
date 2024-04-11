@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNodeStore } from "@/stores/useNodeStore";
+import { useAreaStore } from "@/stores/useAreaStore";
+import { NodeData } from "@/lib/interfaces/graphTypes";
 import {
   Command,
   CommandItem,
@@ -12,32 +14,50 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { ChevronsUpDown } from "lucide-react";
 
-export const CauseSelector: React.FC<{
+interface CauseSelectorProps {
   selectedCauses: string[];
   onSelectionChange: (nodeId: string) => void;
-}> = ({ selectedCauses, onSelectionChange }) => {
-  const { nodes } = useNodeStore();
+}
+
+export const CauseSelector: React.FC<CauseSelectorProps> = ({
+  selectedCauses,
+  onSelectionChange,
+}) => {
+  const { nodes, fetchNodes } = useNodeStore();
+  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (selectedAreaId) {
+      fetchNodes(selectedAreaId);
+    }
+  }, [fetchNodes, selectedAreaId]);
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline">Select Causes</Button>
+        <Button variant="outline" className="w-full justify-between">
+          {selectedCauses.length > 0 ? "Selected Nodes..." : "Select Nodes..."}
+          <ChevronsUpDown className="ml-2" />
+        </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="w-full max-w-xs p-0">
         <Command>
-          <CommandInput placeholder="Search nodes" />
-          {nodes.length ? ( // Corrected to use 'nodes'
-            nodes.map((node) => (
+          <CommandInput placeholder="Search nodes..." autoFocus />
+          {nodes.length === 0 ? (
+            <CommandEmpty>No nodes found.</CommandEmpty>
+          ) : (
+            nodes.map((node: NodeData) => (
               <CommandItem
                 key={node.id}
                 onSelect={() => onSelectionChange(node.id)}
               >
-                {node.title} {selectedCauses.includes(node.id) ? "✓" : ""}
+                {selectedCauses.includes(node.id) ? "✓ " : ""}
+                {node.title}
               </CommandItem>
             ))
-          ) : (
-            <CommandEmpty>No nodes found.</CommandEmpty>
           )}
         </Command>
       </PopoverContent>

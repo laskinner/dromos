@@ -34,6 +34,7 @@
     "cmdk": "^1.0.0",
     "graphology": "^0.25.4",
     "immer": "^10.0.4",
+    "lucide-react": "^0.367.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
