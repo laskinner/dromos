@@ -36,7 +36,12 @@ export const CauseSelector: React.FC<{
     const fetchGraphData = async () => {
       try {
         const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
-        setGraphData(response.data);
+        console.log("API response:", response.data); // Debug log
+        if (response.data && Array.isArray(response.data.nodes)) {
+          setGraphData({ nodes: response.data.nodes });
+        } else {
+          console.error("Unexpected data format:", response.data);
+        }
       } catch (error) {
         console.error(
           "Error fetching graph data for area:",
