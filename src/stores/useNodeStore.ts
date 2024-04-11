@@ -17,8 +17,10 @@ export const useNodeStore = create<NodeState>((set, get) => ({
   selectNode: (nodeId: string) => set({ selectedNodeId: nodeId }),
   // Correctly accepting areaId as a parameter
   fetchNodes: async (areaId: string) => {
+    console.log(`Fetching nodes for area: ${areaId}`);
     try {
       const response = await axios.get(`/api/nodes/?areaId=${areaId}`);
+      console.log("Nodes fetched:", response.data);
       set({ nodes: response.data });
     } catch (error) {
       console.error(`Failed to fetch nodes for area ${areaId}:`, error);

@@ -6,7 +6,6 @@ import {
   Command,
   CommandItem,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
 } from "@/components/ui/command";
 import {
@@ -53,28 +52,23 @@ export const CauseSelector: React.FC<{
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search nodes..." />
-          {nodes.length ? (
-            <CommandGroup>
-              {nodes.map((node) => (
-                <CommandItem
-                  key={node.id}
-                  onSelect={() => {
-                    onSelectionChange(node.id);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedCauses.includes(node.id)
-                        ? "opacity-100"
-                        : "opacity-0",
-                    )}
-                  />
-                  {node.title}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+          {Array.isArray(nodes) && nodes.length > 0 ? (
+            nodes.map((node) => (
+              <CommandItem
+                key={node.id}
+                onSelect={() => onSelectionChange(node.id)}
+              >
+                <Check
+                  className={cn(
+                    "mr-2",
+                    selectedCauses.includes(node.id)
+                      ? "opacity-100"
+                      : "opacity-0",
+                  )}
+                />
+                {node.title}
+              </CommandItem>
+            ))
           ) : (
             <CommandEmpty>No nodes found.</CommandEmpty>
           )}
