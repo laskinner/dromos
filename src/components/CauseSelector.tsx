@@ -21,10 +21,10 @@ export const CauseSelector: React.FC<{
   onSelectionChange: (nodeId: string) => void;
 }> = ({ selectedCauses, onSelectionChange }) => {
   const [open, setOpen] = useState(false);
-  const { nodes, fetchNodes } = useNodeStore();
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+  const { nodes, fetchNodes } = useNodeStore();
 
-  // Fetch nodes whenever the selectedAreaId changes or the component initially mounts
+  // Fetch nodes when selectedAreaId changes
   useEffect(() => {
     if (selectedAreaId) {
       fetchNodes(selectedAreaId);
@@ -52,11 +52,14 @@ export const CauseSelector: React.FC<{
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search nodes..." />
-          {Array.isArray(nodes) && nodes.length > 0 ? (
+          {nodes.length ? (
             nodes.map((node) => (
               <CommandItem
                 key={node.id}
-                onSelect={() => onSelectionChange(node.id)}
+                onSelect={() => {
+                  onSelectionChange(node.id);
+                  setOpen(false);
+                }}
               >
                 <Check
                   className={cn(
