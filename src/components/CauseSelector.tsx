@@ -49,6 +49,12 @@ export const CauseSelector: React.FC<{
     fetchGraphData();
   }, [selectedAreaId]);
 
+  const getSelectedNodeTitles = () =>
+    graphData.nodes
+      .filter((node) => selectedCauses.includes(node.id))
+      .map((node) => node.title)
+      .join(", ");
+
   return (
     <>
       <h1>This node is caused by:</h1>
@@ -81,7 +87,7 @@ export const CauseSelector: React.FC<{
       </Command>
       <br />
       <h1>Selected Causes</h1>
-      <p>{selectedCauses}</p>
+      <p>{getSelectedNodeTitles()}</p>
     </>
   );
 };
