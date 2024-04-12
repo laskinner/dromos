@@ -132,11 +132,7 @@ export const CreateNode: React.FC = () => {
               selectedCauses={selectedCauses}
               onSelectionChange={handleSelectionChange}
             />
-            <Button
-              type="submit"
-              onClick={handleBackClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
+            <Button type="submit" onClick={handleBackClick}>
               Create Node
             </Button>
           </form>
