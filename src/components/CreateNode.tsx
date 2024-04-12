@@ -85,7 +85,7 @@ export const CreateNode: React.FC = () => {
 
   return (
     <div className="flex h-full">
-      <div className="w-1/2 p-28">
+      <div className="w-1/2 p-28 m-2">
         <h1 className="text-xl font-bold">Create Node</h1>
         <h2 className="text-md mb-4">
           Add new node details here. Save when done.
@@ -138,7 +138,7 @@ export const CreateNode: React.FC = () => {
           </form>
         </Form>
       </div>
-      <div className="w-1/2 h-full">
+      <div className="border-2 border-border shadow-lg rounded-lg m-2">
         <GraphRenderer />
       </div>
     </div>
