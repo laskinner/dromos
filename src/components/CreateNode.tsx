@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { CauseSelector } from "@/components/CauseSelector";
+import { GraphRenderer } from "@/components/GraphRenderer";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -83,60 +84,67 @@ export const CreateNode: React.FC = () => {
   };
 
   return (
-    <>
-      <h1>Create Node</h1>
-      <h2> Add new node details here. Save when done.</h2>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <input {...field} id="image" type="file" accept="image/*" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <CauseSelector
-            selectedCauses={selectedCauses}
-            onSelectionChange={handleSelectionChange}
-          />
-          <Button
-            type="submit"
-            onClick={handleBackClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Create Node
-          </Button>
-        </form>
-      </Form>
-    </>
+    <div className="flex h-full">
+      <div className="w-1/2 p-4">
+        <h1 className="text-xl font-bold">Create Node</h1>
+        <h2 className="text-md mb-4">
+          Add new node details here. Save when done.
+        </h2>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image</FormLabel>
+                  <FormControl>
+                    <input {...field} id="image" type="file" accept="image/*" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <CauseSelector
+              selectedCauses={selectedCauses}
+              onSelectionChange={handleSelectionChange}
+            />
+            <Button
+              type="submit"
+              onClick={handleBackClick}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Create Node
+            </Button>
+          </form>
+        </Form>
+      </div>
+      <div className="w-1/2 h-full">
+        <GraphRenderer />
+      </div>
+    </div>
   );
 };

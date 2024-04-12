@@ -14,7 +14,7 @@ interface GraphData {
   edges: EdgeData[];
 }
 
-const GraphRenderer: React.FC = () => {
+export const GraphRenderer: React.FC = () => {
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
   const { selectNode } = useNodeStore();
   const layoutAlgorithm = useLayoutStore((state) => state.layoutAlgorithm);
@@ -85,5 +85,3 @@ const GraphRenderer: React.FC = () => {
 
   return <div ref={containerRef} className="w-full h-full" />;
 };
-
-export default GraphRenderer;
