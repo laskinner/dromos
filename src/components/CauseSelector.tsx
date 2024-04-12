@@ -9,7 +9,8 @@ import {
   CommandInput,
   CommandList,
 } from "@/components/ui/command";
-// import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { NodeData } from "@/lib/interfaces/graphTypes";
 
 interface GraphData {
@@ -50,25 +51,31 @@ export const CauseSelector: React.FC<{
 
   return (
     <>
+      <h1>This node is caused by:</h1>
       <Command>
-        <CommandInput placeholder="Search nodes..." />
+        <CommandInput placeholder="Search causes..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            {graphData.nodes.length ? (
-              graphData.nodes.map((node) => (
-                <CommandItem
-                  key={node.id}
-                  onSelect={() => {
-                    onSelectionChange(node.id);
-                  }}
-                >
-                  {node.title}
-                </CommandItem>
-              ))
-            ) : (
-              <CommandEmpty>No nodes found.</CommandEmpty>
-            )}
+          <CommandGroup heading="Causes">
+            {graphData.nodes.map((node) => (
+              <CommandItem
+                key={node.id}
+                onSelect={() => {
+                  onSelectionChange(node.id);
+                }}
+              >
+                {" "}
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    selectedCauses.includes(node.id)
+                      ? "opacity-100"
+                      : "opacity-0",
+                  )}
+                />
+                {node.title}
+              </CommandItem>
+            ))}
           </CommandGroup>
         </CommandList>
       </Command>
