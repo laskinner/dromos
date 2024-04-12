@@ -138,7 +138,7 @@ export const CreateNode: React.FC = () => {
           </form>
         </Form>
       </div>
-      <div className="border-2 border-border shadow-lg rounded-lg m-2">
+      <div className="w-1/2 h-full m-2 border-2 border-border shadow-lg rounded-lg">
         <GraphRenderer />
       </div>
     </div>
