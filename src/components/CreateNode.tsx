@@ -30,8 +30,6 @@ const formSchema = z.object({
   causedBy: z.array(z.string()),
 });
 
-type FormData = z.infer<typeof formSchema>;
-
 export const CreateNode: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -40,35 +38,25 @@ export const CreateNode: React.FC = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const formData = {
+  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+    const nodeData = {
       title: data.title,
       content: data.content,
-      image: data.title,
-      area: data.area,
+      image: data.image, // Assuming this is now just a URL string
+      area: selectedAreaId || "", // Handle case where selectedAreaId might be null
       causedBy: data.causedBy,
     };
 
     try {
-      await axios.post("/api/nodes/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      // Optionally reset form here
-      form.reset();
-
-      // Optionally navigate back or update UI
+      await axios.post("/api/nodes/", nodeData);
       toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
-
       if (selectedAreaId) {
-        // Only fetch nodes if a specific area is selected
         useNodeStore.getState().fetchNodes(selectedAreaId);
-      } else {
-        // Handle the case where no area is selected, if necessary
-        console.error("No area selected.");
       }
     } catch (error) {
       console.error("Failed to create node:", error);
+      toast({ title: "Error", description: "Failed to create node" });
     }
   };
 
