@@ -25,10 +25,12 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
-  image: z.any(),
+  image: z.string().optional(),
   area: z.string(),
   causedBy: z.array(z.string()),
 });
+
+type FormData = z.infer<typeof formSchema>;
 
 export const CreateNode: React.FC = () => {
   const { toast } = useToast();
@@ -38,12 +40,14 @@ export const CreateNode: React.FC = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("content", data.content);
-    formData.append("area", selectedAreaId || ""); // Handle case where selectedAreaId might be null
-    if (data.image?.[0]) formData.append("image", data.image[0]);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const formData = {
+      title: data.title,
+      content: data.content,
+      image: data.title,
+      area: data.area,
+      causedBy: data.causedBy,
+    };
 
     try {
       await axios.post("/api/nodes/", formData, {
