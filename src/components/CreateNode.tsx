@@ -23,10 +23,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-  title: z.string().min(1, "Name is required."),
+  title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
   image: z.any(),
-  area: z.string(), // Assuming area ID is a string; adjust if it's numeric.
+  area: z.string(),
   causedBy: z.array(z.string()),
 });
 
@@ -53,7 +53,7 @@ export const CreateNode: React.FC = () => {
       form.reset();
 
       // Optionally navigate back or update UI
-      toast({ title: "Account created successfully" });
+      toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
 
       if (selectedAreaId) {
@@ -132,8 +132,11 @@ export const CreateNode: React.FC = () => {
               selectedCauses={selectedCauses}
               onSelectionChange={handleSelectionChange}
             />
-            <Button type="submit" onClick={handleBackClick}>
+            <Button type="submit" className="mb-2">
               Create Node
+            </Button>
+            <Button variant="outline" onClick={handleBackClick}>
+              Back
             </Button>
           </form>
         </Form>
