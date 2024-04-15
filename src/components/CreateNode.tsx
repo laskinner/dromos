@@ -74,16 +74,6 @@ export const CreateNode: React.FC = () => {
 
   const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
-  const handleSelectionChange = (nodeId: string) => {
-    setSelectedCauses((prevSelected) => {
-      const newSelectedCauses = prevSelected.includes(nodeId)
-        ? prevSelected.filter((id) => id !== nodeId)
-        : [...prevSelected, nodeId];
-      form.setValue("causedBy", newSelectedCauses); // Updates form state
-      return newSelectedCauses;
-    });
-  };
-
   // If area ID changes the state here is updated for form
   useEffect(() => {
     form.setValue("area", selectedAreaId || "");
@@ -127,20 +117,22 @@ export const CreateNode: React.FC = () => {
             <FormField
               control={form.control}
               name="causedBy"
-              render={({ field }) => (
+              render={() => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Caused By</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
                   <CauseSelector
                     selectedCauses={selectedCauses}
-                    onSelectionChange={handleSelectionChange}
+                    onSelectionChange={(nodeId: string) => {
+                      const newSelectedCauses = selectedCauses.includes(nodeId)
+                        ? selectedCauses.filter((id) => id !== nodeId)
+                        : [...selectedCauses, nodeId];
+                      setSelectedCauses(newSelectedCauses);
+                      form.setValue("causedBy", newSelectedCauses); // Directly update form state
+                    }}
                   />
                   <FormDescription>
                     These are the nodes which cause this node.
                   </FormDescription>
-                  <FormMessage />
                 </FormItem>
               )}
             />
