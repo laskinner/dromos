@@ -40,7 +40,7 @@ export const CreateNode: React.FC = () => {
   const navigate = useNavigate();
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     const node = {
       title: data.title,
       content: data.content,
