@@ -57,7 +57,6 @@ export const CauseSelector: React.FC<{
 
   return (
     <>
-      <h1>Selected causes for this node.</h1>
       <Command className="rounded-lg border shadow-md">
         <CommandInput placeholder="Search causes..." />
         <CommandList>

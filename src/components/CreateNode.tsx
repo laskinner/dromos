@@ -14,9 +14,11 @@ import axios from "axios";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,13 +75,15 @@ export const CreateNode: React.FC = () => {
   const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
   const handleSelectionChange = (nodeId: string) => {
-    setSelectedCauses((prevSelected) =>
-      prevSelected.includes(nodeId)
+    setSelectedCauses((prevSelected) => {
+      const newSelectedCauses = prevSelected.includes(nodeId)
         ? prevSelected.filter((id) => id !== nodeId)
-        : [...prevSelected, nodeId],
-    );
+        : [...prevSelected, nodeId];
+      form.setValue("causedBy", newSelectedCauses); // Updates form state
+      return newSelectedCauses;
+    });
   };
-  //
+
   // If area ID changes the state here is updated for form
   useEffect(() => {
     form.setValue("area", selectedAreaId || "");
@@ -103,6 +107,7 @@ export const CreateNode: React.FC = () => {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -115,12 +120,29 @@ export const CreateNode: React.FC = () => {
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
-            />
-            <CauseSelector
-              selectedCauses={selectedCauses}
-              onSelectionChange={handleSelectionChange}
+            />{" "}
+            <FormField
+              control={form.control}
+              name="causedBy"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Caused By</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <CauseSelector
+                    selectedCauses={selectedCauses}
+                    onSelectionChange={handleSelectionChange}
+                  />
+                  <FormDescription>
+                    These are the nodes which cause this node.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <Button type="submit" className="mb-2">
               Create Node
