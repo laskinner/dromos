@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CauseSelector } from "@/components/CauseSelector";
 import { GraphRenderer } from "@/components/GraphRenderer";
 import { useToast } from "@/components/ui/use-toast";
@@ -32,13 +32,18 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateNode: React.FC = () => {
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-  });
-
   const { toast } = useToast();
   const navigate = useNavigate();
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      // Provides default value for area in form,
+      // brought by state and sets a fallback value if selectedAreaId might be null
+      area: selectedAreaId || "",
+    },
+  });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("Submitting new node...");
@@ -74,6 +79,11 @@ export const CreateNode: React.FC = () => {
         : [...prevSelected, nodeId],
     );
   };
+  //
+  // If area ID changes the state here is updated for form
+  useEffect(() => {
+    form.setValue("area", selectedAreaId || "");
+  }, [selectedAreaId, form]);
 
   return (
     <div className="flex h-full">
