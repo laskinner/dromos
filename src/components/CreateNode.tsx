@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { CauseSelector } from "@/components/CauseSelector";
 import { GraphRenderer } from "@/components/GraphRenderer";
 import { useToast } from "@/components/ui/use-toast";
@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { useNodeStore } from "@/stores/useNodeStore";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 import {
@@ -48,7 +48,7 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("Submitting new node...");
+    console.log("Submitting new node with data:", data); // Detailed submission log
     const node = {
       title: data.title,
       content: data.content,
@@ -72,12 +72,16 @@ export const CreateNode: React.FC = () => {
     navigate("/graph-view", { state: { selectedAreaId } });
   };
 
-  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
+  //  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
   // If area ID changes the state here is updated for form
   useEffect(() => {
     form.setValue("area", selectedAreaId || "");
   }, [selectedAreaId, form]);
+
+  useEffect(() => {
+    console.log("Form Errors:", form.formState.errors);
+  }, [form.formState.errors]);
 
   return (
     <div className="flex h-full">
@@ -114,21 +118,16 @@ export const CreateNode: React.FC = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
+            <Controller
               name="causedBy"
-              render={() => (
+              control={form.control}
+              render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Caused By</FormLabel>
                   <CauseSelector
-                    selectedCauses={selectedCauses}
-                    onSelectionChange={(nodeId: string) => {
-                      const newSelectedCauses = selectedCauses.includes(nodeId)
-                        ? selectedCauses.filter((id) => id !== nodeId)
-                        : [...selectedCauses, nodeId];
-                      console.log("Updated causes:", newSelectedCauses); // Debugging logs
-                      setSelectedCauses(newSelectedCauses);
-                      form.setValue("causedBy", newSelectedCauses); // Directly update form state
+                    selectedCauses={field.value}
+                    onSelectionChange={(nodeIds) => {
+                      field.onChange(nodeIds); // This ensures the form state is updated correctly
                     }}
                   />
                   <FormDescription>
@@ -140,6 +139,9 @@ export const CreateNode: React.FC = () => {
             <Button type="submit" className="mb-2">
               Create Node
             </Button>
+            {form.formState.errors.causedBy && (
+              <p>{form.formState.errors.causedBy.message}</p>
+            )}
           </form>
         </Form>
         <Button variant="outline" onClick={handleBackClick}>
