@@ -10,7 +10,7 @@ import { useAreaStore } from "@/stores/useAreaStore";
 import { useNodeStore } from "@/stores/useNodeStore";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import axios from "@/api/axiosDefaults";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -114,11 +114,11 @@ export const CreateNode: React.FC = () => {
             <Button type="submit" className="mb-2">
               Create Node
             </Button>
-            <Button variant="outline" onClick={handleBackClick}>
-              Back
-            </Button>
           </form>
         </Form>
+        <Button variant="outline" onClick={handleBackClick}>
+          Back
+        </Button>
       </div>
       <div className="w-1/2 h-full m-2 border-2 border-border shadow-lg rounded-lg">
         <GraphRenderer />
