@@ -24,7 +24,7 @@ import { z } from "zod";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
-  area: z.string().optional(),
+  //  area: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -38,7 +38,7 @@ export const CreateNode: React.FC = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      area: selectedAreaId || "",
+      //     area: selectedAreaId || "",
     },
   });
 
