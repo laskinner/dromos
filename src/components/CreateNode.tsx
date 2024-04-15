@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { useAreaStore } from "@/stores/useAreaStore";
+//import { useAreaStore } from "@/stores/useAreaStore";
 import axios from "axios";
 import {
   Form,
@@ -24,7 +24,6 @@ import { z } from "zod";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
-  //  area: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -32,18 +31,16 @@ type FormData = z.infer<typeof formSchema>;
 export const CreateNode: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
   const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      //     area: selectedAreaId || "",
-    },
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log("Form submission attempted");
     if (selectedCauses.length === 0) {
+      console.log("No causes selected");
       toast({
         title: "Error",
         description: "Please select at least one cause.",
@@ -54,10 +51,11 @@ export const CreateNode: React.FC = () => {
       ...data,
       causedBy: selectedCauses,
     };
+    console.log("Node data prepared for submission:", node);
     try {
       await axios.post("/api/nodes/", node);
       toast({ title: "Node created successfully" });
-      navigate("/graph-view", { state: { selectedAreaId } });
+      navigate("/graph-view");
     } catch (error) {
       console.error("Failed to create node:", error);
       toast({ title: "Error", description: "Failed to create node" });
@@ -65,7 +63,7 @@ export const CreateNode: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    navigate("/graph-view", { state: { selectedAreaId } });
+    navigate("/graph-view");
   };
 
   return (
@@ -114,14 +112,7 @@ export const CreateNode: React.FC = () => {
         <CauseSelector
           selectedCauses={selectedCauses}
           onSelectionChange={(newCauses) => {
-            if (Array.isArray(newCauses)) {
-              setSelectedCauses(newCauses);
-            } else {
-              console.error(
-                "Expected an array of causes, received:",
-                newCauses,
-              );
-            }
+            setSelectedCauses(newCauses);
           }}
         />
       </div>
