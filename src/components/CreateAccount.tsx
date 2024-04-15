@@ -1,4 +1,4 @@
-"use client"; // Use client validiot for form
+"use client"; // Use client to validate form on client side
 
 import React from "react";
 import { LogIn } from "@/components/LogIn";

@@ -25,7 +25,6 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
-  image: z.string().optional(),
   area: z.string(),
   causedBy: z.array(z.string()),
 });
@@ -39,16 +38,8 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const nodeData = {
-      title: data.title,
-      content: data.content,
-      image: data.image, // Assuming this is now just a URL string
-      area: selectedAreaId || "", // Handle case where selectedAreaId might be null
-      causedBy: data.causedBy,
-    };
-
     try {
-      await axios.post("/api/nodes/", nodeData);
+      await axios.post("/api/nodes/", data);
       toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
       if (selectedAreaId) {
@@ -61,7 +52,6 @@ export const CreateNode: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Navigate back to GraphView with selectedAreaId state
     navigate("/graph-view", { state: { selectedAreaId } });
   };
 
@@ -104,18 +94,6 @@ export const CreateNode: React.FC = () => {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <input {...field} id="image" type="file" accept="image/*" />
                   </FormControl>
                 </FormItem>
               )}
