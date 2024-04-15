@@ -17,21 +17,24 @@ interface GraphData {
   nodes: NodeData[];
 }
 
-export const CauseSelector: React.FC<{
+interface CauseSelectorProps {
   selectedCauses: string[];
-  onSelectionChange: (nodeId: string) => void;
-}> = ({ selectedCauses, onSelectionChange }) => {
+  onSelectionChange: (causes: string[]) => void;
+}
+
+export const CauseSelector: React.FC<CauseSelectorProps> = ({
+  selectedCauses,
+  onSelectionChange,
+}) => {
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
   const [graphData, setGraphData] = useState<GraphData>({ nodes: [] });
 
-  // Fetch graph data when selectedAreaId changes
   useEffect(() => {
     if (!selectedAreaId) return;
 
     const fetchGraphData = async () => {
       try {
         const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
-        console.log("API response:", response.data); // Debug log
         if (response.data && Array.isArray(response.data.nodes)) {
           setGraphData({ nodes: response.data.nodes });
         } else {
@@ -49,6 +52,17 @@ export const CauseSelector: React.FC<{
     fetchGraphData();
   }, [selectedAreaId]);
 
+  const handleSelectionChange = (nodeId: string) => {
+    const index = selectedCauses.indexOf(nodeId);
+    const newSelectedCauses = [...selectedCauses];
+    if (index > -1) {
+      newSelectedCauses.splice(index, 1); // Removes the node ID from the selection
+    } else {
+      newSelectedCauses.push(nodeId); // Adds the node ID to the selection
+    }
+    onSelectionChange(newSelectedCauses); // Calls the passed function with the new array
+  };
+
   const getSelectedNodeTitles = () =>
     graphData.nodes
       .filter((node) => selectedCauses.includes(node.id))
@@ -65,11 +79,8 @@ export const CauseSelector: React.FC<{
             {graphData.nodes.map((node) => (
               <CommandItem
                 key={node.id}
-                onSelect={() => {
-                  onSelectionChange(node.id);
-                }}
+                onSelect={() => handleSelectionChange(node.id)}
               >
-                {" "}
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",

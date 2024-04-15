@@ -1,33 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { CauseSelector } from "@/components/CauseSelector";
 import { GraphRenderer } from "@/components/GraphRenderer";
 import { useToast } from "@/components/ui/use-toast";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { z } from "zod";
 import axios from "axios";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { z } from "zod";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
   area: z.string().optional(),
-  causedBy: z.array(z.string()),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -36,6 +33,7 @@ export const CreateNode: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -45,11 +43,21 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (selectedCauses.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please select at least one cause.",
+      });
+      return;
+    }
+    const node = {
+      ...data,
+      causedBy: selectedCauses,
+    };
     try {
-      await axios.post("/api/nodes/", data);
+      await axios.post("/api/nodes/", node);
       toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
-      // Additional logic for fetching nodes if necessary
     } catch (error) {
       console.error("Failed to create node:", error);
       toast({ title: "Error", description: "Failed to create node" });
@@ -78,7 +86,6 @@ export const CreateNode: React.FC = () => {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -91,41 +98,33 @@ export const CreateNode: React.FC = () => {
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" className="mb-2">
               Create Node
             </Button>
-            {form.formState.errors.causedBy && (
-              <p>{form.formState.errors.causedBy.message}</p>
-            )}
           </form>
         </Form>
         <Button variant="outline" onClick={handleBackClick}>
           Back
         </Button>
       </div>
-      <Controller
-        name="causedBy"
-        control={form.control}
-        render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>Caused By</FormLabel>
-            <CauseSelector
-              selectedCauses={field.value}
-              onSelectionChange={(nodeIds) => {
-                field.onChange(nodeIds); // This ensures the form state is updated correctly
-              }}
-            />
-            <FormDescription>
-              These are the nodes which cause this node.
-            </FormDescription>
-          </FormItem>
-        )}
-      />
-
+      <div className="w-1/2 m-2">
+        <CauseSelector
+          selectedCauses={selectedCauses}
+          onSelectionChange={(newCauses) => {
+            if (Array.isArray(newCauses)) {
+              setSelectedCauses(newCauses);
+            } else {
+              console.error(
+                "Expected an array of causes, received:",
+                newCauses,
+              );
+            }
+          }}
+        />
+      </div>
       <div className="w-1/2 h-full m-2 border-2 border-border shadow-lg rounded-lg">
         <GraphRenderer />
       </div>
