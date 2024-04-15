@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required."),
   content: z.string().min(1, "Description is required."),
-  area: z.string(),
+  area: z.string().optional(),
   causedBy: z.array(z.string()),
 });
 
