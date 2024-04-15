@@ -113,7 +113,7 @@ export const CreateNode: React.FC = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
             <FormField
               control={form.control}
               name="causedBy"
