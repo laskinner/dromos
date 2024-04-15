@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { CauseSelector } from "@/components/CauseSelector";
 import { GraphRenderer } from "@/components/GraphRenderer";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
-import { useNodeStore } from "@/stores/useNodeStore";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
@@ -41,27 +40,16 @@ export const CreateNode: React.FC = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // Provides default value for area in form,
-      // brought by state and sets a fallback value if selectedAreaId might be null
       area: selectedAreaId || "",
     },
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("Submitting new node with data:", data); // Detailed submission log
-    const node = {
-      title: data.title,
-      content: data.content,
-      area: data.area,
-      causedBy: data.causedBy,
-    };
     try {
-      await axios.post("/api/nodes/", node);
+      await axios.post("/api/nodes/", data);
       toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
-      if (selectedAreaId) {
-        useNodeStore.getState().fetchNodes(selectedAreaId);
-      }
+      // Additional logic for fetching nodes if necessary
     } catch (error) {
       console.error("Failed to create node:", error);
       toast({ title: "Error", description: "Failed to create node" });
@@ -71,17 +59,6 @@ export const CreateNode: React.FC = () => {
   const handleBackClick = () => {
     navigate("/graph-view", { state: { selectedAreaId } });
   };
-
-  //  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
-
-  // If area ID changes the state here is updated for form
-  useEffect(() => {
-    form.setValue("area", selectedAreaId || "");
-  }, [selectedAreaId, form]);
-
-  useEffect(() => {
-    console.log("Form Errors:", form.formState.errors);
-  }, [form.formState.errors]);
 
   return (
     <div className="flex h-full">
