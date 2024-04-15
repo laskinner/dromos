@@ -29,17 +29,26 @@ const formSchema = z.object({
   causedBy: z.array(z.string()),
 });
 
+type FormData = z.infer<typeof formSchema>;
+
 export const CreateNode: React.FC = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
+    const node = {
+      title: data.title,
+      content: data.content,
+      area: data.area,
+      causedBy: data.causedBy,
+    };
     try {
-      await axios.post("/api/nodes/", data);
+      await axios.post("/api/nodes/", node);
       toast({ title: "Node created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
       if (selectedAreaId) {
