@@ -95,24 +95,6 @@ export const CreateNode: React.FC = () => {
                 </FormItem>
               )}
             />
-            <Controller
-              name="causedBy"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Caused By</FormLabel>
-                  <CauseSelector
-                    selectedCauses={field.value}
-                    onSelectionChange={(nodeIds) => {
-                      field.onChange(nodeIds); // This ensures the form state is updated correctly
-                    }}
-                  />
-                  <FormDescription>
-                    These are the nodes which cause this node.
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
             <Button type="submit" className="mb-2">
               Create Node
             </Button>
@@ -125,6 +107,25 @@ export const CreateNode: React.FC = () => {
           Back
         </Button>
       </div>
+      <Controller
+        name="causedBy"
+        control={form.control}
+        render={({ field }) => (
+          <FormItem className="flex flex-col">
+            <FormLabel>Caused By</FormLabel>
+            <CauseSelector
+              selectedCauses={field.value}
+              onSelectionChange={(nodeIds) => {
+                field.onChange(nodeIds); // This ensures the form state is updated correctly
+              }}
+            />
+            <FormDescription>
+              These are the nodes which cause this node.
+            </FormDescription>
+          </FormItem>
+        )}
+      />
+
       <div className="w-1/2 h-full m-2 border-2 border-border shadow-lg rounded-lg">
         <GraphRenderer />
       </div>
