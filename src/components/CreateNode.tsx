@@ -126,6 +126,7 @@ export const CreateNode: React.FC = () => {
                       const newSelectedCauses = selectedCauses.includes(nodeId)
                         ? selectedCauses.filter((id) => id !== nodeId)
                         : [...selectedCauses, nodeId];
+                      console.log("Updated causes:", newSelectedCauses); // Debugging logs
                       setSelectedCauses(newSelectedCauses);
                       form.setValue("causedBy", newSelectedCauses); // Directly update form state
                     }}
