@@ -41,6 +41,7 @@ export const CreateNode: React.FC = () => {
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log("Submitting new node...");
     const node = {
       title: data.title,
       content: data.content,
