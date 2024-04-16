@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-//import { useAreaStore } from "@/stores/useAreaStore";
+import { useAreaStore } from "@/stores/useAreaStore";
 import axios from "axios";
 import {
   Form,
@@ -31,6 +31,7 @@ type FormData = z.infer<typeof formSchema>;
 export const CreateNode: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { selectedAreaId } = useAreaStore();
   const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
 
   const form = useForm<FormData>({
@@ -38,27 +39,58 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("Form submission attempted");
     if (selectedCauses.length === 0) {
-      console.log("No causes selected");
       toast({
         title: "Error",
         description: "Please select at least one cause.",
       });
       return;
     }
-    const node = {
+
+    if (!selectedAreaId) {
+      toast({
+        title: "Error",
+        description:
+          "No area selected. Please select an area before creating a node.",
+      });
+      return;
+    }
+
+    const nodeData = {
       ...data,
       causedBy: selectedCauses,
+      area: selectedAreaId, // Directly use the selected area ID from the store
     };
-    console.log("Node data prepared for submission:", node);
+
     try {
-      await axios.post("/api/nodes/", node);
+      await axios.post("/api/nodes/", nodeData);
       toast({ title: "Node created successfully" });
-      navigate("/graph-view");
+      navigate("/graph-view", { state: { selectedAreaId } });
     } catch (error) {
-      console.error("Failed to create node:", error);
-      toast({ title: "Error", description: "Failed to create node" });
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error("Failed to create node:", error.response.data);
+          toast({
+            title: "Error",
+            description: `Failed to create node: ${JSON.stringify(
+              error.response.data,
+            )}`,
+          });
+        } else {
+          console.error("Network error or no response:", error.message);
+          toast({
+            title: "Network Error",
+            description:
+              "No response received, check your network or contact support.",
+          });
+        }
+      } else {
+        console.error("An unexpected error occurred:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+        });
+      }
     }
   };
 
