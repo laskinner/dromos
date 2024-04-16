@@ -1,57 +1,59 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAreaStore } from "@/stores/useAreaStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-// Interface for a single area
-interface Area {
-  id: string;
-  name: string;
-  description: string;
-  image: string; // Add image field
-}
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Home: React.FC = () => {
-  const [areas, setAreas] = useState<Area[]>([]); // Types as an array of Area
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { areas, selectArea, fetchAreas } = useAreaStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
+
+  const fetchInitialAreas = useCallback(async () => {
+    const hasMoreAreas = await fetchAreas(1); // Fetch the first page
+    if (hasMoreAreas) {
+      setCurrentPage(2); // Prepare to fetch the next page
+    } else {
+      setHasMore(false); // No more pages to fetch
+    }
+  }, [fetchAreas]);
 
   useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          "https://dromos-backend-1542a6a0bcb1.herokuapp.com/api/areas/",
-        );
-        setAreas(response.data); // Sets fetched areas
-      } catch (error) {
-        console.error("Failed to fetch areas:", error);
-        setError("Failed to fetch areas. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchInitialAreas();
+  }, [fetchInitialAreas]);
 
-    fetchAreas();
-  }, []);
+  const loadMoreAreas = async () => {
+    const hasMoreAreas = await fetchAreas(currentPage);
+    if (hasMoreAreas) {
+      setCurrentPage((prev) => prev + 1);
+    } else {
+      setHasMore(false);
+    }
+  };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleCardClick = (areaId: string) => {
+    selectArea(areaId);
+    navigate("/graph-view");
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
-        Graphs with recent updates
-      </h1>
+    <InfiniteScroll
+      dataLength={areas.length}
+      next={loadMoreAreas} // Function to load more items
+      hasMore={hasMore} // Whether there are more items to load
+      loader={<h4>Loading...</h4>}
+      endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {areas.map((area) => (
-          <Card key={area.id}>
+          <Card key={area.id} onClick={() => handleCardClick(area.id)}>
             <CardHeader>
               <CardTitle>{area.name}</CardTitle>
-              {/* Display area image */}
               <img
                 src={area.image}
                 alt={area.name}
@@ -59,12 +61,12 @@ const Home: React.FC = () => {
               />
             </CardHeader>
             <CardContent>
-              <p>{area.description}</p>
+              <p>{area.content}</p>
             </CardContent>
           </Card>
         ))}
       </div>
-    </div>
+    </InfiniteScroll>
   );
 };
 

@@ -1,22 +1,19 @@
 import { create } from "zustand";
 import axios from "../api/axiosDefaults";
 
-// Define the Area interface according to area data structure
 interface Area {
   id: string;
   name: string;
   image: string;
   content: string;
-  // Add other properties as necessary
 }
 
-// Define the state and actions for area store
 interface AreaState {
-  areas: Area[]; // Use Area[] instead of any[]
+  areas: Area[];
   selectedAreaId: string | null;
   selectArea: (areaId: string) => void;
-  fetchAreas: () => Promise<void>;
-  getSelectedArea: () => Area | undefined; // Return type is Area or undefined
+  fetchAreas: (page?: number, filters?: Filters) => Promise<boolean>;
+  getSelectedArea: () => Area | undefined;
 }
 
 interface Filters {
@@ -25,21 +22,30 @@ interface Filters {
   subscribedUserId?: string;
 }
 
-// Create the store with typed state and actions
 export const useAreaStore = create<AreaState>((set, get) => ({
   areas: [],
   selectedAreaId: null,
-  selectArea: (areaId) => set({ selectedAreaId: areaId }),
-  fetchAreas: async (filters: Filters = {}) => {
+  selectArea: (areaId: string) => {
+    set({ selectedAreaId: areaId });
+  },
+  fetchAreas: async (page = 1, filters: Filters = {}) => {
     try {
-      const queryString = new URLSearchParams(
-        filters as Record<string, string>,
-      ).toString();
-      const response = await axios.get(`/api/areas/?${queryString}`);
-      const areas = response.data;
-      set({ areas });
+      const params = new URLSearchParams({
+        ...(filters as Record<string, string>),
+        page: String(page),
+      });
+      const response = await axios.get(`/api/areas/?${params.toString()}`);
+      set((state) => ({
+        areas:
+          page === 1
+            ? response.data.results
+            : [...state.areas, ...response.data.results],
+        // Optional: Maintain pagination state if needed
+      }));
+      return response.data.next !== null; // Returns true if there is a next page
     } catch (error) {
       console.error("Failed to fetch areas:", error);
+      return false;
     }
   },
   getSelectedArea: () =>
