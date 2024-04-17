@@ -67,7 +67,7 @@ export const useAreaStore = create<AreaState>((set, get) => ({
 
   fetchAllAreas: async () => {
     try {
-      const response = await axios.get(`/api/areas/all`);
+      const response = await axios.get(`/api/areas/`);
       set({ areas: response.data.results || [], error: null });
     } catch (error) {
       console.error("Failed to fetch all areas:", error);
