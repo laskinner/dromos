@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const Home: React.FC = () => {
+export const Home: React.FC = () => {
   const { areas, fetchAreas, currentPage, totalPages, selectArea } =
     useAreaStore(); // Ensure selectArea is included here
   const [loading, setLoading] = useState(false);
@@ -73,5 +73,3 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
-export default Home;
