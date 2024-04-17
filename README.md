@@ -11,6 +11,7 @@ This Readme explicates the following with the regard to the Dromos front-end. Fo
 - [Features](#features)
   - [Existing Features](#existing-features)
   - [Planned Features](#planned-features)
+- [Components](#components)
 - [Testing](#testing)
   - [Validator Testing](#validator-testing)
 - [Known Bugs](#known-bugs)
@@ -74,6 +75,49 @@ Used for drawing and managing large network graphs efficiently, enabling interac
 - **Governance Model for Canonical Graphs**: Establishes a framework for managing and approving changes to canonical graphs.
 - **Billing**: Implements a billing system for users, particularly useful for service monetization and managing premium features.
 - **Mobile App**: Extend functionality with a native mobile application.
+
+## Components
+### React Components
+| Component Name    | Description                                         |
+|-------------------|-----------------------------------------------------|
+| CauseSelector.tsx | Manages the selection of causes in a graph.         |
+| CommentForm.tsx   | Handles the creation of new comments.               |
+| CommentList.tsx   | Displays a list of comments.                        |
+| CreateAccount.tsx | Form component for user account creation.           |
+| CreateGraph.tsx   | Interface for creating new graphs.                  |
+| CreateNode.tsx    | Provides a form to add new nodes to a graph.        |
+| EditAccount.tsx   | Form component for editing user account details.    |
+| GraphRenderer.tsx | Renders interactive graphs using SigmaJS.           |
+| GraphSelector.tsx | Allows users to select different graphs to view.    |
+| GraphView.tsx     | Main component for displaying a graph and its details. |
+| Home.tsx          | Serves as the landing page of the application.      |
+| LogIn.tsx         | Component for user login.                           |
+| Navbar.tsx        | Navigation bar for the application.                 |
+| NodeFullView.tsx  | Provides a detailed view of a node, including comments. |
+| NodeQuickView.tsx | Offers a quick overview of a node's basic information in a drawer. |
+
+### UI Components
+| Component Name | Description                                           |
+|----------------|-------------------------------------------------------|
+| button.tsx     | A reusable button component for user interactions.    |
+| card.tsx       | Displays content in a structured card format.         |
+| command.tsx    | Invokes commands within interfaces.                   |
+| dialog.tsx     | Provides modal dialogues for user confirmations or inputs. |
+| drawer.tsx     | A sliding panel used for displaying additional information without leaving the current context. |
+| form.tsx       | Generic form component for handling user inputs.      |
+| input.tsx      | Input field for form data entry.                      |
+| label.tsx      | Text label for UI elements, particularly form inputs. |
+| popover.tsx    | Small overlay that opens on demand to show more content. |
+| scroll-area.tsx| Custom scrollable area for wrapping content.          |
+| select.tsx     | Dropdown selection component.                         |
+| sheet.tsx      | Container that groups related content and actions.    |
+| switch.tsx     | Toggle switch for enabling or disabling a setting.    |
+| tabs.tsx       | Component for tabbed interfaces, allowing content organization. |
+| textarea.tsx   | Text input field for multiline text.                  |
+| toast.tsx      | Brief messages about app processes.                   |
+| toaster.tsx    | Manages the display of toast notifications.           |
+| tooltip.tsx    | Small informative message that appears when hovering over an element. |
+| use-toast.tsx  | Hook for triggering toast notifications.              |
 
 ## Testing
 
