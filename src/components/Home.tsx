@@ -1,54 +1,46 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Home: React.FC = () => {
-  const { areas, selectArea, fetchAreas } = useAreaStore();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const { areas, fetchAreas, currentPage, totalPages, selectArea } =
+    useAreaStore(); // Ensure selectArea is included here
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchInitialAreas = useCallback(async () => {
-    const hasMoreAreas = await fetchAreas(1); // Fetch the first page
-    if (hasMoreAreas) {
-      setCurrentPage(2); // Prepare to fetch the next page
-    } else {
-      setHasMore(false); // No more pages to fetch
-    }
+  useEffect(() => {
+    const fetchInitialAreas = async () => {
+      setLoading(true);
+      await fetchAreas(1); // Fetch the first page
+      setLoading(false);
+    };
+    fetchInitialAreas();
   }, [fetchAreas]);
 
-  useEffect(() => {
-    fetchInitialAreas();
-  }, [fetchInitialAreas]);
+  const handlePreviousPage = async () => {
+    if (currentPage > 1) {
+      setLoading(true);
+      await fetchAreas(currentPage - 1);
+      setLoading(false);
+    }
+  };
 
-  const loadMoreAreas = async () => {
-    const hasMoreAreas = await fetchAreas(currentPage);
-    if (hasMoreAreas) {
-      setCurrentPage((prev) => prev + 1);
-    } else {
-      setHasMore(false);
+  const handleNextPage = async () => {
+    if (currentPage < totalPages) {
+      setLoading(true);
+      await fetchAreas(currentPage + 1);
+      setLoading(false);
     }
   };
 
   const handleCardClick = (areaId: string) => {
-    selectArea(areaId);
+    selectArea(areaId); // This is where selectArea is used
     navigate("/graph-view");
   };
 
   return (
-    <InfiniteScroll
-      dataLength={areas.length}
-      next={loadMoreAreas} // Function to load more items
-      hasMore={hasMore} // Whether there are more items to load
-      loader={<h4>Loading...</h4>}
-      endMessage={
-        <p style={{ textAlign: "center" }}>
-          <b>Yay! You have seen it all</b>
-        </p>
-      }
-    >
+    <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {areas.map((area) => (
           <Card key={area.id} onClick={() => handleCardClick(area.id)}>
@@ -66,7 +58,19 @@ const Home: React.FC = () => {
           </Card>
         ))}
       </div>
-    </InfiniteScroll>
+      <div className="pagination-controls">
+        <button onClick={handlePreviousPage} disabled={currentPage <= 1}>
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={handleNextPage} disabled={currentPage >= totalPages}>
+          Next
+        </button>
+      </div>
+      {loading && <p>Loading...</p>}
+    </div>
   );
 };
 

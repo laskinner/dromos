@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAreaStore } from "@/stores/useAreaStore";
 import {
   Select,
@@ -8,14 +8,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const GraphSelector: React.FC = () => {
-  const { areas, selectedAreaId, selectArea } = useAreaStore();
+export const GraphSelector: React.FC = () => {
+  const { areas, fetchAllAreas, selectedAreaId, selectArea } = useAreaStore();
+
+  useEffect(() => {
+    fetchAllAreas(); // Fetch all areas when the component mounts
+  }, [fetchAllAreas]);
 
   const handleSelectArea = (areaId: string) => {
     selectArea(areaId); // Directly use selectArea action from the store
   };
 
-  // Find the name of the selected area to display in the SelectValue
   const selectedAreaName =
     areas.find((area) => area.id === selectedAreaId)?.name || "Select a Graph";
 
@@ -34,5 +37,3 @@ const GraphSelector: React.FC = () => {
     </Select>
   );
 };
-
-export default GraphSelector;
