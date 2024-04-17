@@ -167,6 +167,7 @@ Used for drawing and managing large network graphs efficiently, enabling interac
 
 ### Known Bugs
 
+
 ## Deployment
 
 Deployed on Heroku:
@@ -176,6 +177,15 @@ Deployed on Heroku:
 3. Configured environment variables in Heroku settings.
 
 ## UX
+### Graph View
+This was the original Balsamiq for the Graph View. One can see the difference between the mock-up and final implementation, as it became apparent that a dropdown would rather than scrollable cards would free up space for other needed functionality, such as the selected graph card and create node button.
+![image](https://github.com/laskinner/dromos/assets/1858258/cbee916a-d4a8-4ad5-bf32-b5d8e5c0f7fc)
+
+### Navbar
+Here, the actual implementation closely resembled the mock-ups of the Navbar:
+![image](https://github.com/laskinner/dromos/assets/1858258/4ea02540-39cf-4a28-8e89-908e486eefc6)
+
+
 
 ## Credits
 
