@@ -25,9 +25,7 @@ interface Filters {
 export const useAreaStore = create<AreaState>((set, get) => ({
   areas: [],
   selectedAreaId: null,
-  selectArea: (areaId: string) => {
-    set({ selectedAreaId: areaId });
-  },
+  selectArea: (areaId: string) => set({ selectedAreaId: areaId }),
   fetchAreas: async (page = 1, filters: Filters = {}) => {
     try {
       const params = new URLSearchParams({
@@ -48,6 +46,9 @@ export const useAreaStore = create<AreaState>((set, get) => ({
       return false;
     }
   },
-  getSelectedArea: () =>
-    get().areas.find((area) => area.id === get().selectedAreaId),
+  getSelectedArea: () => {
+    const areas = get().areas;
+    const selectedAreaId = get().selectedAreaId;
+    return areas.find((area) => area.id === selectedAreaId);
+  },
 }));
