@@ -187,3 +187,4 @@ Deployed on Heroku:
 
 - Icons from Fontawesome and Lucide.
 - Logo generated using [logo.com](www.logo.com)
+- Blood Pressure picture: Image by <a href="https://pixabay.com/users/mohamed_hassan-5229782/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7210325">Mohamed Hassan</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=7210325">Pixabay</a>
