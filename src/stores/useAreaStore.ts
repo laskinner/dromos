@@ -33,27 +33,20 @@ export const useAreaStore = create<AreaState>((set, get) => ({
         page: String(page),
       });
       const response = await axios.get(`/api/areas/?${params.toString()}`);
-      if (!response.data || !response.data.results) {
-        console.error("Invalid data structure:", response.data);
-        return false; // or handle this case appropriately
-      }
       set((state) => ({
         areas:
           page === 1
             ? response.data.results
             : [...state.areas, ...response.data.results],
       }));
-      return response.data.next !== null;
+      return response.data.next !== null; // Returns true if there is a next page
     } catch (error) {
       console.error("Failed to fetch areas:", error);
       return false;
     }
   },
   getSelectedArea: () => {
-    const { areas, selectedAreaId } = get();
-    if (Array.isArray(areas) && selectedAreaId) {
-      return areas.find((area) => area.id === selectedAreaId);
-    }
-    return undefined;
+    const selectedAreaId = get().selectedAreaId;
+    return get().areas.find((area) => area.id === selectedAreaId);
   },
 }));
