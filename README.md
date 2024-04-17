@@ -1,6 +1,6 @@
 # Dromos
 
-## Overview
+## Purpose
 
 Dromos is designed to enhance user engagement and collaboration within a specific interest community through dynamic interactive node graphs which users can create, edit, maintain. This platform targets both public and private sector researchers, scientists and stakeholders, offering tools that not only facilitate comprehensive visualization of causal pathways, but also encourage collaboration and knowledge sharing.
 
