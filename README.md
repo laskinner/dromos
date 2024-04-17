@@ -21,8 +21,13 @@ This Readme explicates the following with the regard to the Dromos front-end. Fo
 
 ## Technologies Used
 
+The technology stack and design choices for Dromos were purposefully selected with a clear focus on its future public use and the necessity for continuous evolution. The adoption of TypeScript over JavaScript, ShadCN/UI instead of Bootstrap, and TailwindCSS rather than traditional vanilla CSS, were all strategic decisions made to ensure the platform’s suitability for external parties. These choices are essential for maintaining the integrity and extensibility of Dromos as it transitions from initial development and portfolio project into a public-facing offering. The technologies chosen are not only robust and scalable but also support the objective of ongoing iteration and refinement, which is crucial considering that Dromos is intended to be enhanced and expanded by different developers over time.
+
 ### [React](https://reactjs.org/)
 Used for building user interfaces with components, allowing for efficient and flexible UI development.
+
+### [TypeScript](https://www.typescriptlang.org/)
+Used for enhancing JavaScript code with static type definitions, TypeScript offers improved maintainability, understandability, and robustness of the codebase. By introducing static typing, it helps catch errors early in the development process and provides a more scalable foundation for large projects.
 
 ### [TailwindCSS](https://tailwindcss.com/)
 Used for creating custom designs quickly with a utility-first CSS framework, enabling rapid styling directly in markup.
@@ -44,6 +49,13 @@ Used for managing state in React applications, providing a simple and minimalist
 
 ### [SigmaJS](http://sigmajs.org/)
 Used for drawing and managing large network graphs efficiently, enabling interactive visualizations directly within web applications.
+
+### [pnpm](https://pnpm.io/)
+Used for efficient and fast package management, pnpm offers a unique node_modules structure that saves disk space and reduces installation time by avoiding redundancy.
+
+### [vite](https://vitejs.dev/)
+Used for front-end tooling, Vite provides a fast development environment by leveraging modern web technologies. It offers hot module replacement and optimized build times, significantly improving the developer experience.
+
 
 ## Features
 
@@ -177,6 +189,10 @@ Deployed on Heroku:
 3. Configured environment variables in Heroku settings.
 
 ## UX
+
+### Nodes on design
+In general, the choice keep Dromos simple is that it is a SaaS app for business purposes, and in a highly technical space. Therefore, bright colors, unneeded imagery and any otherwise distracted media and colors were not used. As well, the choice to maintain a highly minimal design was done purposefully to maintain flexibility, as there will be changes in the future.
+
 ### Graph View
 This was the original Balsamiq for the Graph View. One can see the difference between the mock-up and final implementation, as it became apparent that a dropdown would rather than scrollable cards would free up space for other needed functionality, such as the selected graph card and create node button.
 ![image](https://github.com/laskinner/dromos/assets/1858258/cbee916a-d4a8-4ad5-bf32-b5d8e5c0f7fc)
