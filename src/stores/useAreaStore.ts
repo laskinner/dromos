@@ -47,8 +47,10 @@ export const useAreaStore = create<AreaState>((set, get) => ({
     }
   },
   getSelectedArea: () => {
-    const areas = get().areas;
-    const selectedAreaId = get().selectedAreaId;
-    return areas.find((area) => area.id === selectedAreaId);
+    const { areas, selectedAreaId } = get();
+    if (Array.isArray(areas) && selectedAreaId) {
+      return areas.find((area) => area.id === selectedAreaId);
+    }
+    return undefined;
   },
 }));
