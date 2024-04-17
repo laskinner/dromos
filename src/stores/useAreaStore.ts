@@ -33,14 +33,17 @@ export const useAreaStore = create<AreaState>((set, get) => ({
         page: String(page),
       });
       const response = await axios.get(`/api/areas/?${params.toString()}`);
+      if (!response.data || !response.data.results) {
+        console.error("Invalid data structure:", response.data);
+        return false; // or handle this case appropriately
+      }
       set((state) => ({
         areas:
           page === 1
             ? response.data.results
             : [...state.areas, ...response.data.results],
-        // Optional: Maintain pagination state if needed
       }));
-      return response.data.next !== null; // Returns true if there is a next page
+      return response.data.next !== null;
     } catch (error) {
       console.error("Failed to fetch areas:", error);
       return false;
