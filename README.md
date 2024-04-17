@@ -1,30 +1,61 @@
-# React + TypeScript + Vite
+# Dromos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Dromos is designed to enhance user engagement and networking within a specific interest community through dynamic interactive node graphs on which users can created, edit, maintain, and callaborate. This platform targets both public and private sector researchers, scientists and stakeholders, offering tools that not only facilitate comprehensive visualization of causal pathways, but also encourage collaboration and knowledge sharing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
 
-## Expanding the ESLint configuration
+- **Frontend**: React, TailwindCSS, Lucide-React, Fontawesome, Zustand, Zod
+- **Backend**: Django, Django REST Framework
+- **Deployment**: Heroku, Cloudinary for media management
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Features
 
-- Configure the top-level `parserOptions` property like this:
+### Existing Features
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **Interactive Map**: Utilizes SigmaJS to render interactive node graphs, enhancing user understanding of complex data structures.
+- **User Authentication**: Secure login and registration system to manage user access and personalize user experiences.
+- **Dynamic Graph Rendering**: Harneses power of SigmaJS and Django back-end to provide infrastructure to implement dynamic node coloring, sizing, and labeling.
+- **Customizable User Profiles**: Users can customize their profiles, allowing them to add personal touches and relevant information.
+- **Responsive Design**: Built with TailwindCSS for a seamless experience across all devices.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Planned Features
+
+- **Advanced Analytics**: Tools to delve deeper into data, offering more sophisticated insights.
+- **Mobile App**: Extend functionality with a native mobile application.
+
+## Testing
+
+### Validator Testing
+
+- **HTML**: Passed W3C validation without errors.
+- **CSS**: No errors on Jigsaw validator.
+
+### Known Bugs
+
+## Deployment
+
+Deployed on Heroku:
+
+1. Set up the Heroku project.
+2. Linked to GitHub repository for continuous deployment.
+3. Configured environment variables in Heroku settings.
+
+## Credits
+
+### Content
+
+- Project descriptions and documentation are original.
+
+### Media
+
+- Icons from Fontawesome and Lucide.
+
+### Acknowledgments
+
+- Community contributions and user feedback have been invaluable.
+
+## Additional Documentation
+
+- Detailed API documentation and frontend component guides are available in separate documents linked here.
