@@ -176,8 +176,8 @@ Used for front-end tooling, Vite provides a fast development environment by leve
 
 **Note: Due to  errors and attempts at critical bug fixing until project submission, code has not yet been passed through a validator**
 
-- **HTML**: Passed W3C validation without errors.
-- **CSS**: No errors on Jigsaw validator.
+- **HTML**: 
+- **CSS**: 
 
 ### Known Bugs
 
