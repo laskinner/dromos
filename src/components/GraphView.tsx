@@ -27,6 +27,9 @@ const GraphView: React.FC = () => {
 
   const isOwner = (areaId: string) => {
     const selectedArea = areas.find((area) => area.id === areaId);
+    console.log("Selected Area:", selectedArea);
+    console.log("Current User:", currentUser);
+    console.log("Owner Details:", selectedArea?.owner);
     return currentUser?.id === selectedArea?.owner; // Check if the logged-in user is the owner
   };
 
