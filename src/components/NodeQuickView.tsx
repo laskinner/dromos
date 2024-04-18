@@ -15,29 +15,48 @@ import { NodeData } from "@/lib/interfaces/graphTypes";
 
 const NodeQuickView: React.FC = () => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false); // New state to control drawer visibility
+  const [isOpen, setIsOpen] = useState(false); // State to control drawer visibility
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
+  const [ownerDetails, setOwnerDetails] = useState({ username: "Loading..." }); // Holds the username of the node owner
 
   useEffect(() => {
+    const fetchOwnerDetails = async (ownerId?: string) => {
+      if (!ownerId) {
+        console.error("Owner ID is undefined.");
+        setOwnerDetails({ username: "Unknown" });
+        return;
+      }
+      try {
+        const response = await axios.get(`/api/users/${ownerId}`);
+        setOwnerDetails({ username: response.data.username });
+      } catch (error) {
+        console.error("Failed to fetch owner details:", error);
+        setOwnerDetails({ username: "Unknown" });
+      }
+    };
+
     if (!selectedNodeId) {
       setNodeDetails(null);
-      setIsOpen(false); // Close drawer when there is no selected node
+      setOwnerDetails({ username: "Unknown" });
+      setIsOpen(false);
       return;
     }
 
     const node = useNodeStore.getState().getSelectedNode();
-    console.log("Selected node details:", node);
     if (node) {
       setNodeDetails(node);
-      setIsOpen(true); // Open drawer when node details are fetched
+      fetchOwnerDetails(node.owner); // Fetch owner details using owner ID
+      setIsOpen(true);
     } else {
-      // Fetch node details if necessary
       const fetchNodeDetails = async () => {
         try {
           const response = await axios.get(`/api/nodes/${selectedNodeId}`);
           setNodeDetails(response.data);
-          setIsOpen(true); // Open drawer when node details are fetched from API
+          if (response.data.owner) {
+            fetchOwnerDetails(response.data.owner); // Fetch owner details if owner ID is present
+          }
+          setIsOpen(true);
         } catch (error) {
           console.error("Failed to fetch node details:", error);
           setIsOpen(false);
@@ -48,23 +67,34 @@ const NodeQuickView: React.FC = () => {
     }
   }, [selectedNodeId]);
 
-  // Function to close the drawer
   const closeDrawer = () => setIsOpen(false);
 
   return (
     <Drawer open={isOpen}>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-sm p-4">
           <DrawerHeader>
-            <DrawerTitle>{nodeDetails?.title || "Node Details"}</DrawerTitle>
+            <DrawerTitle className="font-bold text-lg">
+              {nodeDetails?.title || "Node Details"}
+            </DrawerTitle>
           </DrawerHeader>
-          <div>
-            <p>{nodeDetails?.content}</p>
-            <p>Owner: {nodeDetails?.owner}</p>
-            <p>To view comments, go to node full view.</p>
+          <div className="space-y-2">
+            <p>
+              <strong>Description:</strong>
+              {nodeDetails?.content || "No details available."}
+            </p>
+            <p>
+              <strong>Owner:</strong> {ownerDetails.username} // Use
+              ownerDetails to display the username
+            </p>
+            <p className="text-sm text-gray-600">
+              To view comments and more details, go to the full node view.
+            </p>
           </div>
           <DrawerFooter>
-            <Button onClick={() => navigate("/node-view")}>View Node</Button>
+            <Button onClick={() => navigate("/node-view")}>
+              View Full Node
+            </Button>
             <DrawerClose asChild>
               <Button variant="outline" onClick={closeDrawer}>
                 Close

@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import NodeQuickView from "./NodeQuickView";
+import { NodeQuickView } from "./NodeQuickView";
 
 const GraphView: React.FC = () => {
   const navigate = useNavigate();
@@ -27,9 +27,6 @@ const GraphView: React.FC = () => {
 
   const isOwner = (areaId: string) => {
     const selectedArea = areas.find((area) => area.id === areaId);
-    console.log("Selected Area:", selectedArea);
-    console.log("Current User:", currentUser);
-    console.log("Owner Details:", selectedArea?.owner);
     return currentUser?.id === selectedArea?.owner; // Check if the logged-in user is the owner
   };
 
