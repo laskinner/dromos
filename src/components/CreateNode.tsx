@@ -72,9 +72,7 @@ export const CreateNode: React.FC = () => {
           console.error("Failed to create node:", error.response.data);
           toast({
             title: "Error",
-            description: `Failed to create node: ${JSON.stringify(
-              error.response.data,
-            )}`,
+            description: "Please log in.",
           });
         } else {
           console.error("Network error or no response:", error.message);

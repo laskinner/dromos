@@ -27,7 +27,7 @@ export const useUserStore = create<UserState & UserActions>()(
         if (user === null) {
           state.currentUser = null;
         } else {
-          // Ensures we're not spreading "null" into the state.
+          // Ensures null is not spreading into the user state.
           state.currentUser = { ...state.currentUser, ...user };
         }
       });

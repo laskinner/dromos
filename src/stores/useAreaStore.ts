@@ -1,22 +1,30 @@
 import { create } from "zustand";
-import axios from "../api/axiosDefaults";
+import axios from "axios";
 
-// Define the Area interface according to area data structure
-interface Area {
+interface AreaApiResponse {
   id: string;
   name: string;
-  image: string;
   content: string;
-  // Add other properties as necessary
+  image: string;
+  slug: string;
+  status: string;
+  is_public: boolean;
+  owner: string;
+  created_at: string;
+  updated_at: string;
+  subscribers_count: number;
 }
 
-// Define the state and actions for area store
+interface Area extends AreaApiResponse {}
+
 interface AreaState {
-  areas: Area[]; // Use Area[] instead of any[]
+  areas: Area[];
   selectedAreaId: string | null;
+  loading: boolean;
+  error: string | null;
   selectArea: (areaId: string) => void;
   fetchAreas: () => Promise<void>;
-  getSelectedArea: () => Area | undefined; // Return type is Area or undefined
+  getSelectedArea: () => Area | undefined;
 }
 
 interface Filters {
@@ -25,21 +33,28 @@ interface Filters {
   subscribedUserId?: string;
 }
 
-// Create the store with typed state and actions
 export const useAreaStore = create<AreaState>((set, get) => ({
   areas: [],
   selectedAreaId: null,
-  selectArea: (areaId) => set({ selectedAreaId: areaId }),
+  loading: false,
+  error: null,
+  selectArea: (areaId: string) => set({ selectedAreaId: areaId }),
   fetchAreas: async (filters: Filters = {}) => {
+    set({ loading: true, error: null });
     try {
       const queryString = new URLSearchParams(
         filters as Record<string, string>,
       ).toString();
       const response = await axios.get(`/api/areas/?${queryString}`);
-      const areas = response.data;
-      set({ areas });
+      set({
+        areas: response.data.map((area: AreaApiResponse) => ({
+          ...area,
+        })),
+        loading: false,
+      });
     } catch (error) {
       console.error("Failed to fetch areas:", error);
+      set({ error: "Failed to fetch areas", loading: false });
     }
   },
   getSelectedArea: () =>
