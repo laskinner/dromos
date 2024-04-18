@@ -17,30 +17,32 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
         Explore Graphs
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {areas.map((area) => (
-          <Card
-            key={area.id}
-            onClick={() => handleCardClick(area.id)}
-            className="cursor-pointer"
-          >
-            <CardHeader>
-              <CardTitle>{area.name}</CardTitle>
-              <img
-                src={area.image}
-                alt={area.name}
-                className="w-full h-40 object-cover"
-              />
-            </CardHeader>
-            <CardContent>
-              <p>{area.content}</p>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="max-w-6xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {areas.map((area) => (
+            <Card
+              key={area.id}
+              onClick={() => handleCardClick(area.id)}
+              className="cursor-pointer"
+            >
+              <CardHeader>
+                <CardTitle>{area.name}</CardTitle>
+                <img
+                  src={area.image}
+                  alt={area.name}
+                  className="w-full h-40 object-cover"
+                />
+              </CardHeader>
+              <CardContent>
+                <p>{area.content}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
