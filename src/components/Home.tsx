@@ -1,51 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAreaStore } from "@/stores/useAreaStore";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const Home: React.FC = () => {
-  const { areas, fetchAreas, currentPage, totalPages, selectArea } =
-    useAreaStore(); // Ensure selectArea is included here
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+// Interface for a single area
+interface Area {
+  id: string;
+  name: string;
+  description: string;
+  image: string; // Add image field
+}
+
+const Home: React.FC = () => {
+  const [areas, setAreas] = useState<Area[]>([]); // Types as an array of Area
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchInitialAreas = async () => {
-      setLoading(true);
-      await fetchAreas(1); // Fetch the first page
-      setLoading(false);
+    const fetchAreas = async () => {
+      try {
+        const response = await axios.get(
+          "https://dromos-backend-1542a6a0bcb1.herokuapp.com/api/areas/",
+        );
+        setAreas(response.data); // Sets fetched areas
+      } catch (error) {
+        console.error("Failed to fetch areas:", error);
+        setError("Failed to fetch areas. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchInitialAreas();
-  }, [fetchAreas]);
 
-  const handlePreviousPage = async () => {
-    if (currentPage > 1) {
-      setLoading(true);
-      await fetchAreas(currentPage - 1);
-      setLoading(false);
-    }
-  };
+    fetchAreas();
+  }, []);
 
-  const handleNextPage = async () => {
-    if (currentPage < totalPages) {
-      setLoading(true);
-      await fetchAreas(currentPage + 1);
-      setLoading(false);
-    }
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const handleCardClick = (areaId: string) => {
-    selectArea(areaId); // This is where selectArea is used
-    navigate("/graph-view");
-  };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
+        Graphs with recent updates
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {areas.map((area) => (
-          <Card key={area.id} onClick={() => handleCardClick(area.id)}>
+          <Card key={area.id}>
             <CardHeader>
               <CardTitle>{area.name}</CardTitle>
+              {/* Display area image */}
               <img
                 src={area.image}
                 alt={area.name}
@@ -53,23 +59,13 @@ export const Home: React.FC = () => {
               />
             </CardHeader>
             <CardContent>
-              <p>{area.content}</p>
+              <p>{area.description}</p>
             </CardContent>
           </Card>
         ))}
       </div>
-      <div className="pagination-controls">
-        <button onClick={handlePreviousPage} disabled={currentPage <= 1}>
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={currentPage >= totalPages}>
-          Next
-        </button>
-      </div>
-      {loading && <p>Loading...</p>}
     </div>
   );
 };
+
+export default Home;

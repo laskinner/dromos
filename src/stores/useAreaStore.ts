@@ -1,11 +1,22 @@
 import { create } from "zustand";
 import axios from "../api/axiosDefaults";
 
+// Define the Area interface according to area data structure
 interface Area {
   id: string;
   name: string;
   image: string;
   content: string;
+  // Add other properties as necessary
+}
+
+// Define the state and actions for area store
+interface AreaState {
+  areas: Area[]; // Use Area[] instead of any[]
+  selectedAreaId: string | null;
+  selectArea: (areaId: string) => void;
+  fetchAreas: () => Promise<void>;
+  getSelectedArea: () => Area | undefined; // Return type is Area or undefined
 }
 
 interface Filters {
@@ -14,68 +25,23 @@ interface Filters {
   subscribedUserId?: string;
 }
 
-interface AreaState {
-  areas: Area[];
-  selectedAreaId: string | null;
-  currentPage: number;
-  totalPages: number;
-  error: string | null;
-  selectArea: (areaId: string) => void;
-  fetchAreas: (page?: number, filters?: Filters) => Promise<boolean>;
-  fetchAllAreas: () => Promise<void>;
-  getSelectedArea: () => Area | undefined;
-}
-
+// Create the store with typed state and actions
 export const useAreaStore = create<AreaState>((set, get) => ({
   areas: [],
   selectedAreaId: null,
-  currentPage: 1,
-  totalPages: 1,
-  error: null,
-
-  selectArea: (areaId: string) => set({ selectedAreaId: areaId }),
-
-  fetchAreas: async (page = 1, filters: Filters = {}) => {
-    const params = new URLSearchParams(
-      Object.entries(filters).reduce<Record<string, string>>(
-        (acc, [key, value]) => {
-          if (value !== undefined) {
-            // Ensures no undefined values are converted to string
-            acc[key] = String(value);
-          }
-          return acc;
-        },
-        { page: String(page) },
-      ), // Start the accumulation with the page parameter
-    );
-
+  selectArea: (areaId) => set({ selectedAreaId: areaId }),
+  fetchAreas: async (filters: Filters = {}) => {
     try {
-      const response = await axios.get(`/api/areas/?${params.toString()}`);
-      set({
-        areas: response.data.results || [],
-        currentPage: page,
-        totalPages: Math.ceil(response.data.total / response.data.pageSize),
-        error: null,
-      });
-      return response.data.next != null;
+      const queryString = new URLSearchParams(
+        filters as Record<string, string>,
+      ).toString();
+      const response = await axios.get(`/api/areas/?${queryString}`);
+      const areas = response.data;
+      set({ areas });
     } catch (error) {
       console.error("Failed to fetch areas:", error);
-      set({ error: "Failed to fetch areas" });
-      return false;
     }
   },
-
-  fetchAllAreas: async () => {
-    try {
-      const response = await axios.get(`/api/areas/`);
-      set({ areas: response.data.results || [], error: null });
-    } catch (error) {
-      console.error("Failed to fetch all areas:", error);
-      set({ error: "Failed to fetch all areas" });
-    }
-  },
-
-  getSelectedArea: () => {
-    return get().areas.find((area) => area.id === get().selectedAreaId);
-  },
+  getSelectedArea: () =>
+    get().areas.find((area) => area.id === get().selectedAreaId),
 }));

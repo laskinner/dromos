@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GraphRenderer } from "./GraphRenderer";
-import { GraphSelector } from "./GraphSelector";
+import GraphSelector from "./GraphSelector";
 import { CreateGraph } from "./CreateGraph";
 import { useAreaStore } from "@/stores/useAreaStore";
 import {
