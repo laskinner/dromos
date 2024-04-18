@@ -146,47 +146,53 @@ Used for front-end tooling, Vite provides a fast development environment by leve
 |-----------------|---------------------------------------------------------|---------|
 | Create Graph    | Given a user on the graph creation page, when they input graph details and submit, then the system creates a new graph. | Passed  |
 | Read Graph      | Given a user on the platform, when they select a graph, then they are able to view its details. | Passed  |
-| Update Graph    | Given a user viewing a graph they own, when they update details and submit, then the system updates the graph's details. | Passed  |
-| Delete Graph    | Given a user viewing a graph they own, when they decide to delete the graph and confirm the action, then the system removes the graph. | Passed  |
+| Update Graph    | Given a user viewing a graph they own, when they update details and submit, then the system updates the graph's details. | Failed. User ID not being returned in graph view component, and therefore rendering the edit button does not function.  |
+| Delete Graph    | Given a user viewing a graph they own, when they decide to delete the graph and confirm the action, then the system removes the graph. | Failed. See above problem with Update Graph.  |
 
 ### CRUD Nodes
 | Test Case       | Acceptance Criteria                                     | Result  |
 |-----------------|---------------------------------------------------------|---------|
 | Create Node     | Given a user editing a graph, when they add a new node and specify its details, then the system adds the node to the graph. | Passed  |
 | Read Node       | Given a user viewing a graph, when they select a node, then they see the node's details. | Passed  |
-| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Passed  |
-| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Passed  |
+| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Failed. Not yet implemented.  |
+| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Failed. Not yet implemented.  |
 
 ### CRUD Comments
 | Test Case        | Acceptance Criteria                                      | Result  |
 |------------------|----------------------------------------------------------|---------|
 | Create Comment   | Given a user viewing a graph or node, when they submit a comment, then the system adds the comment to the item. | Passed  |
 | Read Comment     | Given a user on a graph or node page, when they view comments, then they see all posted comments. | Passed  |
-| Update Comment   | Given a user viewing their comment, when they edit and submit the updated comment, then the system updates the comment on the graph or node. | Passed  |
-| Delete Comment   | Given a user viewing their comment, when they delete it and confirm, then the system removes their comment from the graph or node. | Passed  |
+| Update Comment   | Given a user viewing their comment, when they edit and submit the updated comment, then the system updates the comment on the graph or node. | Failed. Not yet implemented.  |
+| Delete Comment   | Given a user viewing their comment, when they delete it and confirm, then the system removes their comment from the graph or node. | Failed. Not yet implemented.  |
 
 ### Permissions
 | Test Case                                       | Acceptance Criteria                                                  | Result  |
 |-------------------------------------------------|----------------------------------------------------------------------|---------|
 | Non-Logged In Read                              | Given a non-logged-in user, when they navigate the platform, then they can only read available public graphs, nodes, and comments. | Passed  |
-| Logged-In Create/Edit Own                       | Given a logged-in user, when they create or edit content, then they can only modify content they have created. | Passed  |
-| Logged-In Delete Own                            | Given a logged-in user viewing their own content, when they decide to delete it and confirm, then the system removes their content. | Passed  |
+| Logged-In Create/Edit Graph                       | Given a logged-in user, when they create or edit content, then they can only modify content they have created. | Failed. While user is being returned to front-end, edit button is not being rendered in graph view.  |
+| Logged-In Delete Own                            | Given a logged-in user viewing their own content, when they decide to delete it and confirm, then the system removes their content. | Failed, see above problem with edit.  |
 
 ### Validator Testing
+
+**Note: Due to  errors and attempts at critical bug fixing until project submission, code has not yet been passed through a validator**
 
 - **HTML**: Passed W3C validation without errors.
 - **CSS**: No errors on Jigsaw validator.
 
 ### Known Bugs
 
+- Editing and deleting graphs, nodes, and comments is not functioning due to conditional rendering not having the reuquired data to render the functionality.
 
 ## Deployment
 
 Deployed on Heroku:
 
-1. Set up the Heroku project.
-2. Linked to GitHub repository for continuous deployment.
-3. Configured environment variables in Heroku settings.
+Automated deployment on Heroku is set up. To deploy, simply merge to main.
+
+If errors arise, logs can be found in Heroku instances:
+
+Front-end: dromos
+Back-end: dromos-backend
 
 ## UX
 
@@ -201,7 +207,15 @@ This was the original Balsamiq for the Graph View. One can see the difference be
 Here, the actual implementation closely resembled the mock-ups of the Navbar:
 ![image](https://github.com/laskinner/dromos/assets/1858258/4ea02540-39cf-4a28-8e89-908e486eefc6)
 
+### Needed improments
 
+Some improvements would be required, including:
+- Node Quick drawer, which appears upon clicking a node
+- Comment formatting and node full view
+
+Additional improments would include:
+- Additionaly rendering algorithms for graph
+- Arrows on graph rendering to show directionality
 
 ## Credits
 
