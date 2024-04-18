@@ -1,57 +1,35 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-// Interface for a single area
-interface Area {
-  id: string;
-  name: string;
-  description: string;
-  image: string; // Add image field
-}
+import { useAreaStore } from "@/stores/useAreaStore";
 
 const Home: React.FC = () => {
-  const [areas, setAreas] = useState<Area[]>([]); // Types as an array of Area
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { areas, fetchAreas, selectArea } = useAreaStore();
 
   useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        const response = await axios.get(
-          "https://dromos-backend-1542a6a0bcb1.herokuapp.com/api/areas/",
-        );
-        setAreas(response.data); // Sets fetched areas
-      } catch (error) {
-        console.error("Failed to fetch areas:", error);
-        setError("Failed to fetch areas. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchAreas(); // Fetch areas when component mounts
+  }, [fetchAreas]);
 
-    fetchAreas();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleCardClick = (areaId: string) => {
+    selectArea(areaId); // Set the selected area ID in the store
+    navigate("/graph-view"); // Navigate to the GraphView
+  };
 
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
-        Graphs with recent updates
+        Explore Graphs
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {areas.map((area) => (
-          <Card key={area.id}>
+          <Card
+            key={area.id}
+            onClick={() => handleCardClick(area.id)}
+            className="cursor-pointer"
+          >
             <CardHeader>
               <CardTitle>{area.name}</CardTitle>
-              {/* Display area image */}
               <img
                 src={area.image}
                 alt={area.name}
@@ -59,7 +37,7 @@ const Home: React.FC = () => {
               />
             </CardHeader>
             <CardContent>
-              <p>{area.description}</p>
+              <p>{area.content}</p>
             </CardContent>
           </Card>
         ))}
