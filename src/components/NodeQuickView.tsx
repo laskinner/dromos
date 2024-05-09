@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import { NodeData } from "@/lib/interfaces/graphTypes";
 
-const NodeQuickView: React.FC = () => {
+export const NodeQuickView: React.FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false); // State to control drawer visibility
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
@@ -106,5 +106,3 @@ const NodeQuickView: React.FC = () => {
     </Drawer>
   );
 };
-
-export default NodeQuickView;
