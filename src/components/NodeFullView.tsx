@@ -69,7 +69,11 @@ export const NodeFullView: React.FC = () => {
         <CommentList />
       </div>
       <div>
-        <Button variant="outline" onClick={handleBackClick}>
+        <Button
+          variant="outline"
+          className="max-w-4xl mx-auto px-4"
+          onClick={handleBackClick}
+        >
           Back
         </Button>
       </div>
