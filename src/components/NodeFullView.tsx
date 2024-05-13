@@ -65,13 +65,14 @@ export const NodeFullView: React.FC = () => {
           <p className="text-gray-600">Owner: {nodeDetails?.owner}</p>
         </CardContent>
       </Card>
+      <CommentList />
       <Button
+        variant="outline"
         onClick={handleBackClick}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         Back
       </Button>
-      <CommentList />
     </div>
   );
 };
