@@ -134,6 +134,14 @@ Used for front-end tooling, Vite provides a fast development environment by leve
 | tooltip.tsx    | Small informative message that appears when hovering over an element. |
 | use-toast.tsx  | Hook for triggering toast notifications.              |
 
+### Component and State refactoring
+During development, management of both components and state became increasingly difficult, and at same point it became apparent that the entire site would benefit from refactoring two componenents, which also served as the routes, out into two routes with several many fine-grained components. Not only did this help keep the architecture of the site more organized, but it also provided more reesuability--allowing components to be used in more than one place--as well as performance, as refactoring components no longer needed to be rendered when nothing changed. However, in the process of doing this, managing state become unwieldy, with prop-drilling and passing state to and from parent and child components. Therefore, Zustand was deployed to help manage state. One such example would be updating the node store when a node is clicked, and then being able to access that node ID stored in the stated when navigating out to the full node view. Prior to the architecture, the site's rough architecture can be seen here, with the orance arrows representing passing state:
+<img width="1090" alt="image" src="https://github.com/laskinner/dromos/assets/1858258/0bd8fa41-5cbd-41f9-a401-d12f6038d337">
+
+With the refactoring, the fine-grained archecture resulting from abstrocting components out into much smaller can be seen, along with abstracting state out into centralized storage locations using Zustand:
+<img width="922" alt="image" src="https://github.com/laskinner/dromos/assets/1858258/32cdc545-a1f6-43a4-9366-eb485a515a92">
+
+
 ## Testing
 
 ### CRUD User Accounts
