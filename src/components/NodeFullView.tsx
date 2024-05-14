@@ -68,12 +68,8 @@ export const NodeFullView: React.FC = () => {
         </Card>
         <CommentList />
       </div>
-      <div>
-        <Button
-          variant="outline"
-          className="max-w-4xl mx-auto px-4"
-          onClick={handleBackClick}
-        >
+      <div className="max-w-4xl mx-auto px-4">
+        <Button variant="outline" onClick={handleBackClick}>
           Back
         </Button>
       </div>
