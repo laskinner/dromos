@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import axios from "axios";
 
+// Define the interface for comment data
 interface CommentData {
   id: string;
   content: string;
+  owner_username: string;
+  created_at: string; // Using string type to represent the date for simplicity
 }
 
 // Define the state and actions for your comment store

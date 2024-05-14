@@ -27,8 +27,12 @@ export const CommentList = () => {
       <div className="mt-4">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <div key={comment.id}>
-              <p>{comment.content}</p>
+            <div key={comment.id} className="mb-4 p-4 border rounded shadow-sm">
+              <p className="font-semibold">{comment.owner_username}</p>
+              <p className="text-gray-600">{comment.content}</p>
+              <p className="text-sm text-gray-500">
+                {new Date(comment.created_at).toLocaleString()}
+              </p>
             </div>
           ))
         ) : (
