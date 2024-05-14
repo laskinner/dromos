@@ -24,16 +24,20 @@ export const CommentList = () => {
       <div>
         <h2 className="text-2xl font-bold text-gray-700 mt-4">Comments</h2>
       </div>
-      {comments.length > 0 ? (
-        comments.map((comment) => (
-          <div key={comment.id}>
-            <p>{comment.content}</p>
-          </div>
-        ))
-      ) : (
-        <p>No comments yet.</p>
-      )}
-      <CommentForm nodeId={selectedNodeId} />
+      <div className="mt-4">
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.id}>
+              <p>{comment.content}</p>
+            </div>
+          ))
+        ) : (
+          <p>No comments yet.</p>
+        )}
+      </div>
+      <div className="mt-4">
+        <CommentForm nodeId={selectedNodeId} />
+      </div>
     </div>
   );
 };
