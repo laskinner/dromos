@@ -60,7 +60,6 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
           name="content"
           render={({ field, fieldState: { error } }) => (
             <FormItem>
-              <FormLabel>Comment</FormLabel>
               <FormControl>
                 <Input placeholder="Add comment here" {...field} />
               </FormControl>
