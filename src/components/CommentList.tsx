@@ -22,7 +22,7 @@ export const CommentList = () => {
     <div>
       <hr />
       <div>
-        <p>Comments</p>
+        <h2 className="text-2xl font-bold text-gray-700 mt-4">Comments</h2>
       </div>
       {comments.length > 0 ? (
         comments.map((comment) => (
