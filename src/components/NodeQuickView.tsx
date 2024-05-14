@@ -80,13 +80,12 @@ export const NodeQuickView: React.FC = () => {
           </DrawerHeader>
           <div className="space-y-2">
             <p>
-              <strong>Description:</strong>
+              <strong>Description:</strong>{" "}
               {nodeDetails?.content || "No details available."}
             </p>
             <p>
               <strong>Owner:</strong>{" "}
-              {ownerDetails?.username || "No user found."} // Use ownerDetails
-              to display the username
+              {ownerDetails?.username || "No user found."}
             </p>
             <p className="text-sm text-gray-600">
               To view comments and more details, go to the full node view.
