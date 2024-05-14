@@ -84,8 +84,9 @@ export const NodeQuickView: React.FC = () => {
               {nodeDetails?.content || "No details available."}
             </p>
             <p>
-              <strong>Owner:</strong> {ownerDetails.username} // Use
-              ownerDetails to display the username
+              <strong>Owner:</strong>{" "}
+              {ownerDetails?.username || "No user found."} // Use ownerDetails
+              to display the username
             </p>
             <p className="text-sm text-gray-600">
               To view comments and more details, go to the full node view.
