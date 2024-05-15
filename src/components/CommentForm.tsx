@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCommentStore } from "@/stores/useCommentStore"; // Import the comment store
 
 const formSchema = z.object({
   content: z.string().min(1, {
@@ -23,30 +24,49 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-// Updated props type to include `nodeId`
 interface CommentFormProps {
   nodeId?: string;
+  commentId?: string; // Add commentId prop for editing
+  initialContent?: string; // Add initialContent prop for editing
+  onCancelEdit?: () => void; // Add onCancelEdit prop for canceling edit mode
 }
 
-export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
+export const CommentForm: React.FC<CommentFormProps> = ({
+  nodeId,
+  commentId,
+  initialContent,
+  onCancelEdit,
+}) => {
   console.log("Received Node ID in CommentForm:", nodeId);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: initialContent || "",
+    },
   });
 
   const { toast } = useToast();
+  const addComment = useCommentStore((state) => state.addComment); // Get the addComment method
+  const editComment = useCommentStore((state) => state.editComment); // Get the editComment method
 
   const onSubmit = async (data: FormData) => {
     if (nodeId) {
       try {
-        // Directly use 'data.content' now that the form field is named 'content'
-        await axios.post("/api/comments/", {
-          content: data.content,
-          node: nodeId,
-        });
-        toast({ variant: "success", title: "Account created successfully" });
-
-        form.reset(); // Reset the form after successful submission
+        if (commentId) {
+          // Edit existing comment
+          await editComment(commentId, data.content);
+          toast({ variant: "success", title: "Comment edited successfully" });
+          if (onCancelEdit) onCancelEdit();
+        } else {
+          // Add new comment
+          const response = await axios.post("/api/comments/", {
+            content: data.content,
+            node: nodeId,
+          });
+          toast({ variant: "success", title: "Comment added successfully" });
+          addComment(response.data); // Add the new comment to the state
+          form.reset(); // Reset the form after successful submission
+        }
       } catch (error) {
         const axiosError = error as AxiosError;
         console.error("Failed to submit comment:", axiosError.response?.data);
@@ -76,7 +96,14 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <div className="flex space-x-4">
+          <Button type="submit">{commentId ? "Update" : "Submit"}</Button>
+          {commentId && onCancelEdit && (
+            <Button type="button" variant="outline" onClick={onCancelEdit}>
+              Cancel
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

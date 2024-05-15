@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import axios from "axios";
 
 interface UserType {
   username?: string;
@@ -17,6 +18,7 @@ interface UserState {
 
 interface UserActions {
   setCurrentUser: (user: Partial<UserType> | null) => void;
+  fetchUserProfile: () => Promise<void>; // Add fetchUserProfile method
 }
 
 export const useUserStore = create<UserState & UserActions>()(
@@ -27,10 +29,19 @@ export const useUserStore = create<UserState & UserActions>()(
         if (user === null) {
           state.currentUser = null;
         } else {
-          // Ensures null is not spreading into the user state.
           state.currentUser = { ...state.currentUser, ...user };
         }
       });
+    },
+    fetchUserProfile: async () => {
+      try {
+        const response = await axios.get<UserType>("/api/profiles/user/");
+        set((state) => {
+          state.currentUser = response.data;
+        });
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
     },
   })),
 );

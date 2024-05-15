@@ -13,15 +13,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useUserStore } from "@/stores/useUserStore";
 
 export const NodeFullView: React.FC = () => {
   const navigate = useNavigate();
   const [nodeDetails, setNodeDetails] = useState<NodeData | null>(null);
   const selectedNodeId = useNodeStore((state) => state.selectedNodeId);
   const selectedAreaId = useAreaStore((state) => state.selectedAreaId);
+  const fetchUserProfile = useUserStore((state) => state.fetchUserProfile);
 
   const handleBackClick = () => {
-    // Navigate back to GraphView with selectedAreaId state
     navigate("/graph-view", { state: { selectedAreaId } });
   };
 
@@ -36,7 +37,6 @@ export const NodeFullView: React.FC = () => {
     if (node) {
       setNodeDetails(node);
     } else {
-      // Fetch node details if necessary
       const fetchNodeDetails = async () => {
         try {
           const response = await axios.get(`/api/nodes/${selectedNodeId}`);
@@ -48,7 +48,9 @@ export const NodeFullView: React.FC = () => {
 
       fetchNodeDetails();
     }
-  }, [selectedNodeId]);
+
+    fetchUserProfile();
+  }, [selectedNodeId, fetchUserProfile]);
 
   return (
     <>
