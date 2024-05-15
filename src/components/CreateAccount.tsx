@@ -36,7 +36,7 @@ const formSchema = z
     username: z
       .string()
       .min(2, { message: "Username must be at least 2 characters long." }),
-    email: z.string().email("Invalid email address."), // Ensure email field is present
+    email: z.string().email("Invalid email address."),
     password1: z.string().min(6, "Password must be at least 6 characters."),
     password2: z.string().min(6, "Confirm Password must match Password."),
     firstName: z.string().optional(),
@@ -63,14 +63,14 @@ export const CreateAccount: React.FC = () => {
     const registrationData = {
       username: data.username,
       email: data.email,
-      password: data.password1,
+      password1: data.password1,
+      password2: data.password2,
       firstName: data.firstName,
       lastName: data.lastName,
       bio: data.bio,
     };
 
     try {
-      // Attempt to create an account
       console.log("Attempting to create account"); // Debug statement
       await axios.post("/dj-rest-auth/registration/", registrationData);
       toast({ title: "Account created successfully" });
@@ -165,7 +165,11 @@ export const CreateAccount: React.FC = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>Please enter a password.</FormDescription>
                     <FormMessage />
@@ -179,7 +183,11 @@ export const CreateAccount: React.FC = () => {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Confirm Password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Confirm Password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       Please reenter the same password as above.
