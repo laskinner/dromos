@@ -36,7 +36,7 @@ const formSchema = z
     username: z
       .string()
       .min(2, { message: "Username must be at least 2 characters long." }),
-    email: z.string().email("Invalid email address."),
+    email: z.string().email("Invalid email address."), // Ensure email field is present
     password1: z.string().min(6, "Password must be at least 6 characters."),
     password2: z.string().min(6, "Confirm Password must match Password."),
     firstName: z.string().optional(),
@@ -56,6 +56,7 @@ export const CreateAccount: React.FC = () => {
   });
 
   const { toast } = useToast();
+  const { setCurrentUser } = useUserStore();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("Form submitted"); // Debug statement
@@ -70,11 +71,13 @@ export const CreateAccount: React.FC = () => {
 
     try {
       // Attempt to create an account
+      console.log("Attempting to create account"); // Debug statement
       await axios.post("/dj-rest-auth/registration/", registrationData);
       toast({ title: "Account created successfully" });
 
       // If account creation was successful, automatically log the user in
       const loginData = { username: data.username, password: data.password1 };
+      console.log("Attempting to log in"); // Debug statement
       const loginResponse = await axios.post("/api/token/", loginData);
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
 
@@ -86,11 +89,13 @@ export const CreateAccount: React.FC = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
       // Fetch and set the current user's profile
+      console.log("Fetching user profile"); // Debug statement
       const userResponse = await axios.get("/api/profiles/user/");
       setCurrentUser(userResponse.data); // Assuming setCurrentUser is a function from your user store to update the user state
 
       toast({ title: "Logged in successfully" });
     } catch (error) {
+      console.log("Error occurred", error); // Debug statement
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data.detail || "An error occurred";
         console.error("Error message:", errorMessage); // Debug statement
@@ -101,8 +106,6 @@ export const CreateAccount: React.FC = () => {
       }
     }
   };
-
-  const { setCurrentUser } = useUserStore();
 
   return (
     <>
@@ -137,6 +140,20 @@ export const CreateAccount: React.FC = () => {
                     <FormDescription>
                       This is your public display name.
                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>Please enter your email.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
