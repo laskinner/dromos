@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
@@ -33,6 +34,8 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
     resolver: zodResolver(formSchema),
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (data: FormData) => {
     if (nodeId) {
       try {
@@ -41,10 +44,17 @@ export const CommentForm: React.FC<CommentFormProps> = ({ nodeId }) => {
           content: data.content,
           node: nodeId,
         });
+        toast({ variant: "success", title: "Account created successfully" });
+
         form.reset(); // Reset the form after successful submission
       } catch (error) {
         const axiosError = error as AxiosError;
         console.error("Failed to submit comment:", axiosError.response?.data);
+        toast({
+          variant: "warning",
+          title: "Failed to submit comment",
+          description: "Please try again",
+        });
       }
     } else {
       console.error("Node ID is missing, cannot submit comment.");
