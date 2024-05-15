@@ -60,15 +60,17 @@ export const LogIn: React.FC = () => {
       const userResponse = await axios.get("/api/profiles/user/");
       setCurrentUser(userResponse.data); // Update Zustand store with the user data
 
-      toast({ title: "Login successful" });
+      toast({ variant: "success", title: "Login successful" });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({
+          variant: "warning",
           title: "Error logging in",
           description: error.response?.data.detail || "An error occurred",
         });
       } else {
         toast({
+          variant: "warning",
           title: "Error",
           description: "An unexpected error occurred",
         });

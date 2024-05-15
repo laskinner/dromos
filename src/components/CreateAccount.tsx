@@ -73,7 +73,7 @@ export const CreateAccount: React.FC = () => {
     try {
       console.log("Attempting to create account"); // Debug statement
       await axios.post("/dj-rest-auth/registration/", registrationData);
-      toast({ title: "Account created successfully" });
+      toast({ variant: "success", title: "Account created successfully" });
 
       // If account creation was successful, automatically log the user in
       const loginData = { username: data.username, password: data.password1 };
@@ -93,16 +93,24 @@ export const CreateAccount: React.FC = () => {
       const userResponse = await axios.get("/api/profiles/user/");
       setCurrentUser(userResponse.data); // Assuming setCurrentUser is a function from your user store to update the user state
 
-      toast({ title: "Logged in successfully" });
+      toast({ variant: "success", title: "Logged in successfully" });
     } catch (error) {
       console.log("Error occurred", error); // Debug statement
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data.detail || "An error occurred";
         console.error("Error message:", errorMessage); // Debug statement
-        toast({ title: "Error", description: errorMessage });
+        toast({
+          variant: "warning",
+          title: "Error",
+          description: errorMessage,
+        });
       } else {
         console.error("Unexpected error:", error); // Debug statement
-        toast({ title: "Error", description: "An unexpected error occurred" });
+        toast({
+          variant: "warning",
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+        });
       }
     }
   };
