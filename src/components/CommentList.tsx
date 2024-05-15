@@ -17,7 +17,7 @@ export const CommentList: React.FC = () => {
     if (selectedNodeId) {
       console.log("Fetching comments for Node ID:", selectedNodeId);
       fetchComments(selectedNodeId);
-      fetchUserProfile();
+      fetchUserProfile(); // Ensure user profile is fetched
     }
   }, [selectedNodeId, fetchComments, fetchUserProfile]);
 

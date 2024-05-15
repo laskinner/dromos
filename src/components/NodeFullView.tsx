@@ -48,8 +48,7 @@ export const NodeFullView: React.FC = () => {
 
       fetchNodeDetails();
     }
-
-    fetchUserProfile();
+    fetchUserProfile(); // Ensure user profile is fetched
   }, [selectedNodeId, fetchUserProfile]);
 
   return (

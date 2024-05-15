@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { GraphRenderer } from "./GraphRenderer";
-import GraphSelector from "./GraphSelector";
-import { CreateGraph } from "./CreateGraph";
 import { useAreaStore } from "@/stores/useAreaStore";
-import { useUserStore } from "@/stores/useUserStore"; // Import user store
+import { useUserStore } from "@/stores/useUserStore";
+import { CreateGraph } from "@/components/CreateGraph";
+import { GraphSelector } from "@/components/GraphSelector";
+import { GraphRenderer } from "@/components/GraphRenderer";
+import { NodeQuickView } from "@/components/NodeQuickView";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,21 +15,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { NodeQuickView } from "./NodeQuickView";
 
 const GraphView: React.FC = () => {
   const navigate = useNavigate();
-  const { areas, selectedAreaId, fetchAreas } = useAreaStore();
-  const { currentUser } = useUserStore(); // Fetch current user details
-
-  useEffect(() => {
-    fetchAreas();
-  }, [fetchAreas]);
+  const { selectedAreaId, areas } = useAreaStore();
+  const { currentUser } = useUserStore();
 
   const isOwner = (areaId: string) => {
-    const selectedArea = areas.find((area) => area.id === areaId);
-    return currentUser?.id === selectedArea?.owner; // Check if the logged-in user is the owner
+    const area = areas.find((area) => area.id === areaId);
+    return area?.owner === currentUser?.username;
   };
 
   return (

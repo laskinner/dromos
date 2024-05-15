@@ -47,8 +47,6 @@ const formSchema = z
       .string()
       .min(6, "Confirm new password must match.")
       .optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
     bio: z.string().max(250, "Bio cannot exceed 250 characters.").optional(),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
@@ -68,9 +66,7 @@ export const EditAccount: React.FC = () => {
     defaultValues: {
       username: currentUser?.username,
       email: currentUser?.email,
-      firstName: currentUser?.firstName,
-      lastName: currentUser?.lastName,
-      bio: currentUser?.bio,
+      bio: currentUser?.content, // Map to 'content'
       // Password fields not prefilled for security reasons
       currentPassword: "",
       newPassword: "",
@@ -83,48 +79,61 @@ export const EditAccount: React.FC = () => {
     try {
       AuthService.logout(); // Assume this clears local storage or relevant auth tokens
       setCurrentUser(null);
-      toast({ description: "Successfully logged out" });
+      toast({ variant: "success", description: "Successfully logged out" });
     } catch (error) {
       toast({
         title: "Logout failed",
+        variant: "warning",
         description: "Unable to logout. Please try again.",
       });
     }
   };
+
+  // Define UserUpdateData type to include 'content' instead of 'bio'
   type UserUpdateData = Omit<
     FormData,
     "confirmNewPassword" | "currentPassword" | "newPassword"
-  >;
+  > & {
+    content?: string;
+  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Prepare your data for submission by omitting the password fields
+    // Prepare data for submission by omitting the password fields
     const updateData: UserUpdateData = {
       username: data.username,
       email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      bio: data.bio,
+      content: data.bio, // Map 'bio' to 'content'
     };
 
     try {
       // Update user information
-      await axios.put("/api/user/update/", updateData);
-      setCurrentUser({ ...currentUser, ...data }); // Assuming response data is the updated user info
-      toast({ title: "Account updated successfully" });
+      await axios.put("/api/profiles/user/", updateData);
+      setCurrentUser({ ...currentUser, ...data, content: data.bio }); // Update currentUser with content
+      toast({ variant: "success", title: "Account updated successfully" });
 
       // Optional: Logout the user after password change for security reasons
       // Consider prompting the user before doing so
       if (data.newPassword) {
+        await axios.post("/dj-rest-auth/password/change/", {
+          old_password: data.currentPassword,
+          new_password1: data.newPassword,
+          new_password2: data.confirmNewPassword,
+        });
         handleLogout();
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast({
+          variant: "warning",
           title: "Error updating account",
           description: error.response?.data.detail || "An error occurred",
         });
       } else {
-        toast({ title: "Error", description: "An unexpected error occurred" });
+        toast({
+          variant: "warning",
+          title: "Error",
+          description: "An unexpected error occurred",
+        });
       }
     }
   };
@@ -178,12 +187,32 @@ export const EditAccount: React.FC = () => {
               />
               <FormField
                 control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is your public email.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Current password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Current password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Current password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       Please enter your current password.
@@ -199,7 +228,11 @@ export const EditAccount: React.FC = () => {
                   <FormItem>
                     <FormLabel>New Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="New Password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="New Password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       Please enter a new password.
@@ -215,42 +248,14 @@ export const EditAccount: React.FC = () => {
                   <FormItem>
                     <FormLabel>Confirm New Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Confirm New Password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Confirm New Password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       Please reenter the same password as above.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="First Name" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Please enter your first name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Last name" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Please enter your last name.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

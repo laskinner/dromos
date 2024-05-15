@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const GraphSelector: React.FC = () => {
+export const GraphSelector: React.FC = () => {
   const { areas, selectedAreaId, selectArea } = useAreaStore();
 
   const handleSelectArea = (areaId: string) => {
@@ -34,5 +34,3 @@ const GraphSelector: React.FC = () => {
     </Select>
   );
 };
-
-export default GraphSelector;
