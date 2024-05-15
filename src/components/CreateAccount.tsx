@@ -92,7 +92,6 @@ export const CreateAccount: React.FC = () => {
       toast({ title: "Logged in successfully" });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Handle errors (both for account creation and login attempt)
         const errorMessage = error.response?.data.detail || "An error occurred";
         console.error("Error message:", errorMessage); // Debug statement
         toast({ title: "Error", description: errorMessage });
@@ -119,7 +118,13 @@ export const CreateAccount: React.FC = () => {
             </SheetDescription>
           </SheetHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={(e) => {
+                console.log("Form submission attempted"); // Debug statement
+                form.handleSubmit(onSubmit)(e);
+              }}
+              className="space-y-8"
+            >
               <FormField
                 control={form.control}
                 name="username"
