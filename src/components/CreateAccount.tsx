@@ -58,6 +58,7 @@ export const CreateAccount: React.FC = () => {
   const { toast } = useToast();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log("Form submitted"); // Debug statement
     const registrationData = {
       username: data.username,
       email: data.email,
@@ -93,8 +94,10 @@ export const CreateAccount: React.FC = () => {
       if (axios.isAxiosError(error)) {
         // Handle errors (both for account creation and login attempt)
         const errorMessage = error.response?.data.detail || "An error occurred";
+        console.error("Error message:", errorMessage); // Debug statement
         toast({ title: "Error", description: errorMessage });
       } else {
+        console.error("Unexpected error:", error); // Debug statement
         toast({ title: "Error", description: "An unexpected error occurred" });
       }
     }
