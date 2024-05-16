@@ -54,7 +54,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
       try {
         if (commentId) {
           // Edit existing comment
-          await editComment(commentId, data.content);
+          await editComment(commentId, data.content, nodeId);
           toast({ variant: "success", title: "Comment edited successfully" });
           if (onCancelEdit) onCancelEdit();
         } else {

@@ -7,15 +7,15 @@ export interface CommentData {
   content: string;
   owner_username: string;
   created_at: string;
-  node: string; // Added node field to store node ID
+  node: string;
 }
 
-// Define the state and actions for your comment store
+// Define the state and actions
 interface CommentState {
   comments: CommentData[];
   fetchComments: (nodeId: string) => Promise<void>;
   addComment: (comment: CommentData) => void;
-  editComment: (id: string, content: string) => Promise<void>;
+  editComment: (id: string, content: string, nodeId: string) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
 }
 
@@ -35,10 +35,11 @@ export const useCommentStore = create<CommentState>((set) => ({
     set((state) => ({
       comments: [...state.comments, comment],
     })),
-  editComment: async (id, content) => {
+  editComment: async (id, content, nodeId) => {
     try {
       const response = await axios.put<CommentData>(`/api/comments/${id}/`, {
         content,
+        node: nodeId,
       });
       set((state) => ({
         comments: state.comments.map((comment) =>
