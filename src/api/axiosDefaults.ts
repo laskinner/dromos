@@ -1,25 +1,10 @@
 import axios from "axios";
 import { AuthService } from "@/lib/AuthService";
 
-// Function to get CSRF token from meta tags
-const getCsrfToken = () => {
-  const tokenElement = document.querySelector('meta[name="csrf-token"]');
-  return tokenElement ? tokenElement.getAttribute("content") : null;
-};
-
 // Set base URL and headers for Axios
 axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.withCredentials = true;
-
-// Interceptor to include the token in every request
-axios.interceptors.request.use((config) => {
-  const csrfToken = getCsrfToken();
-  if (csrfToken) {
-    config.headers["X-CSRFToken"] = csrfToken;
-  }
-  return config;
-});
 
 axios.interceptors.response.use(
   (response) => response,
@@ -35,17 +20,15 @@ axios.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      return (async () => {
-        try {
-          const newAccessToken = await AuthService.refreshToken();
-          axios.defaults.headers.common["Authorization"] =
-            `Bearer ${newAccessToken}`;
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axios(originalRequest); // Attempt retry with new token
-        } catch (refreshError) {
-          return Promise.reject(refreshError); // Ensure rejection if token refresh fails
-        }
-      })();
+      try {
+        const newAccessToken = await AuthService.refreshToken();
+        axios.defaults.headers.common["Authorization"] =
+          `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return axios(originalRequest); // Attempt retry with new token
+      } catch (refreshError) {
+        return Promise.reject(refreshError); // Ensure rejection if token refresh fails
+      }
     }
 
     return Promise.reject(error); // Return rejection for all other errors
