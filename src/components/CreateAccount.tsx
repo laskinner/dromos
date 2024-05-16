@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios from "@/api/axiosDefaults"; // Import the configured Axios instance
 import { useUserStore } from "@/stores/useUserStore";
 import {
   Sheet,
@@ -68,13 +68,13 @@ export const CreateAccount: React.FC = () => {
 
     try {
       console.log("Attempting to create account"); // Debug statement
-      await axios.post("/dj-rest-auth/registration/", registrationData);
+      await axios.post("/dj-rest-auth/registration/", registrationData); // Use the configured Axios instance
       toast({ variant: "success", title: "Account created successfully" });
 
       // If account creation was successful, automatically log the user in
       const loginData = { username: data.username, password: data.password1 };
       console.log("Attempting to log in"); // Debug statement
-      const loginResponse = await axios.post("/api/token/", loginData);
+      const loginResponse = await axios.post("/api/token/", loginData); // Use the configured Axios instance
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
 
       // Store tokens in local storage
@@ -86,7 +86,7 @@ export const CreateAccount: React.FC = () => {
 
       // Fetch and set the current user's profile
       console.log("Fetching user profile"); // Debug statement
-      const userResponse = await axios.get("/api/profiles/user/");
+      const userResponse = await axios.get("/api/profiles/user/"); // Use the configured Axios instance
       setCurrentUser(userResponse.data); // Assuming setCurrentUser is a function from your user store to update the user state
 
       toast({ variant: "success", title: "Logged in successfully" });
