@@ -39,8 +39,6 @@ const formSchema = z
     email: z.string().email("Invalid email address."),
     password1: z.string().min(6, "Password must be at least 6 characters."),
     password2: z.string().min(6, "Confirm Password must match Password."),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
     bio: z.string().max(250, "Bio cannot exceed 250 characters.").optional(),
   })
   .refine((data) => data.password1 === data.password2, {
@@ -65,8 +63,6 @@ export const CreateAccount: React.FC = () => {
       email: data.email,
       password1: data.password1,
       password2: data.password2,
-      firstName: data.firstName,
-      lastName: data.lastName,
       bio: data.bio,
     };
 
@@ -199,38 +195,6 @@ export const CreateAccount: React.FC = () => {
                     </FormControl>
                     <FormDescription>
                       Please reenter the same password as above.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="First Name" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Please enter your first name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Last name" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Please enter your last name.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
