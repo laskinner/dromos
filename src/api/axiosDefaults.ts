@@ -6,6 +6,27 @@ axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.withCredentials = true;
 
+// Function to get CSRF token from cookies
+function getCSRFToken() {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, 10) === "csrftoken=") {
+        cookieValue = decodeURIComponent(cookie.substring(10));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// Set CSRF token header
+const csrfToken = getCSRFToken();
+console.log("CSRF Token:", csrfToken); // Log the CSRF token to ensure it's retrieved
+axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {

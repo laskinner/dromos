@@ -68,6 +68,11 @@ export const CreateAccount: React.FC = () => {
 
     try {
       console.log("Attempting to create account"); // Debug statement
+
+      // Log CSRF token
+      const csrfToken = axios.defaults.headers.common["X-CSRFToken"];
+      console.log("Sending CSRF Token:", csrfToken); // Debug statement
+
       await axios.post("/dj-rest-auth/registration/", registrationData); // Use the configured Axios instance
       toast({ variant: "success", title: "Account created successfully" });
 
