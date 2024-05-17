@@ -74,6 +74,7 @@ export const CreateAccount: React.FC = () => {
       const config = {
         headers: {
           "X-CSRFToken": csrfToken,
+          "Content-Type": "application/json",
         },
       };
 
@@ -83,7 +84,7 @@ export const CreateAccount: React.FC = () => {
       // If account creation was successful, automatically log the user in
       const loginData = { username: data.username, password: data.password1 };
       console.log("Attempting to log in"); // Debug statement
-      const loginResponse = await axios.post("/api/token/", loginData); // Use the configured Axios instance
+      const loginResponse = await axios.post("/api/token/", loginData, config); // Use the configured Axios instance
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
 
       // Store tokens in local storage
