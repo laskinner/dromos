@@ -1,5 +1,3 @@
-"use client"; // Use client to validate form on client side
-
 import React from "react";
 import { LogIn } from "@/components/LogIn";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -71,9 +69,15 @@ export const CreateAccount: React.FC = () => {
 
       // Log CSRF token
       const csrfToken = axios.defaults.headers.common["X-CSRFToken"];
-      console.log("Sending CSRF Token:", csrfToken); // Debug statement
+      console.log("Sending CSRF Token:", csrfToken);
 
-      await axios.post("/dj-rest-auth/registration/", registrationData); // Use the configured Axios instance
+      const config = {
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+      };
+
+      await axios.post("/dj-rest-auth/registration/", registrationData, config); // Use the configured Axios instance
       toast({ variant: "success", title: "Account created successfully" });
 
       // If account creation was successful, automatically log the user in
