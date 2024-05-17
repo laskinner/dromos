@@ -27,15 +27,7 @@ const csrfToken = getCSRFToken();
 console.log("Retrieved CSRF Token:", csrfToken); // Log the CSRF token to ensure it's retrieved
 axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
 
-axios.interceptors.request.use((config) => {
-  // Ensure CSRF token is set for every request
-  const token = getCSRFToken();
-  if (token) {
-    config.headers["X-CSRFToken"] = token;
-  }
-  console.log("Axios Request Config with CSRF Token:", config); // Log the request configuration
-  return config;
-});
+console.log("Axios defaults headers:", axios.defaults.headers);
 
 axios.interceptors.response.use(
   (response) => response,

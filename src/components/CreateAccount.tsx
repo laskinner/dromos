@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import axios from "@/api/axiosDefaults"; // Import the configured Axios instance
+import axios from "@/api/axiosDefaults";
 import { useUserStore } from "@/stores/useUserStore";
 import {
   Sheet,
@@ -55,7 +55,7 @@ export const CreateAccount: React.FC = () => {
   const { setCurrentUser } = useUserStore();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    console.log("Form submitted"); // Debug statement
+    console.log("Form submitted");
     const registrationData = {
       username: data.username,
       email: data.email,
@@ -65,53 +65,47 @@ export const CreateAccount: React.FC = () => {
     };
 
     try {
-      console.log("Attempting to create account"); // Debug statement
+      console.log("Attempting to create account");
+      console.log(
+        "Sending CSRF Token:",
+        axios.defaults.headers.common["X-CSRFToken"],
+      );
 
-      // Log CSRF token
-      const csrfToken = axios.defaults.headers.common["X-CSRFToken"];
-      console.log("Sending CSRF Token:", csrfToken);
+      const response = await axios.post(
+        "/dj-rest-auth/registration/",
+        registrationData,
+      );
 
-      const config = {
-        headers: {
-          "X-CSRFToken": csrfToken,
-          "Content-Type": "application/json",
-        },
-      };
-
-      await axios.post("/dj-rest-auth/registration/", registrationData, config); // Use the configured Axios instance
+      console.log("Registration response:", response);
       toast({ variant: "success", title: "Account created successfully" });
 
-      // If account creation was successful, automatically log the user in
       const loginData = { username: data.username, password: data.password1 };
-      console.log("Attempting to log in"); // Debug statement
-      const loginResponse = await axios.post("/api/token/", loginData, config); // Use the configured Axios instance
+      console.log("Attempting to log in");
+      const loginResponse = await axios.post("/api/token/", loginData);
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
 
-      // Store tokens in local storage
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      // Set the authorization header for future requests
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      // Fetch and set the current user's profile
-      console.log("Fetching user profile"); // Debug statement
-      const userResponse = await axios.get("/api/profiles/user/"); // Use the configured Axios instance
-      setCurrentUser(userResponse.data); // Assuming setCurrentUser is a function from your user store to update the user state
+      console.log("Fetching user profile");
+      const userResponse = await axios.get("/api/profiles/user/");
+      setCurrentUser(userResponse.data);
 
       toast({ variant: "success", title: "Logged in successfully" });
     } catch (error) {
-      console.log("Error occurred", error); // Debug statement
+      console.log("Error occurred", error);
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data.detail || "An error occurred";
-        console.error("Error message:", errorMessage); // Debug statement
+        console.error("Error message:", errorMessage);
         toast({
           variant: "warning",
           title: "Error",
           description: errorMessage,
         });
       } else {
-        console.error("Unexpected error:", error); // Debug statement
+        console.error("Unexpected error:", error);
         toast({
           variant: "warning",
           title: "Error",
@@ -137,7 +131,7 @@ export const CreateAccount: React.FC = () => {
           <Form {...form}>
             <form
               onSubmit={(e) => {
-                console.log("Form submission attempted"); // Debug statement
+                console.log("Form submission attempted");
                 form.handleSubmit(onSubmit)(e);
               }}
               className="space-y-8"
