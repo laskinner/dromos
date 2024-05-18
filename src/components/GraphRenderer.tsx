@@ -65,7 +65,7 @@ export const GraphRenderer: React.FC = () => {
     const graph = new Graph();
     laidOutNodes.forEach((node) => graph.addNode(node.id, node));
     graphData.edges.forEach((edge) =>
-      graph.addEdge(edge.source, edge.target, edge),
+      graph.addEdge(edge.source, edge.target, { ...edge, type: "arrow" }),
     );
 
     // Render the graph with Sigma
@@ -73,6 +73,7 @@ export const GraphRenderer: React.FC = () => {
       renderLabels: true,
       defaultNodeColor: "#666",
       defaultEdgeColor: "#ccc",
+      defaultEdgeType: "arrow", // Set default edge type to arrow
     });
 
     sigmaInstance.on("clickNode", ({ node }) => {

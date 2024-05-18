@@ -16,6 +16,7 @@ export interface EdgeData {
   target: string;
   size?: number;
   color?: string;
+  type?: string;
 }
 
 // Keep your existing export for LayoutFunction
