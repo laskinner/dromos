@@ -65,7 +65,11 @@ export const GraphRenderer: React.FC = () => {
     const graph = new Graph();
     laidOutNodes.forEach((node) => graph.addNode(node.id, node));
     graphData.edges.forEach((edge) =>
-      graph.addEdge(edge.source, edge.target, { ...edge, type: "arrow" }),
+      graph.addEdge(edge.source, edge.target, {
+        ...edge,
+        type: "arrow",
+        size: 6,
+      }),
     );
 
     // Render the graph with Sigma
