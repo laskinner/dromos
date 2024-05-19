@@ -61,6 +61,7 @@ export const GraphRenderer: React.FC = () => {
       graph.addEdge(edge.source, edge.target, {
         ...edge,
         type: "arrow",
+        size: 6,
         color: isCycleEdge ? "red" : undefined,
       });
     });
