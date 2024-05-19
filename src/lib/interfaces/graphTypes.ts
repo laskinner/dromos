@@ -19,7 +19,9 @@ export interface EdgeData {
   type?: string;
 }
 
-// Keep your existing export for LayoutFunction
 export interface LayoutFunction {
-  (nodes: NodeData[], edges?: EdgeData[]): NodeData[];
+  (
+    nodes: NodeData[],
+    edges?: EdgeData[],
+  ): { positionedNodes: NodeData[]; cycleEdges: EdgeData[] };
 }

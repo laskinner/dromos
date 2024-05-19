@@ -4,9 +4,8 @@ import Sigma from "sigma";
 import axios from "axios";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { useNodeStore } from "@/stores/useNodeStore";
-import { circularLayout } from "@/lib/layouts/circularLayout";
+import { dagLayout } from "@/lib/layouts/dagLayout";
 import { useLayoutStore } from "@/stores/useLayoutStore";
-// Import centralized types
 import { NodeData, EdgeData } from "@/lib/interfaces/graphTypes";
 
 interface GraphData {
@@ -24,7 +23,6 @@ export const GraphRenderer: React.FC = () => {
     edges: [],
   });
 
-  // Fetch graph data when selectedAreaId changes
   useEffect(() => {
     if (!selectedAreaId) return;
 
@@ -44,40 +42,34 @@ export const GraphRenderer: React.FC = () => {
     fetchGraphData();
   }, [selectedAreaId]);
 
-  // Apply the layout and render graph with Sigma when graphData or layoutAlgorithm changes
   useEffect(() => {
     if (!containerRef.current || graphData.nodes.length === 0) return;
 
-    // Apply the selected layout algorithm
-    let laidOutNodes = graphData.nodes;
-    switch (layoutAlgorithm) {
-      // Add cases for other layout algorithms
-      // case 'otherLayout':
-      //   laidOutNodes = otherLayoutAlgorithm(graphData.nodes, graphData.edges);
-      //   break;
-      case "circular":
-      default:
-        laidOutNodes = circularLayout(graphData.nodes, graphData.edges);
-        break;
-    }
+    let laidOutNodes: NodeData[] = [];
+    let cycleEdges: EdgeData[] = [];
 
-    // Initialize Graphology instance with laid out nodes
+    const result = dagLayout(graphData.nodes, graphData.edges);
+    laidOutNodes = result.positionedNodes;
+    cycleEdges = result.cycleEdges;
+
     const graph = new Graph();
     laidOutNodes.forEach((node) => graph.addNode(node.id, node));
-    graphData.edges.forEach((edge) =>
+    graphData.edges.forEach((edge) => {
+      const isCycleEdge = cycleEdges.some(
+        (ce) => ce.source === edge.source && ce.target === edge.target,
+      );
       graph.addEdge(edge.source, edge.target, {
         ...edge,
         type: "arrow",
-        size: 6,
-      }),
-    );
+        color: isCycleEdge ? "red" : undefined,
+      });
+    });
 
-    // Render the graph with Sigma
     const sigmaInstance = new Sigma(graph, containerRef.current, {
       renderLabels: true,
       defaultNodeColor: "#666",
       defaultEdgeColor: "#ccc",
-      defaultEdgeType: "arrow", // Set default edge type to arrow
+      defaultEdgeType: "arrow",
     });
 
     sigmaInstance.on("clickNode", ({ node }) => {
@@ -85,7 +77,7 @@ export const GraphRenderer: React.FC = () => {
       selectNode(nodeData.id);
     });
 
-    return () => sigmaInstance.kill(); // Cleanup on unmount
+    return () => sigmaInstance.kill();
   }, [graphData, layoutAlgorithm, selectNode]);
 
   return <div ref={containerRef} className="w-full h-full" />;
