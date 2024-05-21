@@ -55,7 +55,14 @@ export const GraphRenderer: React.FC = () => {
     cycleEdges = result.cycleEdges;
 
     const graph = new Graph();
-    laidOutNodes.forEach((node) => graph.addNode(node.id, node));
+    laidOutNodes.forEach((node) => {
+      graph.addNode(node.id, {
+        ...node,
+        label: node.title, // Use title as label
+        size: node.size || 10, // Set default size if not provided
+        color: node.color || "#666", // Set default color if not provided
+      });
+    });
     graphData.edges.forEach((edge) => {
       const isCycleEdge = cycleEdges.some(
         (ce) => ce.source === edge.source && ce.target === edge.target,
@@ -63,8 +70,8 @@ export const GraphRenderer: React.FC = () => {
       graph.addEdge(edge.source, edge.target, {
         ...edge,
         type: "arrow",
-        // size: 6,
-        color: isCycleEdge ? "red" : undefined,
+        size: edge.size || 6, // Set default size if not provided
+        color: isCycleEdge ? "red" : edge.color || "#ccc", // Set default color if not cycle edge
       });
     });
 
@@ -73,6 +80,10 @@ export const GraphRenderer: React.FC = () => {
       defaultNodeColor: "#666",
       defaultEdgeColor: "#ccc",
       defaultEdgeType: "arrow",
+      labelFont: "Arial",
+      labelColor: {
+        color: "#000",
+      },
     });
 
     sigmaInstance.on("clickNode", ({ node }) => {
