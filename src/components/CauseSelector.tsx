@@ -34,7 +34,9 @@ export const CauseSelector: React.FC<CauseSelectorProps> = ({
 
     const fetchGraphData = async () => {
       try {
-        const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
+        const response = await axios.get(
+          `/api/areas/graph-data/${selectedAreaId}/`,
+        );
         if (response.data && Array.isArray(response.data.nodes)) {
           setGraphData({ nodes: response.data.nodes });
         } else {
