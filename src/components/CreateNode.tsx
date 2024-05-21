@@ -58,18 +58,26 @@ export const CreateNode: React.FC = () => {
 
     const nodeData = {
       ...data,
-      causedBy: selectedCauses,
       area: selectedAreaId, // Directly use the selected area ID from the store
     };
 
     try {
-      await axios.post("/api/nodes/", nodeData);
-      toast({ title: "Node created successfully" });
+      const response = await axios.post("/api/nodes/", nodeData);
+      const newNode = response.data; // API returns the newly created node
+
+      // Create edges
+      const edgePromises = selectedCauses.map((causeId) =>
+        axios.post("/api/edges/", { source: causeId, target: newNode.id }),
+      );
+
+      await Promise.all(edgePromises);
+
+      toast({ title: "Node and edges created successfully" });
       navigate("/graph-view", { state: { selectedAreaId } });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          console.error("Failed to create node:", error.response.data);
+          console.error("Failed to create node or edges:", error.response.data);
           toast({
             title: "Error",
             description: "Please log in.",
