@@ -28,7 +28,9 @@ export const GraphRenderer: React.FC = () => {
 
     const fetchGraphData = async () => {
       try {
-        const response = await axios.get(`/api/graph-data/${selectedAreaId}/`);
+        const response = await axios.get(
+          `/api/areas/graph-data/${selectedAreaId}/`,
+        );
         setGraphData(response.data);
       } catch (error) {
         console.error(
