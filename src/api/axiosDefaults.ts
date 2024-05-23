@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthService } from "@/lib/AuthService";
+import { AuthService } from "@/lib/AuthService"; // Adjust the import path based on your project structure
 
 // Set base URL and headers for Axios
 axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
@@ -9,19 +9,12 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
 // Function to get CSRF token from cookies
-function getCSRFToken() {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, 10) === "csrftoken=") {
-        cookieValue = decodeURIComponent(cookie.substring(10));
-        break;
-      }
-    }
-  }
-  return cookieValue;
+function getCSRFToken(): string | null {
+  const name = "csrftoken";
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift() ?? null;
+  return null;
 }
 
 // Set CSRF token header
@@ -31,7 +24,24 @@ axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
 
 console.log("Axios defaults headers:", axios.defaults.headers);
 
-axios.interceptors.response.use(
+// Create an Axios instance with CSRF token included
+const axiosInstance = axios.create({
+  baseURL: "https://dromos-backend-1542a6a0bcb1.herokuapp.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  const csrfToken = getCSRFToken();
+  if (csrfToken) {
+    config.headers["X-CSRFToken"] = csrfToken;
+  }
+  return config;
+});
+
+axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -47,10 +57,10 @@ axios.interceptors.response.use(
 
       try {
         const newAccessToken = await AuthService.refreshToken();
-        axios.defaults.headers.common["Authorization"] =
+        axiosInstance.defaults.headers.common["Authorization"] =
           `Bearer ${newAccessToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return axios(originalRequest); // Attempt retry with new token
+        return axiosInstance(originalRequest); // Attempt retry with new token
       } catch (refreshError) {
         return Promise.reject(refreshError); // Ensure rejection if token refresh fails
       }
@@ -60,4 +70,4 @@ axios.interceptors.response.use(
   },
 );
 
-export default axios;
+export default axiosInstance;

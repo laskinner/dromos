@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import axios from "@/api/axiosDefaults";
+import axios, { AxiosError } from "axios"; // Import AxiosError from axios package
 import { useUserStore } from "@/stores/useUserStore";
 import {
   Sheet,
@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import axiosInstance from "@/api/axiosDefaults";
 
 const formSchema = z
   .object({
@@ -66,12 +67,8 @@ export const CreateAccount: React.FC = () => {
 
     try {
       console.log("Attempting to create account");
-      console.log(
-        "Sending CSRF Token:",
-        axios.defaults.headers.common["X-CSRFToken"],
-      );
 
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         "/dj-rest-auth/registration/",
         registrationData,
       );
@@ -81,23 +78,27 @@ export const CreateAccount: React.FC = () => {
 
       const loginData = { username: data.username, password: data.password1 };
       console.log("Attempting to log in");
-      const loginResponse = await axios.post("/api/token/", loginData);
+      const loginResponse = await axiosInstance.post("/api/token/", loginData);
       const { access: accessToken, refresh: refreshToken } = loginResponse.data;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${accessToken}`;
 
       console.log("Fetching user profile");
-      const userResponse = await axios.get("/api/profiles/user/");
+      const userResponse = await axiosInstance.get("/api/profiles/user/");
       setCurrentUser(userResponse.data);
 
       toast({ variant: "success", title: "Logged in successfully" });
     } catch (error) {
       console.log("Error occurred", error);
+
       if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data.detail || "An error occurred";
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        const errorMessage =
+          axiosError.response?.data?.detail || "An error occurred";
         console.error("Error message:", errorMessage);
         toast({
           variant: "warning",

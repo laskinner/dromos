@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import axios from "./api/axiosDefaults";
+import FetchCsrfToken from "./lib/FetchCsrfToken";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import Home from "@/components/Home";
@@ -33,7 +34,7 @@ function App() {
         if (axios.isAxiosError(error) && error.response) {
           if (error.response.status === 401) {
             // Handle unauthorized error
-            localStorage.removeItem("authToken");
+            localStorage.removeItem("accessToken");
             setCurrentUser(null);
           } else {
             console.error("Error fetching user:", error.response.data);
@@ -49,6 +50,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen">
+      <FetchCsrfToken />
       <Navbar />
       <div className="flex-1 overflow-auto h-full">
         <Routes>
