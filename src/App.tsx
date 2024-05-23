@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import axios from "./api/axiosDefaults";
+import axios, { AxiosError } from "axios"; // Import AxiosError from axios package
 import FetchCsrfToken from "./lib/FetchCsrfToken";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
@@ -9,6 +9,7 @@ import GraphView from "@/components/GraphView";
 import { CreateNode } from "@/components/CreateNode";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserStore } from "@/stores/useUserStore";
+import axiosInstance from "@/api/axiosDefaults"; // Ensure axiosInstance is imported correctly
 
 function App() {
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
@@ -24,7 +25,7 @@ function App() {
 
       // Now using the axios instance from axiosDefaults
       try {
-        const { data } = await axios.get("/dj-rest-auth/user/", {
+        const { data } = await axiosInstance.get("/dj-rest-auth/user/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -32,12 +33,13 @@ function App() {
         setCurrentUser(data);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          if (error.response.status === 401) {
+          const axiosError = error as AxiosError<{ detail?: string }>;
+          if (axiosError.response?.status === 401) {
             // Handle unauthorized error
             localStorage.removeItem("accessToken");
             setCurrentUser(null);
-          } else {
-            console.error("Error fetching user:", error.response.data);
+          } else if (axiosError.response) {
+            console.error("Error fetching user:", axiosError.response.data);
           }
         } else {
           console.error("An unexpected error occurred:", error);
