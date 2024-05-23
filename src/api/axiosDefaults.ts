@@ -5,6 +5,8 @@ import { AuthService } from "@/lib/AuthService";
 axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.withCredentials = true;
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
 
 // Function to get CSRF token from cookies
 function getCSRFToken() {
