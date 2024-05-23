@@ -1,18 +1,18 @@
-import React, { useEffect } from "react";
-import axios from "@/api/axiosDefaults"; // Adjust the import based on your project structure
+import { useEffect } from "react";
+import axiosInstance from "@/api/axiosDefaults";
 
-const FetchCsrfToken: React.FC = () => {
+const FetchCsrfToken = () => {
   useEffect(() => {
-    const fetchCsrf = async () => {
+    const fetchCsrfToken = async () => {
       try {
-        await axios.get("/set-csrf-token/");
-        console.log("CSRF token set");
+        const response = await axiosInstance.get("/set-csrf-token/");
+        console.log("CSRF Token fetched successfully:", response.data);
       } catch (error) {
-        console.error("Error setting CSRF token", error);
+        console.error("Failed to fetch CSRF token:", error);
       }
     };
 
-    fetchCsrf();
+    fetchCsrfToken();
   }, []);
 
   return null;

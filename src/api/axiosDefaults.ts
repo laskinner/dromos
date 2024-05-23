@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthService } from "@/lib/AuthService"; // Adjust the import path based on your project structure
+import { AuthService } from "@/lib/AuthService";
 
 // Set base URL and headers for Axios
 axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
@@ -9,39 +9,36 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
 // Function to get CSRF token from cookies
-function getCSRFToken(): string | null {
-  const name = "csrftoken";
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift() ?? null;
-  return null;
+function getCSRFToken() {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith("csrftoken=")) {
+        cookieValue = decodeURIComponent(cookie.substring("csrftoken=".length));
+        break;
+      }
+    }
+  }
+  return cookieValue;
 }
 
-// Set CSRF token header
-const csrfToken = getCSRFToken();
-console.log("Retrieved CSRF Token:", csrfToken); // Log the CSRF token to ensure it's retrieved
-axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
-
-console.log("Axios defaults headers:", axios.defaults.headers);
-
-// Create an Axios instance with CSRF token included
-const axiosInstance = axios.create({
-  baseURL: "https://dromos-backend-1542a6a0bcb1.herokuapp.com",
-  headers: {
-    "Content-Type": "application/json",
+// Set up request interceptor to include CSRF token in headers
+axios.interceptors.request.use(
+  (config) => {
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+      config.headers["X-CSRFToken"] = csrfToken;
+    }
+    return config;
   },
-  withCredentials: true,
-});
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-axiosInstance.interceptors.request.use((config) => {
-  const csrfToken = getCSRFToken();
-  if (csrfToken) {
-    config.headers["X-CSRFToken"] = csrfToken;
-  }
-  return config;
-});
-
-axiosInstance.interceptors.response.use(
+axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -57,10 +54,10 @@ axiosInstance.interceptors.response.use(
 
       try {
         const newAccessToken = await AuthService.refreshToken();
-        axiosInstance.defaults.headers.common["Authorization"] =
+        axios.defaults.headers.common["Authorization"] =
           `Bearer ${newAccessToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest); // Attempt retry with new token
+        return axios(originalRequest); // Attempt retry with new token
       } catch (refreshError) {
         return Promise.reject(refreshError); // Ensure rejection if token refresh fails
       }
@@ -70,4 +67,4 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export default axiosInstance;
+export default axios;
