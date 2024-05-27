@@ -47,7 +47,7 @@ const formSchema = z
 
 type FormData = z.infer<typeof formSchema>;
 
-const clearSiteData = (): void => {
+const clearSiteData = async (): Promise<void> => {
   // Clear cookies
   const cookies = document.cookie.split("; ");
   for (const cookie of cookies) {
@@ -59,6 +59,11 @@ const clearSiteData = (): void => {
       "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=." +
       window.location.host +
       ";path=/";
+    document.cookie =
+      name +
+      "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=" +
+      window.location.host +
+      ";path=/";
   }
 
   // Clear local storage and session storage
@@ -67,13 +72,12 @@ const clearSiteData = (): void => {
 
   // Clear indexedDB
   if (window.indexedDB) {
-    window.indexedDB.databases().then((databases) => {
-      databases.forEach((db) => {
-        if (db.name) {
-          window.indexedDB.deleteDatabase(db.name);
-        }
-      });
-    });
+    const databases = await window.indexedDB.databases();
+    for (const db of databases) {
+      if (db.name) {
+        window.indexedDB.deleteDatabase(db.name);
+      }
+    }
   }
 };
 
@@ -86,7 +90,7 @@ export const CreateAccount: React.FC = () => {
   const { setCurrentUser } = useUserStore();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    clearSiteData(); // Clear site data before creating an account
+    await clearSiteData(); // Clear site data before creating an account
 
     console.log("Form submitted");
     const registrationData = {
