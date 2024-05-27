@@ -47,6 +47,36 @@ const formSchema = z
 
 type FormData = z.infer<typeof formSchema>;
 
+const clearSiteData = (): void => {
+  // Clear cookies
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    document.cookie =
+      name +
+      "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=." +
+      window.location.host +
+      ";path=/";
+  }
+
+  // Clear local storage and session storage
+  localStorage.clear();
+  sessionStorage.clear();
+
+  // Clear indexedDB
+  if (window.indexedDB) {
+    window.indexedDB.databases().then((databases) => {
+      databases.forEach((db) => {
+        if (db.name) {
+          window.indexedDB.deleteDatabase(db.name);
+        }
+      });
+    });
+  }
+};
+
 export const CreateAccount: React.FC = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -56,6 +86,8 @@ export const CreateAccount: React.FC = () => {
   const { setCurrentUser } = useUserStore();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    clearSiteData(); // Clear site data before creating an account
+
     console.log("Form submitted");
     const registrationData = {
       username: data.username,
