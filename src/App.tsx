@@ -52,7 +52,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen">
-      <FetchCsrfToken />
+      // <FetchCsrfToken />
       <Navbar />
       <div className="flex-1 overflow-auto h-full">
         <Routes>
