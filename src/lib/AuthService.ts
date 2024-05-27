@@ -56,9 +56,15 @@ const logout = (): void => {
     const eqPos = cookie.indexOf("=");
     const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    document.cookie =
+      name +
+      "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=." +
+      window.location.host +
+      ";path=/";
   }
 
-  // Clear session storage
+  // Clear local storage and session storage
+  localStorage.clear();
   sessionStorage.clear();
 
   // Clear indexedDB
@@ -76,7 +82,7 @@ const logout = (): void => {
   delete axios.defaults.headers.common["Authorization"];
 
   // Reload the page to clear site data
-  window.location.reload();
+  window.location.href = "/"; // Redirect to the home page after clearing
 };
 
 export const AuthService = { login, refreshToken, logout };
