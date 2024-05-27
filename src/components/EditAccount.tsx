@@ -1,4 +1,4 @@
-"use client"; // Use client validiot for form
+"use client"; // Use client validation for form
 
 import React from "react";
 import { AuthService } from "@/lib/AuthService";
@@ -74,10 +74,9 @@ export const EditAccount: React.FC = () => {
     },
   });
 
-  // Simplify logout function, assuming AuthService.logout is asynchronous
   const handleLogout = async () => {
     try {
-      AuthService.logout(); // Assume this clears local storage or relevant auth tokens
+      AuthService.logout();
       setCurrentUser(null);
       toast({ variant: "success", description: "Successfully logged out" });
     } catch (error) {

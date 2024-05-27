@@ -22,7 +22,7 @@ const refreshToken = async (): Promise<string> => {
   }
 };
 
-//// Function to handle login
+// Function to handle login
 const login = async (
   username: string,
   password: string,
@@ -44,11 +44,24 @@ const login = async (
   }
 };
 
-//// Function to handle logout
+// Function to handle logout
 const logout = (): void => {
+  // Remove tokens from local storage
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
+
+  // Clear cookies
+  document.cookie.split(";").forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+  });
+
+  // Delete authorization header
   delete axios.defaults.headers.common["Authorization"];
+
+  // Reload the page to clear site data
+  window.location.reload();
 };
 
 export const AuthService = { login, refreshToken, logout };
