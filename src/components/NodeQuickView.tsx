@@ -25,7 +25,9 @@ export const NodeQuickView: React.FC = () => {
   useEffect(() => {
     const fetchOwnerDetails = async (ownerId: string) => {
       try {
+        console.log(`Fetching owner details for ID: ${ownerId}`);
         const response = await axios.get(`/api/profiles/${ownerId}/`);
+        console.log("Owner details response:", response.data);
         setOwnerDetails({ username: response.data.username });
       } catch (error) {
         console.error("Failed to fetch owner details:", error);
@@ -35,7 +37,9 @@ export const NodeQuickView: React.FC = () => {
 
     const fetchNodeDetails = async (nodeId: string) => {
       try {
+        console.log(`Fetching node details for ID: ${nodeId}`);
         const response = await axios.get(`/api/nodes/${nodeId}`);
+        console.log("Node details response:", response.data);
         setNodeDetails(response.data);
         if (response.data.owner) {
           fetchOwnerDetails(response.data.owner);
@@ -52,6 +56,7 @@ export const NodeQuickView: React.FC = () => {
     if (selectedNodeId) {
       const node = useNodeStore.getState().getSelectedNode();
       if (node) {
+        console.log("Selected node:", node);
         setNodeDetails(node);
         if (node.owner) {
           fetchOwnerDetails(node.owner);
