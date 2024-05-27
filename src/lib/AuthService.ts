@@ -54,7 +54,7 @@ const logout = (): void => {
   const cookies = document.cookie.split("; ");
   for (const cookie of cookies) {
     const eqPos = cookie.indexOf("=");
-    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
     document.cookie =
       name +
@@ -81,8 +81,8 @@ const logout = (): void => {
   // Delete authorization header
   delete axios.defaults.headers.common["Authorization"];
 
-  // Reload the page to clear site data
-  window.location.href = "/"; // Redirect to the home page after clearing
+  // Redirect to the home page to ensure all site data is cleared
+  window.location.href = "/";
 };
 
 export const AuthService = { login, refreshToken, logout };
