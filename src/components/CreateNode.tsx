@@ -8,8 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
-import axiosInstance from "@/api/axiosDefaults"; // Use axiosInstance
-import axios from "axios";
+import axios from "@/api/axiosDefaults"; // Use the configured axios instance
 import {
   Form,
   FormControl,
@@ -63,12 +62,12 @@ export const CreateNode: React.FC = () => {
     };
 
     try {
-      const response = await axiosInstance.post("/nodes/", nodeData);
+      const response = await axios.post("/api/nodes/", nodeData);
       const newNode = response.data; // API returns the newly created node
 
       // Create edges
       const edgePromises = selectedCauses.map((causeId) =>
-        axiosInstance.post("/edges/", { source: causeId, target: newNode.id }),
+        axios.post("/api/edges/", { source: causeId, target: newNode.id }),
       );
 
       await Promise.all(edgePromises);
@@ -92,7 +91,10 @@ export const CreateNode: React.FC = () => {
           });
         }
       } else {
-        console.error("An unexpected error occurred:", error);
+        console.error(
+          "An unexpected error occurred:",
+          (error as Error).message,
+        );
         toast({
           title: "Error",
           description: "An unexpected error occurred. Please try again.",
