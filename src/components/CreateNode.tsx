@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
 import axiosInstance from "@/api/axiosDefaults"; // Use axiosInstance
+import axios from "axios";
 import {
   Form,
   FormControl,
