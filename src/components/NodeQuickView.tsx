@@ -28,7 +28,7 @@ export const NodeQuickView: React.FC = () => {
         console.log(`Fetching owner details for ID: ${ownerId}`);
         const response = await axios.get(`/api/profiles/${ownerId}/`);
         console.log("Owner details response:", response.data);
-        setOwnerDetails({ username: response.data.username });
+        setOwnerDetails({ username: response.data.owner });
       } catch (error) {
         console.error("Failed to fetch owner details:", error);
         setOwnerDetails({ username: "Unknown" });
