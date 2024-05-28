@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CommentList } from "@/components/CommentList";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useNodeStore } from "@/stores/useNodeStore";
 import { useAreaStore } from "@/stores/useAreaStore";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useUserStore } from "@/stores/useUserStore";
+import {
+  fetchFullNodeDetails,
+  updateNode,
+  deleteNode,
+} from "@/lib/services/nodeService";
 
 export const NodeFullView: React.FC = () => {
   const navigate = useNavigate();
@@ -33,23 +37,33 @@ export const NodeFullView: React.FC = () => {
     }
 
     const node = useNodeStore.getState().getSelectedNode();
-    console.log("Selected node details:", node);
     if (node) {
       setNodeDetails(node);
     } else {
-      const fetchNodeDetails = async () => {
-        try {
-          const response = await axios.get(`/api/nodes/${selectedNodeId}`);
-          setNodeDetails(response.data);
-        } catch (error) {
-          console.error("Failed to fetch node details:", error);
-        }
-      };
-
-      fetchNodeDetails();
+      fetchFullNodeDetails(selectedNodeId)
+        .then(({ node }) => setNodeDetails(node))
+        .catch(() => console.error("Failed to fetch node details"));
     }
-    fetchUserProfile(); // Ensure user profile is fetched
+
+    fetchUserProfile();
   }, [selectedNodeId, fetchUserProfile]);
+
+  const handleEdit = async () => {
+    if (nodeDetails) {
+      const updatedNode = await updateNode(nodeDetails.id, {
+        ...nodeDetails,
+        title: "Updated Title",
+      });
+      setNodeDetails(updatedNode);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (nodeDetails) {
+      await deleteNode(nodeDetails.id);
+      navigate("/graph-view", { state: { selectedAreaId } }); // Navigate after deletion
+    }
+  };
 
   return (
     <>
@@ -67,6 +81,14 @@ export const NodeFullView: React.FC = () => {
             <p className="text-gray-600">Owner: {nodeDetails?.owner}</p>
           </CardContent>
         </Card>
+        {nodeDetails?.is_owner && (
+          <div className="space-y-2">
+            <Button onClick={handleEdit}>Edit</Button>
+            <Button variant="outline" onClick={handleDelete}>
+              Delete
+            </Button>
+          </div>
+        )}
         <CommentList />
       </div>
       <div className="max-w-4xl mx-auto px-4">

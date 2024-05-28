@@ -9,6 +9,9 @@ export interface NodeData {
   owner?: string;
   created_at?: string;
   updated_at?: string;
+  image?: string; // Add image property
+  status?: string; // Add status property
+  is_owner?: boolean; // Add is_owner property
 }
 
 export interface EdgeData {
