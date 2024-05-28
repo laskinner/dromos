@@ -2,15 +2,11 @@ import axios from "axios";
 import { AuthService } from "@/lib/AuthService";
 
 // Set base URL and headers for Axios
-const axiosInstance = axios.create({
-  baseURL: "https://dromos-backend-1542a6a0bcb1.herokuapp.com",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-  xsrfHeaderName: "X-CSRFTOKEN",
-  xsrfCookieName: "csrftoken",
-});
+axios.defaults.baseURL = "https://dromos-backend-1542a6a0bcb1.herokuapp.com";
+axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
 
 // Function to get CSRF token from cookies
 function getCSRFToken() {
@@ -29,15 +25,11 @@ function getCSRFToken() {
 }
 
 // Set up request interceptor to include CSRF token in headers
-axiosInstance.interceptors.request.use(
+axios.interceptors.request.use(
   (config) => {
     const csrfToken = getCSRFToken();
     if (csrfToken) {
       config.headers["X-CSRFToken"] = csrfToken;
-    }
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -46,7 +38,7 @@ axiosInstance.interceptors.request.use(
   },
 );
 
-axiosInstance.interceptors.response.use(
+axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -62,10 +54,10 @@ axiosInstance.interceptors.response.use(
 
       try {
         const newAccessToken = await AuthService.refreshToken();
-        axiosInstance.defaults.headers.common["Authorization"] =
+        axios.defaults.headers.common["Authorization"] =
           `Bearer ${newAccessToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest); // Attempt retry with new token
+        return axios(originalRequest); // Attempt retry with new token
       } catch (refreshError) {
         return Promise.reject(refreshError); // Ensure rejection if token refresh fails
       }
@@ -75,4 +67,4 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export default axiosInstance;
+export default axios;
