@@ -8,7 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAreaStore } from "@/stores/useAreaStore";
-import axios from "axios";
+import axiosInstance from "@/api/axiosDefaults"; // Use axiosInstance
 import {
   Form,
   FormControl,
@@ -62,12 +62,12 @@ export const CreateNode: React.FC = () => {
     };
 
     try {
-      const response = await axios.post("/api/nodes/", nodeData);
+      const response = await axiosInstance.post("/nodes/", nodeData);
       const newNode = response.data; // API returns the newly created node
 
       // Create edges
       const edgePromises = selectedCauses.map((causeId) =>
-        axios.post("/api/edges/", { source: causeId, target: newNode.id }),
+        axiosInstance.post("/edges/", { source: causeId, target: newNode.id }),
       );
 
       await Promise.all(edgePromises);
@@ -80,7 +80,7 @@ export const CreateNode: React.FC = () => {
           console.error("Failed to create node or edges:", error.response.data);
           toast({
             title: "Error",
-            description: "Please log in.",
+            description: error.response.data.detail || "Please log in.",
           });
         } else {
           console.error("Network error or no response:", error.message);
