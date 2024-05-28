@@ -63,6 +63,7 @@ export const CreateNode: React.FC = () => {
 
     try {
       const response = await axios.post("/api/nodes/", nodeData);
+      console.log("Node Creation Response:", response.data); // Log the response
       const newNode = response.data; // API returns the newly created node
 
       // Create edges

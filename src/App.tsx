@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import axios, { AxiosError } from "axios"; // Import AxiosError from axios package
-// import FetchCsrfToken from "./lib/FetchCsrfToken";
+import FetchCsrfToken from "./lib/FetchCsrfToken";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import Home from "@/components/Home";
@@ -52,6 +52,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen">
+      <FetchCsrfToken />
       <Navbar />
       <div className="flex-1 overflow-auto h-full">
         <Routes>
