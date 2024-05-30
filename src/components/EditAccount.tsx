@@ -281,7 +281,7 @@ export const EditAccount: React.FC = () => {
           </Form>
           <SheetFooter>
             <SheetClose asChild>
-              <Button variant="outline" onClick={handleLogout}>
+              <Button variant="outline" onMouseDown={handleLogout}>
                 Logout
               </Button>
             </SheetClose>
