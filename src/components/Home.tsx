@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           {areas.map((area) => (
             <Card
               key={area.id}
-              onClick={() => handleCardClick(area.id)}
+              onMouseDown={() => handleCardClick(area.id)}
               className="cursor-pointer"
             >
               <CardHeader>
