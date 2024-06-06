@@ -203,7 +203,12 @@ TSX was validated using [eslint.org](www.eslint.org). The total count was 3417 l
 
 ### Known Bugs
 
-- Editing and deleting graphs, nodes, and comments is not functioning due to conditional rendering not having the reuquired data to render the functionality.
+- In node view, owner ID is being shown, when it should be username:
+![image](https://github.com/laskinner/dromos/assets/1858258/8d05eaf9-5636-4259-a98d-15a70a8e3879)
+- Responsivess issues in mobile view for the graph-view persists, as managing the HTML canvas with CSS proved to be difficult:
+![image](https://github.com/laskinner/dromos/assets/1858258/ac1155f5-1ea6-4bfc-8087-f89c0e71dd5c)
+
+
 
 ## Deployment
 
