@@ -145,15 +145,15 @@ With the refactoring, the fine-grained archecture resulting from abstrocting com
 ## Testing
 
 ### CRUD User Accounts
-| Test Case       | Acceptance Criteria                                     | Result  |
-|-----------------|---------------------------------------------------------|---------|
-| Create Account  | Given the registration page, when a user submits valid registration details, then the system creates a new user account. | Passed  |
+| Test Case       | Acceptance Criteria                                     | Result | Issue |
+|-----------------|---------------------------------------------------------|---------|---------|
+| Create Account  | Given the registration page, when a user submits valid registration details, then the system creates a new user account. | Passed  | #37 |
 | Read Account    | Given a logged-in user, when they navigate to their profile page, then they see their account details. | Passed  |
 | Update Account  | Given a logged-in user on their profile page, when they update their information and submit, then the system updates their account details. | Passed  |
 | Delete Account  | Given a logged-in user on their profile page, when they choose to delete their account and confirm the action, then the system deletes their account. | Passed  |
 
 ### CRUD Graphs
-| Test Case       | Acceptance Criteria                                     | Result  |
+| Test Case       | Acceptance Criteria                                     | Result |
 |-----------------|---------------------------------------------------------|---------|
 | Create Graph    | Given a user on the graph creation page, when they input graph details and submit, then the system creates a new graph. | Passed  |
 | Read Graph      | Given a user on the platform, when they select a graph, then they are able to view its details. | Passed  |
@@ -161,15 +161,15 @@ With the refactoring, the fine-grained archecture resulting from abstrocting com
 | Delete Graph    | Given a user viewing a graph they own, when they decide to delete the graph and confirm the action, then the system removes the graph. | Failed. See above problem with Update Graph.  |
 
 ### CRUD Nodes
-| Test Case       | Acceptance Criteria                                     | Result  |
+| Test Case       | Acceptance Criteria                                     | Result |
 |-----------------|---------------------------------------------------------|---------|
 | Create Node     | Given a user editing a graph, when they add a new node and specify its details, then the system adds the node to the graph. | Passed  |
-| Read Node       | Given a user viewing a graph, when they select a node, then they see the node's details. | Passed  |
-| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Failed. Not yet implemented.  |
-| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Failed. Not yet implemented.  |
+| Read Node       | Given a user viewing a graph, when they select a node, then they see the node's details. | Passed |
+| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Future implementation.  |
+| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Future implementation.  |
 
 ### CRUD Comments
-| Test Case        | Acceptance Criteria                                      | Result  |
+| Test Case        | Acceptance Criteria                                      | Result |
 |------------------|----------------------------------------------------------|---------|
 | Create Comment   | Given a user viewing a graph or node, when they submit a comment, then the system adds the comment to the item. | Passed  |
 | Read Comment     | Given a user on a graph or node page, when they view comments, then they see all posted comments. | Passed  |
@@ -180,7 +180,7 @@ With the refactoring, the fine-grained archecture resulting from abstrocting com
 | Test Case                                       | Acceptance Criteria                                                  | Result  |
 |-------------------------------------------------|----------------------------------------------------------------------|---------|
 | Non-Logged In Read                              | Given a non-logged-in user, when they navigate the platform, then they can only read available public graphs, nodes, and comments. | Passed  |
-| Logged-In Create/Edit Graph                       | Given a logged-in user, when they create or edit content, then they can only modify content they have created. | Failed. While user is being returned to front-end, edit button is not being rendered in graph view.  |
+| Logged-In Create/Edit Graph                      | Given a logged-in user, when they create or edit content, then they can only modify content they have created. | Failed. While user is being returned to front-end, edit button is not being rendered in graph view.  |
 | Logged-In Delete Own                            | Given a logged-in user viewing their own content, when they decide to delete it and confirm, then the system removes their content. | Failed, see above problem with edit.  |
 
 ### Validator Testing
