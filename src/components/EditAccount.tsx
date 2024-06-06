@@ -35,24 +35,38 @@ const formSchema = z
   .object({
     username: z.string().min(2, "Username must be at least 2 characters."),
     email: z.string().email("Invalid email address."),
-    currentPassword: z
-      .string()
-      .min(6, "Current password is required.")
-      .optional(),
+    currentPassword: z.string().optional(),
     newPassword: z
       .string()
-      .min(6, "New password must be at least 6 characters.")
-      .optional(),
+      .optional()
+      .refine((val) => !val || val.length >= 6, {
+        message: "New password must be at least 6 characters.",
+      }),
     confirmNewPassword: z
       .string()
-      .min(6, "Confirm new password must match.")
-      .optional(),
+      .optional()
+      .refine((val) => !val || val.length >= 6, {
+        message: "Confirm new password must be at least 6 characters.",
+      }),
     bio: z.string().max(250, "Bio cannot exceed 250 characters.").optional(),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "New passwords do not match.",
-    path: ["confirmNewPassword"],
-  });
+  .refine(
+    (data) =>
+      (data.newPassword && data.confirmNewPassword) ||
+      (!data.newPassword && !data.confirmNewPassword),
+    {
+      message:
+        "Both new password fields must be filled out or both left empty.",
+      path: ["confirmNewPassword"],
+    },
+  )
+  .refine(
+    (data) => !data.newPassword || data.newPassword === data.confirmNewPassword,
+    {
+      message: "New passwords do not match.",
+      path: ["confirmNewPassword"],
+    },
+  );
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -111,7 +125,6 @@ export const EditAccount: React.FC = () => {
       toast({ variant: "success", title: "Account updated successfully" });
 
       // Optional: Logout the user after password change for security reasons
-      // Consider prompting the user before doing so
       if (data.newPassword) {
         await axios.post("/dj-rest-auth/password/change/", {
           old_password: data.currentPassword,
