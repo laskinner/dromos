@@ -27,8 +27,8 @@ const GraphView: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full">
-      <aside className="w-64 p-4 h-full">
+    <div className="flex flex-col lg:flex-row h-full">
+      <aside className="w-full lg:w-64 p-4 h-full">
         <div className="flex mb-4">
           <CreateGraph />
         </div>
