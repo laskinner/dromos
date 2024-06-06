@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios from "@/api/axiosDefaults"; // Use the configured axios instance
 import { useUserStore } from "@/stores/useUserStore";
 import {
   Sheet,
@@ -24,7 +24,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -111,7 +110,14 @@ export const EditAccount: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Prepare data for submission by omitting the password fields
+    if (!currentUser?.profileId) {
+      toast({
+        title: "Error",
+        description: "Profile ID is missing. Please try again.",
+      });
+      return;
+    }
+
     const updateData: UserUpdateData = {
       username: data.username,
       email: data.email,
@@ -120,7 +126,11 @@ export const EditAccount: React.FC = () => {
 
     try {
       // Update user information
-      await axios.put("/api/profiles/user/", updateData);
+      const response = await axios.put(
+        `/api/profiles/${currentUser.profileId}/`,
+        updateData,
+      ); // Ensure URL is correct
+      console.log("Profile Update Response:", response.data);
       setCurrentUser({ ...currentUser, ...data, content: data.bio }); // Update currentUser with content
       toast({ variant: "success", title: "Account updated successfully" });
 
@@ -135,16 +145,28 @@ export const EditAccount: React.FC = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        toast({
-          variant: "warning",
-          title: "Error updating account",
-          description: error.response?.data.detail || "An error occurred",
-        });
+        if (error.response) {
+          console.error("Failed to update profile:", error.response.data);
+          toast({
+            title: "Error",
+            description: error.response.data.detail || "Please log in.",
+          });
+        } else {
+          console.error("Network error or no response:", error.message);
+          toast({
+            title: "Network Error",
+            description:
+              "No response received, check your network or contact support.",
+          });
+        }
       } else {
+        console.error(
+          "An unexpected error occurred:",
+          (error as Error).message,
+        );
         toast({
-          variant: "warning",
           title: "Error",
-          description: "An unexpected error occurred",
+          description: "An unexpected error occurred. Please try again.",
         });
       }
     }
@@ -190,9 +212,6 @@ export const EditAccount: React.FC = () => {
                     <FormControl>
                       <Input placeholder="Username" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -206,9 +225,6 @@ export const EditAccount: React.FC = () => {
                     <FormControl>
                       <Input placeholder="Email" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      This is your public email.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -226,9 +242,6 @@ export const EditAccount: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Please enter your current password.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -246,9 +259,6 @@ export const EditAccount: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Please enter a new password.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -266,9 +276,6 @@ export const EditAccount: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Please reenter the same password as above.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -282,9 +289,6 @@ export const EditAccount: React.FC = () => {
                     <FormControl>
                       <Textarea placeholder="Bio" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Please enter a short bio about yourself.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -2,14 +2,27 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import axios from "axios";
 
+// Define the interface for the API response
+interface ProfileResponse {
+  id: number;
+  owner: string;
+  email: string;
+  name: string;
+  content: string;
+  image: string;
+}
+
+// Define the user type for your store
 interface UserType {
   username?: string;
   email?: string;
-  name?: string; // Adding name field
-  content?: string; // Adding content field
-  image?: string; // Adding image field
+  name?: string;
+  content?: string;
+  image?: string;
+  profileId?: number; // Ensure profileId is of type number
 }
 
+// Define the state and actions for your store
 interface UserState {
   currentUser: UserType | null;
 }
@@ -19,6 +32,7 @@ interface UserActions {
   fetchUserProfile: () => Promise<void>;
 }
 
+// Create the store
 export const useUserStore = create<UserState & UserActions>()(
   immer((set) => ({
     currentUser: null,
@@ -33,9 +47,18 @@ export const useUserStore = create<UserState & UserActions>()(
     },
     fetchUserProfile: async () => {
       try {
-        const response = await axios.get<UserType>("/api/profiles/user/");
+        const response = await axios.get<ProfileResponse>(
+          "/api/profiles/user/",
+        );
         set((state) => {
-          state.currentUser = response.data;
+          state.currentUser = {
+            username: response.data.owner,
+            email: response.data.email,
+            name: response.data.name,
+            content: response.data.content,
+            image: response.data.image,
+            profileId: response.data.id, // Store the profileId
+          };
         });
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
