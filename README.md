@@ -144,51 +144,62 @@ With the refactoring, the fine-grained archecture resulting from abstrocting com
 
 ## Testing
 
+Note: For those features marked as future implementation, this is specificially in regards to front-end implementation. Full CRUD functionality is possible through the admin panel, and therefore the tests below relate to the public user-facing front-end. 
+
 ### CRUD User Accounts
 | Test Case       | Acceptance Criteria                                     | Result | Issue |
 |-----------------|---------------------------------------------------------|---------|---------|
-| Create Account  | Given the registration page, when a user submits valid registration details, then the system creates a new user account. | Passed  | #37 |
-| Read Account    | Given a logged-in user, when they navigate to their profile page, then they see their account details. | Passed  |
-| Update Account  | Given a logged-in user on their profile page, when they update their information and submit, then the system updates their account details. | Passed  |
-| Delete Account  | Given a logged-in user on their profile page, when they choose to delete their account and confirm the action, then the system deletes their account. | Passed  |
+| Create Account  | Given the registration page, when a user submits valid registration details, then the system creates a new user account. | Passed  | [#37](https://github.com/laskinner/dromos/issues/37) |
+| Read Account    | Given a logged-in user, when they navigate to their profile page, then they see their account details. | Passed  | [#46](https://github.com/laskinner/dromos/issues/46)
+| Update Account  | Given a logged-in user on their profile page, when they update their information and submit, then the system updates their account details. | Failed  | [#44](https://github.com/laskinner/dromos/issues/44) |
+| Delete Account  | Given a logged-in user on their profile page, when they choose to delete their account and confirm the action, then the system deletes their account. | Passed  | [#45](https://github.com/laskinner/dromos/issues/45)
 
 ### CRUD Graphs
-| Test Case       | Acceptance Criteria                                     | Result |
-|-----------------|---------------------------------------------------------|---------|
-| Create Graph    | Given a user on the graph creation page, when they input graph details and submit, then the system creates a new graph. | Passed  |
-| Read Graph      | Given a user on the platform, when they select a graph, then they are able to view its details. | Passed  |
-| Update Graph    | Given a user viewing a graph they own, when they update details and submit, then the system updates the graph's details. | Failed. User ID not being returned in graph view component, and therefore rendering the edit button does not function.  |
-| Delete Graph    | Given a user viewing a graph they own, when they decide to delete the graph and confirm the action, then the system removes the graph. | Failed. See above problem with Update Graph.  |
+| Test Case       | Acceptance Criteria                                     | Result | Issue |
+|-----------------|---------------------------------------------------------|---------|---------|
+| Create Graph    | Given a user on the graph creation page, when they input graph details and submit, then the system creates a new graph. | Passed  | [#19](https://github.com/laskinner/dromos/issues/19) |
+| Read Graph      | Given a user on the platform, when they select a graph, then they are able to view its details. | Passed  | [#4](https://github.com/laskinner/dromos/issues/4)
+| Update Graph    | Given a user viewing a graph they own, when they update details and submit, then the system updates the graph's details. | Future implementation  | [#20](https://github.com/laskinner/dromos/issues/20) |
+| Delete Graph    | Given a user viewing a graph they own, when they decide to delete the graph and confirm the action, then the system removes the graph. | Future implementation.  | [#21](https://github.com/laskinner/dromos/issues/20) |
 
 ### CRUD Nodes
-| Test Case       | Acceptance Criteria                                     | Result |
-|-----------------|---------------------------------------------------------|---------|
-| Create Node     | Given a user editing a graph, when they add a new node and specify its details, then the system adds the node to the graph. | Passed  |
-| Read Node       | Given a user viewing a graph, when they select a node, then they see the node's details. | Passed |
-| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Future implementation.  |
-| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Future implementation.  |
+| Test Case       | Acceptance Criteria                                     | Result | Issue |
+|-----------------|---------------------------------------------------------|---------|-------|
+| Create Node     | Given a user editing a graph, when they add a new node and specify its details, then the system adds the node to the graph. | Passed  | [#31](https://github.com/laskinner/dromos/issues/31) |
+| Read Node       | Given a user viewing a graph, when they select a node, then they see the node's details. | Passed | [#22](https://github.com/laskinner/dromos/issues/22) |
+| Update Node     | Given a user viewing a node they own, when they update the node's details and submit, then the system updates the node within the graph. | Future implementation  | [#10](https://github.com/laskinner/dromos/issues/32) |
+| Delete Node     | Given a user viewing a node they own, when they delete the node and confirm, then the system removes the node from the graph. | Future implementation  | [#32](https://github.com/laskinner/dromos/issues/32) |
 
 ### CRUD Comments
-| Test Case        | Acceptance Criteria                                      | Result |
-|------------------|----------------------------------------------------------|---------|
-| Create Comment   | Given a user viewing a graph or node, when they submit a comment, then the system adds the comment to the item. | Passed  |
-| Read Comment     | Given a user on a graph or node page, when they view comments, then they see all posted comments. | Passed  |
-| Update Comment   | Given a user viewing their comment, when they edit and submit the updated comment, then the system updates the comment on the graph or node. | Failed. Not yet implemented.  |
-| Delete Comment   | Given a user viewing their comment, when they delete it and confirm, then the system removes their comment from the graph or node. | Failed. Not yet implemented.  |
+| Test Case        | Acceptance Criteria                                      | Result | Issue |
+|------------------|----------------------------------------------------------|---------|-------|
+| Create Comment   | Given a user viewing a graph or node, when they submit a comment, then the system adds the comment to the item. | Passed  | [#6](https://github.com/laskinner/dromos/issues/6) |
+| Read Comment     | Given a user on a graph or node page, when they view comments, then they see all posted comments. | Passed  | [#7](https://github.com/laskinner/dromos/issues/7) |
+| Update Comment   | Given a user viewing their comment, when they edit and submit the updated comment, then the system updates the comment on the graph or node. | Failed. Not yet implemented.  | [#9](https://github.com/laskinner/dromos/issues/9) |
+| Delete Comment   | Given a user viewing their comment, when they delete it and confirm, then the system removes their comment from the graph or node. | Failed. Not yet implemented.  | [#8](https://github.com/laskinner/dromos/issues/8) |
 
 ### Permissions
-| Test Case                                       | Acceptance Criteria                                                  | Result  |
-|-------------------------------------------------|----------------------------------------------------------------------|---------|
-| Non-Logged In Read                              | Given a non-logged-in user, when they navigate the platform, then they can only read available public graphs, nodes, and comments. | Passed  |
-| Logged-In Create/Edit Graph                      | Given a logged-in user, when they create or edit content, then they can only modify content they have created. | Failed. While user is being returned to front-end, edit button is not being rendered in graph view.  |
-| Logged-In Delete Own                            | Given a logged-in user viewing their own content, when they decide to delete it and confirm, then the system removes their content. | Failed, see above problem with edit.  |
+| Test Case                                       | Acceptance Criteria                                                  | Result  | Issue |
+|-------------------------------------------------|----------------------------------------------------------------------|---------|-------|
+| Non-Logged In Read                              | Given a non-logged-in user, when they navigate the platform, then they can only read available public graphs, nodes, and comments. | Passed  | [#47](https://github.com/laskinner/dromos/issues/47) |
+
+### Navigation
+| Test Case                                       | Acceptance Criteria                                                  | Result  | Issue |
+|-------------------------------------------------|----------------------------------------------------------------------|---------|-------|
+| Navigation Tooltips                            | As a user, When I when I hover over UI elements, I see a tooltip that provides additional context | Passed  | [#2](https://github.com/laskinner/dromos/issues/2) |
+| Routing                | Three user stories for routing, see ticket. | Passed | [#14](https://github.com/laskinner/dromos/issues/14) |
+
 
 ### Validator Testing
 
-**Note: Due to  errors and attempts at critical bug fixing until project submission, code has not yet been passed through a validator**
+- **TSX**:
+TSX was validated using [eslint.org](www.eslint.org). The total count was 3417 lines of .tsx code, with the only error generated being an `as` keyword in an Axios call, which can be safely ignored:
+![image](https://github.com/laskinner/dromos/assets/1858258/127889b1-e6d6-499f-ac56-defbac53d00d)
 
-- **HTML**: 
-- **CSS**: 
+- **CSS**:
+
+![image](https://github.com/laskinner/dromos/assets/1858258/e1ba4a50-58b7-46b0-9891-8dc75556d332)
+
 
 ### Known Bugs
 
@@ -196,14 +207,76 @@ With the refactoring, the fine-grained archecture resulting from abstrocting com
 
 ## Deployment
 
-Deployed on Heroku:
+### Back-End (Django) Setup
 
-Automated deployment on Heroku is set up. To deploy, simply merge to main.
+1. **Cloning the Repository:**
+   - Clone the repository locally: `git clone repository_url`
+   - Navigate to the project directory: `cd project_directory`
 
-If errors arise, logs can be found in Heroku instances:
+2. **Setting Up Django Project:**
+   - Install Django: `pip install django`
+   - Create a new Django project: `django-admin startproject project_name`
+   - Navigate to the project directory: `cd project_name`
+   - Create a Django app: `python manage.py startapp app_name`
 
-Front-end: dromos
-Back-end: dromos-backend
+3. **Environment Variables Setup:**
+   - Create a `.env` file in the root directory.
+   - Define environment variables:
+     - `SECRET_KEY`: Django secret key for cryptographic signing.
+     - `DATABASE_URL`: URL for connecting to the PostgreSQL database.
+     - Other variables as needed (e.g., `DEBUG`, `ALLOWED_HOSTS`).
+
+4. **Heroku Deployment:**
+   - Install the Heroku CLI.
+   - Log in to Heroku: `heroku login`
+   - Create a new Heroku app: `heroku create app_name`
+   - Set up PostgreSQL addon for the database: `heroku addons:create heroku-postgresql:hobby-dev`
+   - Set Django environment variables in Heroku: `heroku config:set VARIABLE_NAME=value`
+   - Push code to Heroku: `git push heroku main`
+
+5. **Database Migration:**
+   - Run database migrations: `python manage.py migrate`
+   - Create a superuser for admin access: `python manage.py createsuperuser`
+
+### Database (ElephantSQL) Setup
+
+1. **Setting Up ElephantSQL:**
+   - Sign up for an [ElephantSQL](https://www.elephantsql.com/) account.
+   - Create a new PostgreSQL instance.
+   - Note down the database URL.
+
+2. **Environment Variables Setup:**
+   - Add the ElephantSQL database URL to the `.env` file.
+
+### Front-End Setup
+
+1. **Cloning the Repository:**
+   - Clone the repository locally: `git clone repository_url`
+   - Navigate to the project directory: `cd project_directory`
+
+2. **Heroku Deployment:**
+   - Ensure you have a `package.json` file with required dependencies.
+   - Create a new Heroku app: `heroku create app_name`
+   - Set environment variables if necessary: `heroku config:set VARIABLE_NAME=value`
+   - Push code to Heroku: `git push heroku main`
+
+3. **Installing Required Packages:**
+   - Decide on required packages:
+     - React: `npm install react`
+     - TypeScript: `npm install typescript`
+     - TailwindCSS: `npm install tailwindcss`
+     - ShadCN/UI: `npm install @shadcn/ui`
+     - Lucide-React: `npm install @lucide/react`
+     - Fontawesome: `npm install @fortawesome/fontawesome-free`
+     - Zod: `npm install zod`
+     - Zustand: `npm install zustand`
+     - SigmaJS: `npm install sigma`
+     - pnpm: `npm install pnpm`
+     - Vite: `npm install vite`
+
+### Detailed Technologies Used
+
+Refer to the provided list of technologies used in the Dromos project for detailed information on the tech stack employed.
 
 ## UX
 
