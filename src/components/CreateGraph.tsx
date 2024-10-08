@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -24,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -32,9 +32,11 @@ const formSchema = z.object({
 });
 
 export const CreateGraph: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
   const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
     const payload = {
       name: data.name,
@@ -45,7 +47,7 @@ export const CreateGraph: React.FC = () => {
     try {
       await axios.post("/api/areas/", payload);
       form.reset();
-      // Handle success (e.g., show confirmation, refresh list of areas/graphs)
+      setIsOpen(false); // Close the modal on successful submit
     } catch (error) {
       // Handle error
       console.error("Failed to create area:", error);
@@ -53,9 +55,9 @@ export const CreateGraph: React.FC = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Create Graph</Button>
+        <Button onClick={() => setIsOpen(true)}>Create Graph</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -107,9 +109,7 @@ export const CreateGraph: React.FC = () => {
               )}
             />
             <DialogFooter>
-              <DialogClose>
-                <Button type="submit">Save changes</Button>
-              </DialogClose>
+              <Button type="submit">Save changes</Button>
             </DialogFooter>
           </form>
         </Form>

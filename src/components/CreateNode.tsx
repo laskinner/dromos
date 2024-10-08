@@ -39,14 +39,6 @@ export const CreateNode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // if (selectedCauses.length === 0) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please select at least one cause.",
-    //   });
-    //   return;
-    // }
-
     if (!selectedAreaId) {
       toast({
         title: "Error",
